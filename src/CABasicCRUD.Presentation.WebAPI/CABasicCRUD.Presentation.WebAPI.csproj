@@ -12,4 +12,7 @@
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.0.1" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CABasicCRUD.Infrastructure.Persistence\CABasicCRUD.Infrastructure.Persistence.csproj" />
+  </ItemGroup>
 </Project>
