@@ -1,16 +1,17 @@
 using CABasicCRUD.Application.Posts.DTOs;
 using CABasicCRUD.Application.Posts.Mapping;
+using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
 using MediatR;
 
 namespace CABasicCRUD.Application.Posts.Queries.GetAllposts;
 
 public class GetAllPostsQueryHandler(IPostRepository postRepository)
-    : IRequestHandler<GetAllPostsQuery, IReadOnlyList<PostDTO>>
+    : IRequestHandler<GetAllPostsQuery, Result<IReadOnlyList<PostDTO>>>
 {
     private readonly IPostRepository _postRepository = postRepository;
 
-    public async Task<IReadOnlyList<PostDTO>> Handle(
+    public async Task<Result<IReadOnlyList<PostDTO>>> Handle(
         GetAllPostsQuery request,
         CancellationToken cancellationToken
     )
@@ -19,6 +20,6 @@ public class GetAllPostsQueryHandler(IPostRepository postRepository)
 
         IReadOnlyList<PostDTO> postDTOs = posts.ToListPostDTO();
 
-        return postDTOs;
+        return Result<IReadOnlyList<PostDTO>>.Success(postDTOs);
     }
 }

@@ -1,28 +1,39 @@
 using CABasicCRUD.Application.Common.Interfaces;
+using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
 using MediatR;
+using PostErrors = CABasicCRUD.Application.Posts.Errors.PostErrors;
 
 namespace CABasicCRUD.Application.Posts.Commands.UpdatePost;
 
 public class UpdatePostCommandHandler(IPostRepository postRepository, IUnitOfWork unitOfWork)
-    : IRequestHandler<UpdatePostCommand>
+    : IRequestHandler<UpdatePostCommand, Result>
 {
     private readonly IPostRepository _postRepository = postRepository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-    public async Task Handle(UpdatePostCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
     {
         var post = await _postRepository.GetByIdAsync(id: request.PostId);
 
         if (post is null)
         {
-            throw new KeyNotFoundException($"Post with Id: {request.PostId.Value} not found");
+            // throw new KeyNotFoundException($"Post with Id: {request.PostId.Value} not found");
+            return Result.Failure(PostErrors.NotFound);
         }
 
-        post.Update(title: request.UpdatePostDTO.Title, content: request.UpdatePostDTO.Content);
+        Result<Post> postUpdateResult = post.Update(
+            title: request.UpdatePostDTO.Title,
+            content: request.UpdatePostDTO.Content
+        );
 
-        await _postRepository.UpdateAsync(entity: post);
+        if (postUpdateResult.IsFailure || postUpdateResult.Value == null)
+            return Result.Failure(postUpdateResult.Error);
+
+        await _postRepository.UpdateAsync(entity: postUpdateResult.Value);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken);
+
+        return Result.Success();
     }
 }
