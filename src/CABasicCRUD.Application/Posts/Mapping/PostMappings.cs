@@ -1,13 +1,19 @@
 using CABasicCRUD.Application.Posts.DTOs;
+using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
 
 namespace CABasicCRUD.Application.Posts.Mapping;
 
 public static class PostMappings
 {
-    public static Post ToEntity(this CreatePostDTO createPostDTO)
+    public static Result<Post> ToEntityResult(this CreatePostDTO createPostDTO)
     {
-        return Post.Create(title: createPostDTO.Title, content: createPostDTO.Content);
+        Result<Post> resultPost = Post.Create(
+            title: createPostDTO.Title,
+            content: createPostDTO.Content
+        );
+
+        return resultPost;
     }
 
     public static PostDTO ToPostDTO(this Post post)
