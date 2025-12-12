@@ -4,6 +4,7 @@ using CABasicCRUD.Application.Posts.Commands.UpdatePost;
 using CABasicCRUD.Application.Posts.DTOs;
 using CABasicCRUD.Application.Posts.Queries.GetAllposts;
 using CABasicCRUD.Application.Posts.Queries.GetPostById;
+using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -22,12 +23,17 @@ public class PostsController(IMediator mediator) : ControllerBase
     {
         CreatePostCommand command = new(CreatePostDTO: createPostDTO);
 
-        PostDTO postDTO = await _mediator.Send(request: command);
+        Result<PostDTO> postDTOResult = await _mediator.Send(request: command);
+
+        if (postDTOResult.IsFailure || postDTOResult.Value is null)
+        {
+            return BadRequest();
+        }
 
         return CreatedAtAction(
             actionName: nameof(GetPostById),
-            routeValues: new { id = postDTO.PostId.Value },
-            value: postDTO
+            routeValues: new { id = postDTOResult.Value.PostId.Value },
+            value: postDTOResult.Value
         );
     }
 
@@ -38,9 +44,14 @@ public class PostsController(IMediator mediator) : ControllerBase
     {
         GetPostByIdQuery query = new(PostId: (PostId)id);
 
-        PostDTO? postDTO = await _mediator.Send(request: query);
+        Result<PostDTO> postDTOResult = await _mediator.Send(request: query);
 
-        return Ok(postDTO);
+        if (postDTOResult.IsFailure || postDTOResult.Value == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(postDTOResult.Value);
     }
 
     [HttpGet]
@@ -52,9 +63,12 @@ public class PostsController(IMediator mediator) : ControllerBase
     {
         GetAllPostsQuery query = new();
 
-        IReadOnlyList<PostDTO> postDTOList = await _mediator.Send(request: query);
+        Result<IReadOnlyList<PostDTO>> postDTOListResult = await _mediator.Send(request: query);
 
-        return Ok(postDTOList);
+        if (postDTOListResult.IsFailure || postDTOListResult.Value == null)
+            return Ok();
+
+        return Ok(postDTOListResult.Value);
     }
 
     [HttpPatch("{id}")]
@@ -63,7 +77,10 @@ public class PostsController(IMediator mediator) : ControllerBase
     {
         UpdatePostCommand command = new(UpdatePostDTO: updatePostDTO, PostId: (PostId)id);
 
-        await _mediator.Send(request: command);
+        Result result = await _mediator.Send(request: command);
+
+        if (result.IsFailure)
+            return BadRequest();
 
         return NoContent();
     }
