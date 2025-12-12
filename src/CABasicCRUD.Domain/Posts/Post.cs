@@ -14,30 +14,32 @@ public class Post : EntityBase<PostId>
         Content = content;
     }
 
-    public static Post Create(string? title, string? content)
+    public static Result<Post> Create(string? title, string? content)
     {
         if (string.IsNullOrEmpty(title))
         {
-            throw new ArgumentException("Post title cannot be null or empty", nameof(title));
+            return Result<Post>.Failure(PostErrors.TitleEmpty);
         }
         if (string.IsNullOrEmpty(content))
         {
-            throw new ArgumentException("Post content cannot be null or empty", nameof(content));
+            return Result<Post>.Failure(PostErrors.ContentEmpty);
         }
-        return new(PostId.New(), title, content);
+        Post post = new(PostId.New(), title, content);
+        return post;
     }
 
-    public void Update(string? title, string? content)
+    public Result<Post> Update(string? title, string? content)
     {
         if (string.IsNullOrEmpty(title))
         {
-            throw new ArgumentException("Post title cannot be null or empty", nameof(title));
+            return Result<Post>.Failure(PostErrors.TitleEmpty);
         }
         if (string.IsNullOrEmpty(content))
         {
-            throw new ArgumentException("Post content cannot be null or empty", nameof(content));
+            return Result<Post>.Failure(PostErrors.ContentEmpty);
         }
         Title = title;
         Content = content;
+        return this;
     }
 }
