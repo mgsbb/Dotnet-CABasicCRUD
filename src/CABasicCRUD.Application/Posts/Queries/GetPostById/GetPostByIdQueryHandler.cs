@@ -1,14 +1,14 @@
+using CABasicCRUD.Application.Common.Interfaces.Messaging;
 using CABasicCRUD.Application.Posts.DTOs;
 using CABasicCRUD.Application.Posts.Mapping;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
-using MediatR;
 using PostErrors = CABasicCRUD.Application.Posts.Errors.PostErrors;
 
 namespace CABasicCRUD.Application.Posts.Queries.GetPostById;
 
 public class GetPostByIdQueryHandler(IPostRepository postRepository)
-    : IRequestHandler<GetPostByIdQuery, Result<PostDTO>>
+    : IQueryHander<GetPostByIdQuery, PostDTO>
 {
     private readonly IPostRepository _postRepository = postRepository;
 

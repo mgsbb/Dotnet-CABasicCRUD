@@ -1,13 +1,13 @@
 using CABasicCRUD.Application.Common.Interfaces;
+using CABasicCRUD.Application.Common.Interfaces.Messaging;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
-using MediatR;
 using PostErrors = CABasicCRUD.Application.Posts.Errors.PostErrors;
 
 namespace CABasicCRUD.Application.Posts.Commands.UpdatePost;
 
 public class UpdatePostCommandHandler(IPostRepository postRepository, IUnitOfWork unitOfWork)
-    : IRequestHandler<UpdatePostCommand, Result>
+    : ICommandHandler<UpdatePostCommand>
 {
     private readonly IPostRepository _postRepository = postRepository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;

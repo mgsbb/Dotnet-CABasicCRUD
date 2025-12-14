@@ -1,8 +1,7 @@
+using CABasicCRUD.Application.Common.Interfaces.Messaging;
 using CABasicCRUD.Application.Posts.DTOs;
-using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
-using MediatR;
 
 namespace CABasicCRUD.Application.Posts.Queries.GetPostById;
 
-public record GetPostByIdQuery(PostId PostId) : IRequest<Result<PostDTO>>;
+public record GetPostByIdQuery(PostId PostId) : IQuery<PostDTO>;

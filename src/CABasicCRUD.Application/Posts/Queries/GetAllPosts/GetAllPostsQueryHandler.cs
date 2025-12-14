@@ -1,13 +1,13 @@
+using CABasicCRUD.Application.Common.Interfaces.Messaging;
 using CABasicCRUD.Application.Posts.DTOs;
 using CABasicCRUD.Application.Posts.Mapping;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
-using MediatR;
 
 namespace CABasicCRUD.Application.Posts.Queries.GetAllposts;
 
 public class GetAllPostsQueryHandler(IPostRepository postRepository)
-    : IRequestHandler<GetAllPostsQuery, Result<IReadOnlyList<PostDTO>>>
+    : IQueryHander<GetAllPostsQuery, IReadOnlyList<PostDTO>>
 {
     private readonly IPostRepository _postRepository = postRepository;
 

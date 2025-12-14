@@ -1,14 +1,14 @@
 using CABasicCRUD.Application.Common.Interfaces;
+using CABasicCRUD.Application.Common.Interfaces.Messaging;
 using CABasicCRUD.Application.Posts.DTOs;
 using CABasicCRUD.Application.Posts.Mapping;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
-using MediatR;
 
 namespace CABasicCRUD.Application.Posts.Commands.CreatePost;
 
 public class CreatePostCommandHandler(IPostRepository postRepository, IUnitOfWork unitOfWork)
-    : IRequestHandler<CreatePostCommand, Result<PostDTO>>
+    : ICommandHandler<CreatePostCommand, PostDTO>
 {
     private readonly IPostRepository _postRepository = postRepository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;

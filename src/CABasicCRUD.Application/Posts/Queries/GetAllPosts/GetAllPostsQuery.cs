@@ -1,7 +1,6 @@
+using CABasicCRUD.Application.Common.Interfaces.Messaging;
 using CABasicCRUD.Application.Posts.DTOs;
-using CABasicCRUD.Domain.Common;
-using MediatR;
 
 namespace CABasicCRUD.Application.Posts.Queries.GetAllposts;
 
-public record GetAllPostsQuery() : IRequest<Result<IReadOnlyList<PostDTO>>>;
+public record GetAllPostsQuery() : IQuery<IReadOnlyList<PostDTO>>;

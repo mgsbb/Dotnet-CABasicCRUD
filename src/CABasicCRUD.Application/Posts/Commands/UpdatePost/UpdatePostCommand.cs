@@ -1,8 +1,7 @@
+using CABasicCRUD.Application.Common.Interfaces.Messaging;
 using CABasicCRUD.Application.Posts.DTOs;
-using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
-using MediatR;
 
 namespace CABasicCRUD.Application.Posts.Commands.UpdatePost;
 
-public record UpdatePostCommand(UpdatePostDTO UpdatePostDTO, PostId PostId) : IRequest<Result>;
+public record UpdatePostCommand(UpdatePostDTO UpdatePostDTO, PostId PostId) : ICommand;

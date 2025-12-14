@@ -1,7 +1,6 @@
-using CABasicCRUD.Domain.Common;
+using CABasicCRUD.Application.Common.Interfaces.Messaging;
 using CABasicCRUD.Domain.Posts;
-using MediatR;
 
 namespace CABasicCRUD.Application.Posts.Commands.DeletePost;
 
-public record DeletePostCommand(PostId PostId) : IRequest<Result>;
+public record DeletePostCommand(PostId PostId) : ICommand;
