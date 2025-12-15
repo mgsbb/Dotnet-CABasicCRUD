@@ -18,7 +18,7 @@ public static class PostMappings
 
     public static PostDTO ToPostDTO(this Post post)
     {
-        return new PostDTO(PostId: post.Id, Title: post.Title, Content: post.Content);
+        return new PostDTO(Id: post.Id, Title: post.Title, Content: post.Content);
     }
 
     public static IReadOnlyList<PostDTO> ToListPostDTO(this IReadOnlyList<Post> posts)

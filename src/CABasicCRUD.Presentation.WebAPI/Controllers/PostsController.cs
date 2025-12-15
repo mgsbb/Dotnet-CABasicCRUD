@@ -33,7 +33,7 @@ public class PostsController(IMediator mediator) : APIController
 
         return CreatedAtAction(
             actionName: nameof(GetPostById),
-            routeValues: new { id = postDTOResult.Value.PostId.Value },
+            routeValues: new { id = postDTOResult.Value.Id },
             value: postDTOResult.Value
         );
     }

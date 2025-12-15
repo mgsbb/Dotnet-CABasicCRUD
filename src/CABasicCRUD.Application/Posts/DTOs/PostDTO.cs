@@ -1,5 +1,3 @@
-using CABasicCRUD.Domain.Posts;
-
 namespace CABasicCRUD.Application.Posts.DTOs;
 
-public record PostDTO(PostId PostId, string Title, string Content);
+public record PostDTO(Guid Id, string Title, string Content);
