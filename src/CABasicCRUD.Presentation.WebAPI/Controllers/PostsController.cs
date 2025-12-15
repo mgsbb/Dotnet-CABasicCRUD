@@ -6,6 +6,7 @@ using CABasicCRUD.Application.Posts.Queries.GetAllposts;
 using CABasicCRUD.Application.Posts.Queries.GetPostById;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
+using CABasicCRUD.Presentation.WebAPI.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,7 +14,7 @@ namespace CABasicCRUD.Presentation.WebAPI.Controllers;
 
 [ApiController]
 [Route("/api/v1/[controller]")]
-public class PostsController(IMediator mediator) : ControllerBase
+public class PostsController(IMediator mediator) : APIController
 {
     private readonly IMediator _mediator = mediator;
 
@@ -27,7 +28,7 @@ public class PostsController(IMediator mediator) : ControllerBase
 
         if (postDTOResult.IsFailure || postDTOResult.Value is null)
         {
-            return BadRequest();
+            return HandleBadRequest(postDTOResult);
         }
 
         return CreatedAtAction(
