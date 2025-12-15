@@ -10,10 +10,12 @@ public class CreatePostCommandValidator : AbstractValidator<CreatePostCommand>
             .NotEmpty()
             .WithMessage("Post title cannot be empty")
             .MaximumLength(100)
-            .WithMessage("Post title cannot be more than 100 characters");
+            .WithMessage("Post title cannot be more than 100 characters")
+            .OverridePropertyName("Title");
 
         RuleFor(x => x.CreatePostDTO.Content)
             .NotEmpty()
-            .WithMessage("Post content cannot be empty");
+            .WithMessage("Post content cannot be empty")
+            .OverridePropertyName("Content");
     }
 }
