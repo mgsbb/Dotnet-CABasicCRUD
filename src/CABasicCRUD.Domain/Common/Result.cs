@@ -27,7 +27,7 @@ public class Result<TValue> : Result
 {
     public TValue? Value { get; private set; }
 
-    private Result(bool isSuccess, TValue? value, Error? error)
+    protected Result(bool isSuccess, TValue? value, Error? error)
         : base(isSuccess, error)
     {
         if (isSuccess && value == null)
