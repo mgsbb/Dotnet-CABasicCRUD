@@ -16,6 +16,8 @@ public static class ApplicationServicesRegistration
             configuration.RegisterServicesFromAssembly(applicationAssembly)
         );
 
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingPipelineBehavior<,>));
+
         services.AddValidatorsFromAssembly(applicationAssembly);
 
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
