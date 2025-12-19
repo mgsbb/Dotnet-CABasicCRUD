@@ -1,5 +1,6 @@
 using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Domain.Posts;
+using CABasicCRUD.Domain.Users;
 using CABasicCRUD.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +20,7 @@ public static class PersistenceServicesRegistration
         );
 
         services.AddScoped<IPostRepository, PostRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
 
         services.AddScoped<IUnitOfWork>(provider =>
             provider.GetRequiredService<ApplicationDbContext>()
