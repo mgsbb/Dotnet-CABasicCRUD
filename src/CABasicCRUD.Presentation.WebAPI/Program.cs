@@ -1,4 +1,6 @@
 ﻿using CABasicCRUD.Application;
+using CABasicCRUD.Infrastructure;
+using CABasicCRUD.Infrastructure.Authentication;
 using CABasicCRUD.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder();
@@ -9,6 +11,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.RegisterApplicationServices();
 builder.Services.RegisterPersistenceServices(configuration: builder.Configuration);
+builder.Services.RegisterAuthenticationServices();
+
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 
 var app = builder.Build();
 
