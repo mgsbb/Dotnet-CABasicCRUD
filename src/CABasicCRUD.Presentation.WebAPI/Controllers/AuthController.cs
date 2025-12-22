@@ -4,7 +4,7 @@ using CABasicCRUD.Application.Users.DTOs;
 using CABasicCRUD.Application.Users.Errors;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Presentation.WebAPI.Abstractions;
-using CABasicCRUD.Presentation.WebAPI.Contracts.Authentication;
+using CABasicCRUD.Presentation.WebAPI.Contracts.Auth;
 using CABasicCRUD.Presentation.WebAPI.Contracts.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +13,7 @@ namespace CABasicCRUD.Presentation.WebAPI.Controllers;
 
 [ApiController]
 [Route("/api/v1/[controller]")]
-public sealed class UsersController(IMediator mediator) : APIController
+public sealed class AuthController(IMediator mediator) : APIController
 {
     private readonly IMediator _mediator = mediator;
 
