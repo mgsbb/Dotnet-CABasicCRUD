@@ -7,6 +7,7 @@ using CABasicCRUD.Application.Posts.Queries.GetPostById;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
 using CABasicCRUD.Presentation.WebAPI.Abstractions;
+using CABasicCRUD.Presentation.WebAPI.Contracts.Posts;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,64 +20,64 @@ public class PostsController(IMediator mediator) : APIController
     private readonly IMediator _mediator = mediator;
 
     [HttpPost]
-    [ProducesResponseType(type: typeof(PostDTO), statusCode: StatusCodes.Status201Created)]
-    public async Task<ActionResult<PostDTO>> CreatePost([FromBody] CreatePostDTO createPostDTO)
+    [ProducesResponseType(type: typeof(PostResponse), statusCode: StatusCodes.Status201Created)]
+    public async Task<ActionResult<PostResponse>> CreatePost([FromBody] CreatePostRequest request)
     {
-        CreatePostCommand command = new(CreatePostDTO: createPostDTO);
+        CreatePostCommand command = new(request.Title, request.Content);
 
-        Result<PostDTO> postDTOResult = await _mediator.Send(request: command);
+        Result<PostResult> result = await _mediator.Send(request: command);
 
-        if (postDTOResult.IsFailure || postDTOResult.Value is null)
+        if (result.IsFailure || result.Value is null)
         {
-            return HandleBadRequest(postDTOResult);
+            return HandleBadRequest(result);
         }
 
         return CreatedAtAction(
             actionName: nameof(GetPostById),
-            routeValues: new { id = postDTOResult.Value.Id },
-            value: postDTOResult.Value
+            routeValues: new { id = result.Value.Id },
+            value: result.Value
         );
     }
 
     [HttpGet("{id}")]
-    [ProducesResponseType(type: typeof(PostDTO), statusCode: StatusCodes.Status200OK)]
+    [ProducesResponseType(type: typeof(PostResponse), statusCode: StatusCodes.Status200OK)]
     [ProducesResponseType(statusCode: StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<PostDTO?>> GetPostById(Guid id)
+    public async Task<ActionResult<PostResponse?>> GetPostById(Guid id)
     {
         GetPostByIdQuery query = new(PostId: (PostId)id);
 
-        Result<PostDTO> postDTOResult = await _mediator.Send(request: query);
+        Result<PostResult> result = await _mediator.Send(request: query);
 
-        if (postDTOResult.IsFailure || postDTOResult.Value == null)
+        if (result.IsFailure || result.Value == null)
         {
             return NotFound();
         }
 
-        return Ok(postDTOResult.Value);
+        return Ok(result.Value);
     }
 
     [HttpGet]
     [ProducesResponseType(
-        type: typeof(IReadOnlyList<PostDTO>),
+        type: typeof(IReadOnlyList<PostResponse>),
         statusCode: StatusCodes.Status200OK
     )]
-    public async Task<ActionResult<IReadOnlyList<PostDTO>>> GetAllPosts()
+    public async Task<ActionResult<IReadOnlyList<PostResponse>>> GetAllPosts()
     {
         GetAllPostsQuery query = new();
 
-        Result<IReadOnlyList<PostDTO>> postDTOListResult = await _mediator.Send(request: query);
+        Result<IReadOnlyList<PostResult>> result = await _mediator.Send(request: query);
 
-        if (postDTOListResult.IsFailure || postDTOListResult.Value == null)
+        if (result.IsFailure || result.Value == null)
             return Ok();
 
-        return Ok(postDTOListResult.Value);
+        return Ok(result.Value);
     }
 
     [HttpPatch("{id}")]
     [ProducesResponseType(statusCode: StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> UpdatePost([FromBody] UpdatePostDTO updatePostDTO, Guid id)
+    public async Task<IActionResult> UpdatePost([FromBody] UpdatePostRequest request, Guid id)
     {
-        UpdatePostCommand command = new(UpdatePostDTO: updatePostDTO, PostId: (PostId)id);
+        UpdatePostCommand command = new(PostId: (PostId)id, request.Title, request.Content);
 
         Result result = await _mediator.Send(request: command);
 
