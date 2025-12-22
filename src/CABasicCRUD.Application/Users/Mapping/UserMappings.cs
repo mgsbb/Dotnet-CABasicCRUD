@@ -5,7 +5,7 @@ namespace CABasicCRUD.Application.Users.Mapping;
 
 internal static class UserMappings
 {
-    internal static UserResponse ToUserResponse(this User user)
+    internal static UserResult ToUserResult(this User user)
     {
         return new(Id: user.Id, Name: user.Name, Email: user.Email);
     }

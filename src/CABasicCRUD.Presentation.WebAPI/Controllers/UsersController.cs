@@ -5,6 +5,7 @@ using CABasicCRUD.Application.Users.Errors;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Presentation.WebAPI.Abstractions;
 using CABasicCRUD.Presentation.WebAPI.Contracts.Authentication;
+using CABasicCRUD.Presentation.WebAPI.Contracts.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,12 +20,10 @@ public sealed class UsersController(IMediator mediator) : APIController
     [HttpPost("register")]
     [ProducesResponseType(typeof(UserResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> RegisterUser(
-        [FromBody] RegisterUserRequest registerUserRequestDTO
-    )
+    public async Task<ActionResult> RegisterUser([FromBody] RegisterUserRequest request)
     {
-        RegisterUserCommand command = new(registerUserRequestDTO);
-        Result<UserResponse> result = await _mediator.Send(command);
+        RegisterUserCommand command = new(request.Name, request.Email, request.Password);
+        Result<UserResult> result = await _mediator.Send(command);
 
         if (result.IsFailure || result.Value is null)
         {

@@ -9,8 +9,7 @@ using UserErrors = CABasicCRUD.Application.Users.Errors.UserErrors;
 
 namespace CABasicCRUD.Application.Users.Commands.RegisterUser;
 
-internal sealed class RegisterUserCommandHandler
-    : ICommandHandler<RegisterUserCommand, UserResponse>
+internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand, UserResult>
 {
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -27,38 +26,38 @@ internal sealed class RegisterUserCommandHandler
         _passwordHasher = passwordHasher;
     }
 
-    public async Task<Result<UserResponse>> Handle(
+    public async Task<Result<UserResult>> Handle(
         RegisterUserCommand request,
         CancellationToken cancellationToken
     )
     {
-        User? user = await _userRepository.GetByEmailAsync(request.RegisterUserRequest.Email);
+        User? user = await _userRepository.GetByEmailAsync(request.Email);
 
         if (user is not null)
         {
-            return Result<UserResponse>.Failure(UserErrors.AlreadyExists);
+            return Result<UserResult>.Failure(UserErrors.AlreadyExists);
         }
 
-        Result<User> userResult = User.Create(
-            name: request.RegisterUserRequest.Name,
-            email: request.RegisterUserRequest.Email,
-            password: request.RegisterUserRequest.Password,
+        Result<User> result = User.Create(
+            name: request.Name,
+            email: request.Email,
+            password: request.Password,
             passwordHasher: _passwordHasher
         );
 
-        if (userResult.IsFailure || userResult.Value is null)
+        if (result.IsFailure || result.Value is null)
         {
-            return Result<UserResponse>.Failure(userResult.Error);
+            return Result<UserResult>.Failure(result.Error);
         }
 
-        User registeredUser = userResult.Value;
+        User registeredUser = result.Value;
 
         await _userRepository.AddAsync(registeredUser);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        UserResponse userResponse = registeredUser.ToUserResponse();
+        UserResult userResult = registeredUser.ToUserResult();
 
-        return Result<UserResponse>.Success(userResponse);
+        return Result<UserResult>.Success(userResult);
     }
 }
