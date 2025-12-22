@@ -1,7 +1,7 @@
-using CABasicCRUD.Application.Users.Commands.LoginUser;
-using CABasicCRUD.Application.Users.Commands.RegisterUser;
-using CABasicCRUD.Application.Users.DTOs;
-using CABasicCRUD.Application.Users.Errors;
+using CABasicCRUD.Application.Auth.Commands.LoginUser;
+using CABasicCRUD.Application.Auth.Commands.RegisterUser;
+using CABasicCRUD.Application.Auth.DTOs;
+using CABasicCRUD.Application.Auth.Errors;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Presentation.WebAPI.Abstractions;
 using CABasicCRUD.Presentation.WebAPI.Contracts.Auth;
@@ -47,7 +47,7 @@ public sealed class AuthController(IMediator mediator) : APIController
         LoginUserCommand command = new(loginUserRequest.Email, loginUserRequest.Password);
         Result<LoginUserResult> result = await _mediator.Send(command);
 
-        if (result.IsFailure && result.Error == UserErrors.InvalidCredentials)
+        if (result.IsFailure && result.Error == AuthErrors.InvalidCredentials)
         {
             return Unauthorized();
         }
