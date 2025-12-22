@@ -7,37 +7,39 @@ using CABasicCRUD.Domain.Posts;
 
 namespace CABasicCRUD.Application.Posts.Commands.CreatePost;
 
-public class CreatePostCommandHandler(IPostRepository postRepository, IUnitOfWork unitOfWork)
-    : ICommandHandler<CreatePostCommand, PostDTO>
+internal sealed class CreatePostCommandHandler(
+    IPostRepository postRepository,
+    IUnitOfWork unitOfWork
+) : ICommandHandler<CreatePostCommand, PostResult>
 {
     private readonly IPostRepository _postRepository = postRepository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-    public async Task<Result<PostDTO>> Handle(
+    public async Task<Result<PostResult>> Handle(
         CreatePostCommand request,
         CancellationToken cancellationToken
     )
     {
-        Result<Post> postResult = request.CreatePostDTO.ToEntityResult();
+        Result<Post> result = Post.Create(title: request.Title, content: request.Content);
 
         // Result<Post> postResult = Post.Create(
         //     title: request.CreatePostDTO.Title,
         //     content: request.CreatePostDTO.Content
         // );
 
-        if (postResult.IsFailure || postResult.Value is null)
+        if (result.IsFailure || result.Value is null)
         {
-            return Result<PostDTO>.Failure(postResult.Error);
+            return Result<PostResult>.Failure(result.Error);
         }
 
-        Post post = postResult.Value;
+        Post post = result.Value;
 
         Post postFromDB = await _postRepository.AddAsync(entity: post);
 
-        PostDTO postDTO = postFromDB.ToPostDTO();
+        PostResult postResult = postFromDB.ToPostResult();
 
         await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken);
 
-        return postDTO;
+        return postResult;
     }
 }

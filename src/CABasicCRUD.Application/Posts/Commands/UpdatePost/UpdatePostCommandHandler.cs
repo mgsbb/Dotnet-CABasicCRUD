@@ -6,8 +6,10 @@ using PostErrors = CABasicCRUD.Application.Posts.Errors.PostErrors;
 
 namespace CABasicCRUD.Application.Posts.Commands.UpdatePost;
 
-public class UpdatePostCommandHandler(IPostRepository postRepository, IUnitOfWork unitOfWork)
-    : ICommandHandler<UpdatePostCommand>
+internal sealed class UpdatePostCommandHandler(
+    IPostRepository postRepository,
+    IUnitOfWork unitOfWork
+) : ICommandHandler<UpdatePostCommand>
 {
     private readonly IPostRepository _postRepository = postRepository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
@@ -22,15 +24,12 @@ public class UpdatePostCommandHandler(IPostRepository postRepository, IUnitOfWor
             return Result.Failure(PostErrors.NotFound);
         }
 
-        Result<Post> postUpdateResult = post.Update(
-            title: request.UpdatePostDTO.Title,
-            content: request.UpdatePostDTO.Content
-        );
+        Result<Post> result = post.Update(title: request.Title, content: request.Content);
 
-        if (postUpdateResult.IsFailure || postUpdateResult.Value == null)
-            return Result.Failure(postUpdateResult.Error);
+        if (result.IsFailure || result.Value == null)
+            return Result.Failure(result.Error);
 
-        await _postRepository.UpdateAsync(entity: postUpdateResult.Value);
+        await _postRepository.UpdateAsync(entity: result.Value);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken);
 

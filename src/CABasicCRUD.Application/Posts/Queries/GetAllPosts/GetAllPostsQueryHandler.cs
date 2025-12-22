@@ -7,19 +7,19 @@ using CABasicCRUD.Domain.Posts;
 namespace CABasicCRUD.Application.Posts.Queries.GetAllposts;
 
 public class GetAllPostsQueryHandler(IPostRepository postRepository)
-    : IQueryHander<GetAllPostsQuery, IReadOnlyList<PostDTO>>
+    : IQueryHander<GetAllPostsQuery, IReadOnlyList<PostResult>>
 {
     private readonly IPostRepository _postRepository = postRepository;
 
-    public async Task<Result<IReadOnlyList<PostDTO>>> Handle(
+    public async Task<Result<IReadOnlyList<PostResult>>> Handle(
         GetAllPostsQuery request,
         CancellationToken cancellationToken
     )
     {
         IReadOnlyList<Post> posts = await _postRepository.GetAllAsync();
 
-        IReadOnlyList<PostDTO> postDTOs = posts.ToListPostDTO();
+        IReadOnlyList<PostResult> postsList = posts.ToListPostResult();
 
-        return Result<IReadOnlyList<PostDTO>>.Success(postDTOs);
+        return Result<IReadOnlyList<PostResult>>.Success(postsList);
     }
 }

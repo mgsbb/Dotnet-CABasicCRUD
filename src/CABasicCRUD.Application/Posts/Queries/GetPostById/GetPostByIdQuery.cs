@@ -4,4 +4,4 @@ using CABasicCRUD.Domain.Posts;
 
 namespace CABasicCRUD.Application.Posts.Queries.GetPostById;
 
-public record GetPostByIdQuery(PostId PostId) : IQuery<PostDTO>;
+public record GetPostByIdQuery(PostId PostId) : IQuery<PostResult>;

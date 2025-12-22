@@ -8,11 +8,11 @@ using PostErrors = CABasicCRUD.Application.Posts.Errors.PostErrors;
 namespace CABasicCRUD.Application.Posts.Queries.GetPostById;
 
 public class GetPostByIdQueryHandler(IPostRepository postRepository)
-    : IQueryHander<GetPostByIdQuery, PostDTO>
+    : IQueryHander<GetPostByIdQuery, PostResult>
 {
     private readonly IPostRepository _postRepository = postRepository;
 
-    public async Task<Result<PostDTO>> Handle(
+    public async Task<Result<PostResult>> Handle(
         GetPostByIdQuery request,
         CancellationToken cancellationToken
     )
@@ -22,11 +22,11 @@ public class GetPostByIdQueryHandler(IPostRepository postRepository)
         if (post is null)
         {
             // throw new KeyNotFoundException($"Post with Id: {request.PostId.Value} not found");
-            return Result<PostDTO>.Failure(PostErrors.NotFound);
+            return Result<PostResult>.Failure(PostErrors.NotFound);
         }
 
-        var postDTO = post.ToPostDTO();
+        var postResult = post.ToPostResult();
 
-        return postDTO;
+        return postResult;
     }
 }

@@ -6,26 +6,16 @@ namespace CABasicCRUD.Application.Posts.Mapping;
 
 internal static class PostMappings
 {
-    internal static Result<Post> ToEntityResult(this CreatePostDTO createPostDTO)
+    internal static PostResult ToPostResult(this Post post)
     {
-        Result<Post> resultPost = Post.Create(
-            title: createPostDTO.Title,
-            content: createPostDTO.Content
-        );
-
-        return resultPost;
+        return new PostResult(Id: post.Id, Title: post.Title, Content: post.Content);
     }
 
-    internal static PostDTO ToPostDTO(this Post post)
-    {
-        return new PostDTO(Id: post.Id, Title: post.Title, Content: post.Content);
-    }
-
-    internal static IReadOnlyList<PostDTO> ToListPostDTO(this IReadOnlyList<Post> posts)
+    internal static IReadOnlyList<PostResult> ToListPostResult(this IReadOnlyList<Post> posts)
     {
         if (posts == null)
-            return new List<PostDTO>();
+            return new List<PostResult>();
 
-        return posts.Select(post => post.ToPostDTO()).ToList();
+        return posts.Select(post => post.ToPostResult()).ToList();
     }
 }
