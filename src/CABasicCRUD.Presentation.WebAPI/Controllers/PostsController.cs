@@ -8,6 +8,7 @@ using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
 using CABasicCRUD.Presentation.WebAPI.Abstractions;
 using CABasicCRUD.Presentation.WebAPI.Contracts.Posts;
+using CABasicCRUD.Presentation.WebAPI.Mappings;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,10 +33,12 @@ public class PostsController(IMediator mediator) : APIController
             return HandleBadRequest(result);
         }
 
+        PostResponse postResponse = result.Value.ToPostResponse();
+
         return CreatedAtAction(
             actionName: nameof(GetPostById),
-            routeValues: new { id = result.Value.Id },
-            value: result.Value
+            routeValues: new { id = postResponse.Id },
+            value: postResponse
         );
     }
 
@@ -53,7 +56,9 @@ public class PostsController(IMediator mediator) : APIController
             return NotFound();
         }
 
-        return Ok(result.Value);
+        PostResponse postResponse = result.Value.ToPostResponse();
+
+        return Ok(postResponse);
     }
 
     [HttpGet]
@@ -70,7 +75,9 @@ public class PostsController(IMediator mediator) : APIController
         if (result.IsFailure || result.Value == null)
             return Ok();
 
-        return Ok(result.Value);
+        IReadOnlyList<PostResponse> postResponses = result.Value.ToListPostResult();
+
+        return Ok(postResponses);
     }
 
     [HttpPatch("{id}")]
