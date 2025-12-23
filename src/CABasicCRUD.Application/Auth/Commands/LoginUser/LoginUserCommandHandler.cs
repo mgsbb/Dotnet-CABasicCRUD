@@ -8,7 +8,7 @@ using AuthErrors = CABasicCRUD.Application.Auth.Errors.AuthErrors;
 
 namespace CABasicCRUD.Application.Auth.Commands.LoginUser;
 
-internal sealed class LoginUserCommandHandler : ICommandHandler<LoginUserCommand, LoginUserResult>
+internal sealed class LoginUserCommandHandler : ICommandHandler<LoginUserCommand, AuthResult>
 {
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher _passwordHasher;
@@ -25,7 +25,7 @@ internal sealed class LoginUserCommandHandler : ICommandHandler<LoginUserCommand
         _jwtProvider = jwtProvider;
     }
 
-    public async Task<Result<LoginUserResult>> Handle(
+    public async Task<Result<AuthResult>> Handle(
         LoginUserCommand request,
         CancellationToken cancellationToken
     )
@@ -34,26 +34,21 @@ internal sealed class LoginUserCommandHandler : ICommandHandler<LoginUserCommand
 
         if (user is null)
         {
-            return Result<LoginUserResult>.Failure(AuthErrors.InvalidCredentials);
+            return Result<AuthResult>.Failure(AuthErrors.InvalidCredentials);
         }
 
         bool isPasswordCorrect = user.VerifyPassword(request.Password, _passwordHasher);
 
         if (!isPasswordCorrect)
         {
-            return Result<LoginUserResult>.Failure(AuthErrors.InvalidCredentials);
+            return Result<AuthResult>.Failure(AuthErrors.InvalidCredentials);
         }
 
         string token = _jwtProvider.GenerateToken(user);
 
-        LoginUserResult loginUserResult = new(
-            Id: user.Id,
-            Name: user.Name,
-            Email: user.Email,
-            Token: token
-        );
+        AuthResult authResult = new(Id: user.Id, Name: user.Name, Email: user.Email, Token: token);
 
         // return Result<LoginUserResult>.Success(loginUserResult);
-        return loginUserResult;
+        return authResult;
     }
 }

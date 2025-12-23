@@ -1,5 +1,4 @@
 using CABasicCRUD.Application.Auth.DTOs;
-using CABasicCRUD.Application.Auth.Mapping;
 using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Common.Interfaces.Messaging;
 using CABasicCRUD.Domain.Common;
@@ -9,24 +8,27 @@ using AuthErrors = CABasicCRUD.Application.Auth.Errors.AuthErrors;
 
 namespace CABasicCRUD.Application.Auth.Commands.RegisterUser;
 
-internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand, UserResult>
+internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand, AuthResult>
 {
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly IJwtProvider _jwtProvider;
 
     public RegisterUserCommandHandler(
         IUserRepository userRepository,
         IUnitOfWork unitOfWork,
-        IPasswordHasher passwordHasher
+        IPasswordHasher passwordHasher,
+        IJwtProvider jwtProvider
     )
     {
         _userRepository = userRepository;
         _unitOfWork = unitOfWork;
         _passwordHasher = passwordHasher;
+        _jwtProvider = jwtProvider;
     }
 
-    public async Task<Result<UserResult>> Handle(
+    public async Task<Result<AuthResult>> Handle(
         RegisterUserCommand request,
         CancellationToken cancellationToken
     )
@@ -35,7 +37,7 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserC
 
         if (user is not null)
         {
-            return Result<UserResult>.Failure(AuthErrors.AlreadyExists);
+            return Result<AuthResult>.Failure(AuthErrors.AlreadyExists);
         }
 
         Result<User> result = User.Create(
@@ -47,7 +49,7 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserC
 
         if (result.IsFailure || result.Value is null)
         {
-            return Result<UserResult>.Failure(result.Error);
+            return Result<AuthResult>.Failure(result.Error);
         }
 
         User registeredUser = result.Value;
@@ -56,8 +58,15 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserC
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        UserResult userResult = registeredUser.ToUserResult();
+        string token = _jwtProvider.GenerateToken(registeredUser);
 
-        return Result<UserResult>.Success(userResult);
+        AuthResult authResult = new(
+            registeredUser.Id,
+            registeredUser.Name,
+            registeredUser.Email,
+            token
+        );
+
+        return Result<AuthResult>.Success(authResult);
     }
 }
