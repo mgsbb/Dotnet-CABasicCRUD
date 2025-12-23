@@ -22,12 +22,14 @@ public sealed class AuthController(IMediator mediator) : APIController
     public async Task<ActionResult> RegisterUser([FromBody] RegisterUserRequest request)
     {
         RegisterUserCommand command = new(request.Name, request.Email, request.Password);
-        Result<UserResult> result = await _mediator.Send(command);
+        Result<AuthResult> result = await _mediator.Send(command);
 
         if (result.IsFailure || result.Value is null)
         {
             return HandleBadRequest(result);
         }
+
+        Response.Cookies.Append("access_token", result.Value.Token);
 
         AuthResponse authResponse = result.Value.ToAuthResponse();
 
@@ -39,14 +41,14 @@ public sealed class AuthController(IMediator mediator) : APIController
     }
 
     [HttpPost("login")]
-    [ProducesResponseType(typeof(LoginUserResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> LoginUser([FromBody] LoginUserRequest loginUserRequest)
     {
         LoginUserCommand command = new(loginUserRequest.Email, loginUserRequest.Password);
-        Result<LoginUserResult> result = await _mediator.Send(command);
+        Result<AuthResult> result = await _mediator.Send(command);
 
         if (result.IsFailure && result.Error == AuthErrors.InvalidCredentials)
         {
@@ -59,9 +61,9 @@ public sealed class AuthController(IMediator mediator) : APIController
 
         Response.Cookies.Append("access_token", result.Value.Token);
 
-        LoginUserResponse loginUserResponse = result.Value.ToLoginUserResponse();
+        AuthResponse authResponse = result.Value.ToAuthResponse();
 
-        return Ok(loginUserResponse);
+        return Ok(authResponse);
     }
 
     [HttpGet("{id}")]

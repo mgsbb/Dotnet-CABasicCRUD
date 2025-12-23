@@ -5,13 +5,8 @@ namespace CABasicCRUD.Presentation.WebAPI.Auth;
 
 public static class AuthMappings
 {
-    public static AuthResponse ToAuthResponse(this UserResult userResult)
+    public static AuthResponse ToAuthResponse(this AuthResult authResult)
     {
-        return new(userResult.Id, userResult.Name, userResult.Email);
-    }
-
-    public static LoginUserResponse ToLoginUserResponse(this LoginUserResult loginUserResult)
-    {
-        return new(loginUserResult.Id, loginUserResult.Name, loginUserResult.Email);
+        return new(authResult.Id, authResult.Name, authResult.Email);
     }
 }
