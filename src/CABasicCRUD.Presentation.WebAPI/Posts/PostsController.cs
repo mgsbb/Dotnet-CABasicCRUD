@@ -7,12 +7,11 @@ using CABasicCRUD.Application.Posts.Queries.GetPostById;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
 using CABasicCRUD.Presentation.WebAPI.Abstractions;
-using CABasicCRUD.Presentation.WebAPI.Contracts.Posts;
-using CABasicCRUD.Presentation.WebAPI.Mappings;
+using CABasicCRUD.Presentation.WebAPI.Posts.Contracts;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CABasicCRUD.Presentation.WebAPI.Controllers;
+namespace CABasicCRUD.Presentation.WebAPI.Posts;
 
 [ApiController]
 [Route("/api/v1/[controller]")]

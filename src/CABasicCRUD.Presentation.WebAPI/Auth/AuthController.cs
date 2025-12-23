@@ -4,12 +4,11 @@ using CABasicCRUD.Application.Auth.DTOs;
 using CABasicCRUD.Application.Auth.Errors;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Presentation.WebAPI.Abstractions;
-using CABasicCRUD.Presentation.WebAPI.Contracts.Auth;
-using CABasicCRUD.Presentation.WebAPI.Contracts.Users;
+using CABasicCRUD.Presentation.WebAPI.Auth.Contracts;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CABasicCRUD.Presentation.WebAPI.Controllers;
+namespace CABasicCRUD.Presentation.WebAPI.Auth;
 
 [ApiController]
 [Route("/api/v1/[controller]")]
@@ -18,7 +17,7 @@ public sealed class AuthController(IMediator mediator) : APIController
     private readonly IMediator _mediator = mediator;
 
     [HttpPost("register")]
-    [ProducesResponseType(typeof(UserResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> RegisterUser([FromBody] RegisterUserRequest request)
     {
