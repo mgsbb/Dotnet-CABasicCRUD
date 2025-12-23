@@ -19,9 +19,11 @@ public sealed class JwtProvider : IJwtProvider
 
     public string GenerateToken(User user)
     {
+        Guid userId = user.Id;
+
         Claim[] claims =
         [
-            new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new(JwtRegisteredClaimNames.Sub, userId.ToString()),
             new(JwtRegisteredClaimNames.Email, user.Email),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         ];
