@@ -1,4 +1,5 @@
 ﻿using CABasicCRUD.Application;
+using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Infrastructure;
 using CABasicCRUD.Infrastructure.Authentication;
 using CABasicCRUD.Infrastructure.Persistence;
@@ -15,6 +16,8 @@ builder.Services.RegisterApplicationServices();
 builder.Services.RegisterPersistenceServices(configuration: builder.Configuration);
 builder.Services.RegisterAuthenticationServices();
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
 builder
@@ -24,6 +27,8 @@ builder
         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     })
     .AddJwtBearer();
+
+builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 
 var app = builder.Build();
 
