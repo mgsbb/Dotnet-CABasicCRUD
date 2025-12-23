@@ -29,10 +29,12 @@ public sealed class AuthController(IMediator mediator) : APIController
             return HandleBadRequest(result);
         }
 
+        AuthResponse authResponse = result.Value.ToAuthResponse();
+
         return CreatedAtAction(
             actionName: nameof(GetUserById),
-            routeValues: new { id = result.Value.Id },
-            value: result.Value
+            routeValues: new { id = authResponse.Id },
+            value: authResponse
         );
     }
 
@@ -57,11 +59,7 @@ public sealed class AuthController(IMediator mediator) : APIController
 
         Response.Cookies.Append("access_token", result.Value.Token);
 
-        LoginUserResponse loginUserResponse = new(
-            result.Value.Id,
-            result.Value.Name,
-            result.Value.Email
-        );
+        LoginUserResponse loginUserResponse = result.Value.ToLoginUserResponse();
 
         return Ok(loginUserResponse);
     }
