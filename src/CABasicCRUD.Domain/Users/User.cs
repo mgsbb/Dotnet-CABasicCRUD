@@ -53,4 +53,19 @@ public class User : EntityBase<UserId>
     {
         return passwordHasher.VerifyPassword(password, PasswordHash);
     }
+
+    public Result<User> UpdateDetails(string? name, string? email)
+    {
+        if (string.IsNullOrEmpty(name))
+        {
+            return Result<User>.Failure(UserErrors.NameEmpty);
+        }
+        if (string.IsNullOrEmpty(email))
+        {
+            return Result<User>.Failure(UserErrors.EmailEmpty);
+        }
+        Name = name;
+        Email = email;
+        return this;
+    }
 }
