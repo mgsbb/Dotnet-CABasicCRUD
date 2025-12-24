@@ -6,7 +6,7 @@ using CABasicCRUD.Domain.Posts;
 
 namespace CABasicCRUD.Application.Posts.Queries.GetAllposts;
 
-public class GetAllPostsQueryHandler(IPostRepository postRepository)
+internal sealed class GetAllPostsQueryHandler(IPostRepository postRepository)
     : IQueryHander<GetAllPostsQuery, IReadOnlyList<PostResult>>
 {
     private readonly IPostRepository _postRepository = postRepository;

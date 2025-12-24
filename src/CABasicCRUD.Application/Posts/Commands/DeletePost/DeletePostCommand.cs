@@ -3,4 +3,4 @@ using CABasicCRUD.Domain.Posts;
 
 namespace CABasicCRUD.Application.Posts.Commands.DeletePost;
 
-public record DeletePostCommand(PostId PostId) : ICommand;
+public sealed record DeletePostCommand(PostId PostId) : ICommand;

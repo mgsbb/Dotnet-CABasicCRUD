@@ -7,7 +7,7 @@ using PostErrors = CABasicCRUD.Application.Posts.Errors.PostErrors;
 
 namespace CABasicCRUD.Application.Posts.Queries.GetPostById;
 
-public class GetPostByIdQueryHandler(IPostRepository postRepository)
+internal sealed class GetPostByIdQueryHandler(IPostRepository postRepository)
     : IQueryHander<GetPostByIdQuery, PostResult>
 {
     private readonly IPostRepository _postRepository = postRepository;

@@ -3,4 +3,4 @@ using CABasicCRUD.Application.Posts.DTOs;
 
 namespace CABasicCRUD.Application.Posts.Queries.GetAllposts;
 
-public record GetAllPostsQuery() : IQuery<IReadOnlyList<PostResult>>;
+public sealed record GetAllPostsQuery() : IQuery<IReadOnlyList<PostResult>>;
