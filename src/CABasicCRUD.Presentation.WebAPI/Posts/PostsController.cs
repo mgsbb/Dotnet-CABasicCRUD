@@ -1,9 +1,9 @@
-using CABasicCRUD.Application.Posts.Commands.CreatePost;
-using CABasicCRUD.Application.Posts.Commands.DeletePost;
-using CABasicCRUD.Application.Posts.Commands.UpdatePost;
-using CABasicCRUD.Application.Posts.DTOs;
-using CABasicCRUD.Application.Posts.Queries.GetAllposts;
-using CABasicCRUD.Application.Posts.Queries.GetPostById;
+using CABasicCRUD.Application.Features.Posts;
+using CABasicCRUD.Application.Features.Posts.CreatePost;
+using CABasicCRUD.Application.Features.Posts.DeletePost;
+using CABasicCRUD.Application.Features.Posts.GetAllposts;
+using CABasicCRUD.Application.Features.Posts.GetPostById;
+using CABasicCRUD.Application.Features.Posts.UpdatePost;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
 using CABasicCRUD.Presentation.WebAPI.Abstractions;

@@ -1,7 +1,6 @@
-using CABasicCRUD.Application.Auth.Commands.LoginUser;
-using CABasicCRUD.Application.Auth.Commands.RegisterUser;
-using CABasicCRUD.Application.Auth.DTOs;
-using CABasicCRUD.Application.Auth.Errors;
+using CABasicCRUD.Application.Features.Auth;
+using CABasicCRUD.Application.Features.Auth.LoginUser;
+using CABasicCRUD.Application.Features.Auth.RegisterUser;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Presentation.WebAPI.Abstractions;
 using CABasicCRUD.Presentation.WebAPI.Auth.Contracts;

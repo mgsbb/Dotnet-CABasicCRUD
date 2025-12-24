@@ -1,4 +1,4 @@
-using CABasicCRUD.Application.Posts.DTOs;
+using CABasicCRUD.Application.Features.Posts;
 using CABasicCRUD.Presentation.WebAPI.Posts.Contracts;
 
 namespace CABasicCRUD.Presentation.WebAPI.Posts;
