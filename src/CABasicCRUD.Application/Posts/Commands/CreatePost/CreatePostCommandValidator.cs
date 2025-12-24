@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace CABasicCRUD.Application.Posts.Commands.CreatePost;
 
-internal sealed class CreatePostCommandValidator : AbstractValidator<CreatePostCommand>
+public sealed class CreatePostCommandValidator : AbstractValidator<CreatePostCommand>
 {
     public CreatePostCommandValidator()
     {

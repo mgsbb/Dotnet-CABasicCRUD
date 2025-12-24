@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace CABasicCRUD.Application.Posts.Commands.UpdatePost;
 
-internal sealed class UpdatePostCommandValidator : AbstractValidator<UpdatePostCommand>
+public sealed class UpdatePostCommandValidator : AbstractValidator<UpdatePostCommand>
 {
     public UpdatePostCommandValidator()
     {
