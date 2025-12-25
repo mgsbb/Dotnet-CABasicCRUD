@@ -1,10 +1,13 @@
 using CABasicCRUD.Application.Features.Users;
 using CABasicCRUD.Application.Features.Users.GetUserById;
+using CABasicCRUD.Application.Features.Users.UpdateUser;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Users;
 using CABasicCRUD.Presentation.WebAPI.Common.Abstractions;
+using CABasicCRUD.Presentation.WebAPI.Common.Security.Authorization;
 using CABasicCRUD.Presentation.WebAPI.Features.Users.Contracts;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CABasicCRUD.Presentation.WebAPI.Features.Users;
@@ -35,5 +38,54 @@ public sealed class UsersController(IMediator mediator) : APIController
         UserResponse userResponse = result.Value.ToUserResponse();
 
         return Ok(userResponse);
+    }
+
+    [Authorize]
+    [HttpPatch("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> UpdateUser(
+        Guid id,
+        [FromBody] UpdateUserRequest request,
+        [FromServices] IAuthorizationService authorizationService
+    )
+    {
+        GetUserByIdQuery query = new((UserId)id);
+
+        Result<UserResult> result = await _mediator.Send(query);
+
+        if (result.IsFailure || result.Value is null)
+        {
+            return HandleProblem(StatusCodes.Status404NotFound, detail: "User not found.");
+        }
+
+        var authResult = await authorizationService.AuthorizeAsync(
+            HttpContext.User,
+            id,
+            AuthorizationPolicies.ResourceOwner
+        );
+
+        if (!authResult.Succeeded)
+        {
+            return HandleProblem(
+                StatusCodes.Status403Forbidden,
+                detail: "You don't have permission to perform the requested action."
+            );
+        }
+
+        UpdateUserCommand command = new((UserId)id, request.Name, request.Email);
+
+        Result updateResult = await _mediator.Send(command);
+
+        // TODO: Send 400 before 404 and 403.
+        // Redundant check: updateResult is IValidationResult
+        if (updateResult.IsFailure && updateResult is IValidationResult)
+        {
+            return HandleBadRequest(updateResult);
+        }
+
+        return NoContent();
     }
 }
