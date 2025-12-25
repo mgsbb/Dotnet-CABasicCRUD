@@ -1,5 +1,6 @@
 using CABasicCRUD.Domain.Common;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace CABasicCRUD.Presentation.WebAPI.Abstractions;
 
@@ -25,5 +26,28 @@ public abstract class APIController : ControllerBase
             ),
             _ => throw new NotImplementedException(),
         };
+    }
+
+    protected ObjectResult HandleProblem(
+        int statusCode,
+        string? title = null,
+        string? detail = null,
+        string? type = null,
+        string? instance = null
+    )
+    {
+        ProblemDetailsFactory factory =
+            HttpContext.RequestServices.GetRequiredService<ProblemDetailsFactory>();
+
+        ProblemDetails problem = factory.CreateProblemDetails(
+            HttpContext,
+            statusCode: statusCode,
+            title: title,
+            type: type,
+            detail: detail,
+            instance: instance
+        );
+
+        return new ObjectResult(problem);
     }
 }
