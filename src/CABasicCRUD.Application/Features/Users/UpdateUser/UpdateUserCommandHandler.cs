@@ -9,11 +9,17 @@ internal sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserComma
 {
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ICurrentUser _currentUser;
 
-    public UpdateUserCommandHandler(IUserRepository userRepository, IUnitOfWork unitOfWork)
+    public UpdateUserCommandHandler(
+        IUserRepository userRepository,
+        IUnitOfWork unitOfWork,
+        ICurrentUser currentUser
+    )
     {
         _userRepository = userRepository;
         _unitOfWork = unitOfWork;
+        _currentUser = currentUser;
     }
 
     public async Task<Result> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
@@ -23,6 +29,11 @@ internal sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserComma
         if (user is null)
         {
             return Result.Failure(UserErrors.NotFound);
+        }
+
+        if (_currentUser.UserId != request.UserId)
+        {
+            return Result.Failure(UserErrors.NotOwner);
         }
 
         Result<User> result = user.UpdateDetails(request.Name, request.Email);

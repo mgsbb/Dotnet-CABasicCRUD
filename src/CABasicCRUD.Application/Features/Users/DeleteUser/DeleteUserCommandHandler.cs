@@ -9,11 +9,17 @@ internal sealed class DeleteUserCommandHandler : ICommandHandler<DeleteUserComma
 {
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ICurrentUser _currentUser;
 
-    public DeleteUserCommandHandler(IUserRepository userRepository, IUnitOfWork unitOfWork)
+    public DeleteUserCommandHandler(
+        IUserRepository userRepository,
+        IUnitOfWork unitOfWork,
+        ICurrentUser currentUser
+    )
     {
         _userRepository = userRepository;
         _unitOfWork = unitOfWork;
+        _currentUser = currentUser;
     }
 
     public async Task<Result> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
@@ -23,6 +29,11 @@ internal sealed class DeleteUserCommandHandler : ICommandHandler<DeleteUserComma
         if (user is null)
         {
             return Result.Failure(UserErrors.NotFound);
+        }
+
+        if (_currentUser.UserId != request.UserId)
+        {
+            return Result.Failure(UserErrors.NotOwner);
         }
 
         await _userRepository.DeleteAsync(user);

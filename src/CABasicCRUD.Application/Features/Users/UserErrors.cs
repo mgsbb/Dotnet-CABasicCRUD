@@ -8,4 +8,9 @@ public static class UserErrors
         "User.NotFound",
         "User with the given email does not exist."
     );
+
+    public static readonly Error NotOwner = new(
+        "User.NotOwner",
+        "User does not belong to the current user."
+    );
 }
