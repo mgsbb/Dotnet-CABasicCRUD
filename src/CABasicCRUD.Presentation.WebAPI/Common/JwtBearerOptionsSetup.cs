@@ -1,6 +1,9 @@
 using System.Text;
+using System.Text.Json;
 using CABasicCRUD.Infrastructure.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -29,9 +32,9 @@ internal sealed class JwtBearerOptionsSetup(IOptions<JwtOptions> jwtOptions)
             ),
         };
 
-        // extract token from http only cookie
         options.Events = new JwtBearerEvents
         {
+            // extract token from http only cookie
             OnMessageReceived = context =>
             {
                 // check Authorization header (for Bearer {access_token})
@@ -44,6 +47,26 @@ internal sealed class JwtBearerOptionsSetup(IOptions<JwtOptions> jwtOptions)
                 // if not found above, extract from cookie
                 context.Token = context.Request.Cookies["access_token"];
                 return Task.CompletedTask;
+            },
+
+            // write custom problem details when token not found
+            OnChallenge = async context =>
+            {
+                context.HandleResponse();
+
+                ProblemDetailsFactory factory =
+                    context.HttpContext.RequestServices.GetRequiredService<ProblemDetailsFactory>();
+
+                ProblemDetails problem = factory.CreateProblemDetails(
+                    context.HttpContext,
+                    statusCode: StatusCodes.Status401Unauthorized,
+                    detail: "Authentication token is missing or invalid."
+                );
+
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                context.Response.ContentType = "application/problem+json";
+
+                await context.Response.WriteAsync(JsonSerializer.Serialize(problem));
             },
         };
     }
