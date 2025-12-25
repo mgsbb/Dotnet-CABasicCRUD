@@ -1,7 +1,7 @@
 using CABasicCRUD.Application.Features.Posts;
-using CABasicCRUD.Presentation.WebAPI.Posts.Contracts;
+using CABasicCRUD.Presentation.WebAPI.Features.Posts.Contracts;
 
-namespace CABasicCRUD.Presentation.WebAPI.Posts;
+namespace CABasicCRUD.Presentation.WebAPI.Features.Posts;
 
 internal static class PostMappings
 {

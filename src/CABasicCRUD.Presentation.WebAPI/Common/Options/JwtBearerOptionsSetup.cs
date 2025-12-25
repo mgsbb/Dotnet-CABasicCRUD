@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace CABasicCRUD.Presentation.WebAPI.Common;
+namespace CABasicCRUD.Presentation.WebAPI.Common.Options;
 
 internal sealed class JwtBearerOptionsSetup(IOptions<JwtOptions> jwtOptions)
     : IConfigureNamedOptions<JwtBearerOptions>

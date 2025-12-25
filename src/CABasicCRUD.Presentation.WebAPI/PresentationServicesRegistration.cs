@@ -1,6 +1,7 @@
 using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Infrastructure.Authentication;
-using CABasicCRUD.Presentation.WebAPI.Common;
+using CABasicCRUD.Presentation.WebAPI.Common.Options;
+using CABasicCRUD.Presentation.WebAPI.Common.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace CABasicCRUD.Presentation.WebAPI;
