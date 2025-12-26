@@ -4,6 +4,7 @@ using CABasicCRUD.Application.Features.Auth.RegisterUser;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Presentation.WebAPI.Common.Abstractions;
 using CABasicCRUD.Presentation.WebAPI.Features.Auth.Contracts;
+using CABasicCRUD.Presentation.WebAPI.Features.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,14 +19,23 @@ public sealed class AuthController(IMediator mediator) : APIController
     [HttpPost("register")]
     [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<ActionResult> RegisterUser([FromBody] RegisterUserRequest request)
     {
         RegisterUserCommand command = new(request.Name, request.Email, request.Password);
         Result<AuthResult> result = await _mediator.Send(command);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure && result is IValidationResult)
         {
             return HandleBadRequest(result);
+        }
+        if (result.IsFailure && result.Error == AuthErrors.AlreadyExists)
+        {
+            return HandleProblem(StatusCodes.Status409Conflict, detail: "Email already in use.");
+        }
+        if (result.IsFailure || result.Value is null)
+        {
+            return HandleProblem(StatusCodes.Status500InternalServerError);
         }
 
         Response.Cookies.Append("access_token", result.Value.Token);
@@ -33,7 +43,8 @@ public sealed class AuthController(IMediator mediator) : APIController
         AuthResponse authResponse = result.Value.ToAuthResponse();
 
         return CreatedAtAction(
-            actionName: nameof(GetUserById),
+            actionName: nameof(UsersController.GetUserById),
+            controllerName: "Users",
             routeValues: new { id = authResponse.Id },
             value: authResponse
         );
@@ -63,14 +74,5 @@ public sealed class AuthController(IMediator mediator) : APIController
         AuthResponse authResponse = result.Value.ToAuthResponse();
 
         return Ok(authResponse);
-    }
-
-    [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> GetUserById(Guid id)
-    {
-        return Ok();
     }
 }
