@@ -1,4 +1,5 @@
 using CABasicCRUD.Application.Features.Users;
+using CABasicCRUD.Application.Features.Users.DeleteUser;
 using CABasicCRUD.Application.Features.Users.GetUserById;
 using CABasicCRUD.Application.Features.Users.UpdateUser;
 using CABasicCRUD.Domain.Common;
@@ -84,6 +85,54 @@ public sealed class UsersController(IMediator mediator) : APIController
         if (updateResult.IsFailure && updateResult is IValidationResult)
         {
             return HandleBadRequest(updateResult);
+        }
+
+        return NoContent();
+    }
+
+    [Authorize]
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> DeleteUser(
+        Guid id,
+        [FromServices] IAuthorizationService authorizationService
+    )
+    {
+        GetUserByIdQuery query = new((UserId)id);
+
+        Result<UserResult> result = await _mediator.Send(query);
+
+        if (result.IsFailure || result.Value is null)
+        {
+            return HandleProblem(StatusCodes.Status404NotFound, detail: "User not found.");
+        }
+
+        var authResult = await authorizationService.AuthorizeAsync(
+            HttpContext.User,
+            id,
+            AuthorizationPolicies.ResourceOwner
+        );
+
+        if (!authResult.Succeeded)
+        {
+            return HandleProblem(
+                StatusCodes.Status403Forbidden,
+                detail: "You don't have permission to perform the requested action."
+            );
+        }
+
+        DeleteUserCommand command = new((UserId)id);
+
+        Result deleteResult = await _mediator.Send(command);
+
+        // TODO: Send 400 before 404 and 403.
+
+        if (deleteResult.IsFailure)
+        {
+            return HandleProblem(StatusCodes.Status500InternalServerError);
         }
 
         return NoContent();
