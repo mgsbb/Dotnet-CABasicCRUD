@@ -25,17 +25,9 @@ public sealed class AuthController(IMediator mediator) : APIController
         RegisterUserCommand command = new(request.Name, request.Email, request.Password);
         Result<AuthResult> result = await _mediator.Send(command);
 
-        if (result.IsFailure && result is IValidationResult)
-        {
-            return HandleBadRequest(result);
-        }
-        if (result.IsFailure && result.Error == AuthErrors.AlreadyExists)
-        {
-            return HandleProblem(StatusCodes.Status409Conflict, detail: "Email already in use.");
-        }
         if (result.IsFailure || result.Value is null)
         {
-            return HandleProblem(StatusCodes.Status500InternalServerError);
+            return HandleResultFailure(result);
         }
 
         Response.Cookies.Append("access_token", result.Value.Token);
@@ -52,7 +44,6 @@ public sealed class AuthController(IMediator mediator) : APIController
 
     [HttpPost("login")]
     [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> LoginUser([FromBody] LoginUserRequest loginUserRequest)
@@ -60,13 +51,9 @@ public sealed class AuthController(IMediator mediator) : APIController
         LoginUserCommand command = new(loginUserRequest.Email, loginUserRequest.Password);
         Result<AuthResult> result = await _mediator.Send(command);
 
-        if (result.IsFailure && result.Error == AuthErrors.InvalidCredentials)
+        if (result.IsFailure || result.Value is null)
         {
-            return Unauthorized();
-        }
-        if (result is IValidationResult || result.Value is null)
-        {
-            return HandleBadRequest(result);
+            return HandleResultFailure(result);
         }
 
         Response.Cookies.Append("access_token", result.Value.Token);
@@ -74,5 +61,37 @@ public sealed class AuthController(IMediator mediator) : APIController
         AuthResponse authResponse = result.Value.ToAuthResponse();
 
         return Ok(authResponse);
+    }
+
+    private ObjectResult HandleResultFailure(Result result)
+    {
+        // redundant check?
+        if (result.IsSuccess)
+        {
+            throw new InvalidOperationException();
+        }
+        if (result is IValidationResult validationResult)
+        {
+            IDictionary<string, object?> extensions = new Dictionary<string, object?>
+            {
+                ["errors"] = validationResult
+                    .Errors.Select(e => new { code = e.Code, message = e.Message })
+                    .ToList(),
+            };
+            return HandleProblem(
+                StatusCodes.Status400BadRequest,
+                detail: result.Error?.Message,
+                extensions: extensions
+            );
+        }
+        if (result.Error == AuthErrors.AlreadyExists)
+        {
+            return HandleProblem(StatusCodes.Status409Conflict, detail: result.Error.Message);
+        }
+        if (result.Error == AuthErrors.InvalidCredentials)
+        {
+            return HandleProblem(StatusCodes.Status401Unauthorized, detail: result.Error.Message);
+        }
+        return HandleProblem(StatusCodes.Status500InternalServerError);
     }
 }

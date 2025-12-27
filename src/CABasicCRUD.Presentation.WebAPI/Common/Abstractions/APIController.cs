@@ -33,7 +33,8 @@ public abstract class APIController : ControllerBase
         string? title = null,
         string? detail = null,
         string? type = null,
-        string? instance = null
+        string? instance = null,
+        IDictionary<string, object?>? extensions = null
     )
     {
         ProblemDetailsFactory factory =
@@ -47,6 +48,11 @@ public abstract class APIController : ControllerBase
             detail: detail,
             instance: instance
         );
+
+        if (extensions is not null)
+        {
+            problem.Extensions = extensions;
+        }
 
         return new ObjectResult(problem);
     }
