@@ -1,3 +1,5 @@
+using CABasicCRUD.Application.Common.Interfaces;
+using CABasicCRUD.Application.Features.Auth;
 using CABasicCRUD.Application.Features.Posts;
 using CABasicCRUD.Application.Features.Posts.CreatePost;
 using CABasicCRUD.Application.Features.Posts.DeletePost;
@@ -6,30 +8,40 @@ using CABasicCRUD.Application.Features.Posts.GetPostById;
 using CABasicCRUD.Application.Features.Posts.UpdatePost;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
+using CABasicCRUD.Domain.Users;
 using CABasicCRUD.Presentation.WebAPI.Common.Abstractions;
 using CABasicCRUD.Presentation.WebAPI.Features.Posts.Contracts;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CABasicCRUD.Presentation.WebAPI.Features.Posts;
 
 [ApiController]
 [Route("/api/v1/[controller]")]
-public class PostsController(IMediator mediator) : APIController
+public class PostsController(IMediator mediator, ICurrentUser currentUser) : APIController
 {
     private readonly IMediator _mediator = mediator;
+    private readonly ICurrentUser _currentUser = currentUser;
 
+    [Authorize]
     [HttpPost]
     [ProducesResponseType(type: typeof(PostResponse), statusCode: StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<PostResponse>> CreatePost([FromBody] CreatePostRequest request)
     {
-        CreatePostCommand command = new(request.Title, request.Content);
+        CreatePostCommand command = new(
+            request.Title,
+            request.Content,
+            (UserId)_currentUser.UserId
+        );
 
         Result<PostResult> result = await _mediator.Send(request: command);
 
         if (result.IsFailure || result.Value is null)
         {
-            return HandleBadRequest(result);
+            return HandleResultFailure(result);
         }
 
         PostResponse postResponse = result.Value.ToPostResponse();
@@ -52,7 +64,7 @@ public class PostsController(IMediator mediator) : APIController
 
         if (result.IsFailure || result.Value == null)
         {
-            return NotFound();
+            return HandleResultFailure(result);
         }
 
         PostResponse postResponse = result.Value.ToPostResponse();
@@ -79,28 +91,78 @@ public class PostsController(IMediator mediator) : APIController
         return Ok(postResponses);
     }
 
+    [Authorize]
     [HttpPatch("{id}")]
     [ProducesResponseType(statusCode: StatusCodes.Status204NoContent)]
+    [ProducesResponseType(statusCode: StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(statusCode: StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(statusCode: StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdatePost([FromBody] UpdatePostRequest request, Guid id)
     {
-        UpdatePostCommand command = new(PostId: (PostId)id, request.Title, request.Content);
+        UpdatePostCommand command = new(
+            PostId: (PostId)id,
+            request.Title,
+            request.Content,
+            (UserId)_currentUser.UserId
+        );
 
         Result result = await _mediator.Send(request: command);
 
         if (result.IsFailure)
-            return BadRequest();
+        {
+            return HandleResultFailure(result);
+        }
 
         return NoContent();
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     [ProducesResponseType(statusCode: StatusCodes.Status204NoContent)]
+    [ProducesResponseType(statusCode: StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(statusCode: StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> DeletePost(Guid id)
     {
-        DeletePostCommand command = new(PostId: (PostId)id);
+        DeletePostCommand command = new((PostId)id, (UserId)_currentUser.UserId);
 
-        await _mediator.Send(request: command);
+        Result result = await _mediator.Send(request: command);
+
+        if (result.IsFailure)
+        {
+            return HandleResultFailure(result);
+        }
 
         return NoContent();
+    }
+
+    private ObjectResult HandleResultFailure(Result result)
+    {
+        if (result.IsSuccess)
+        {
+            throw new InvalidOperationException();
+        }
+        if (result is IValidationResult validationResult)
+        {
+            IDictionary<string, object?> extensions = new Dictionary<string, object?>
+            {
+                ["errors"] = validationResult
+                    .Errors.Select(e => new { code = e.Code, message = e.Message })
+                    .ToList(),
+            };
+            return HandleProblem(
+                StatusCodes.Status400BadRequest,
+                detail: result.Error?.Message,
+                extensions: extensions
+            );
+        }
+        if (result.Error == Application.Features.Posts.PostErrors.NotFound)
+        {
+            return HandleProblem(StatusCodes.Status404NotFound, detail: result.Error.Message);
+        }
+        if (result.Error == AuthErrors.Forbidden)
+        {
+            return HandleProblem(StatusCodes.Status403Forbidden, detail: result.Error.Message);
+        }
+        return HandleProblem(StatusCodes.Status500InternalServerError);
     }
 }

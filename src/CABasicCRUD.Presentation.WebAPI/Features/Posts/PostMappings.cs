@@ -7,7 +7,7 @@ internal static class PostMappings
 {
     internal static PostResponse ToPostResponse(this PostResult postResult)
     {
-        return new(postResult.Id, postResult.Title, postResult.Content);
+        return new(postResult.Id, postResult.Title, postResult.Content, postResult.UserId);
     }
 
     internal static IReadOnlyList<PostResponse> ToListPostResult(
