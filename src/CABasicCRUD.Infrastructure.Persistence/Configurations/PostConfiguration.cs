@@ -1,4 +1,5 @@
 using CABasicCRUD.Domain.Posts;
+using CABasicCRUD.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -16,5 +17,10 @@ public class PostConfiguration : IEntityTypeConfiguration<Post>
         builder.Property(p => p.Title).IsRequired().HasMaxLength(100);
 
         builder.Property(p => p.Content).IsRequired();
+
+        builder.HasOne<User>().WithMany().HasForeignKey(p => p.UserId);
+        builder
+            .Property(p => p.UserId)
+            .HasConversion(userId => userId.Value, value => (UserId)value);
     }
 }
