@@ -1,3 +1,4 @@
+using CABasicCRUD.Application.Features.Auth;
 using CABasicCRUD.Application.Features.Users;
 using CABasicCRUD.Application.Features.Users.DeleteUser;
 using CABasicCRUD.Application.Features.Users.GetUserById;
@@ -30,10 +31,7 @@ public sealed class UsersController(IMediator mediator) : APIController
 
         if (result.IsFailure || result.Value == null)
         {
-            return HandleProblem(
-                statusCode: StatusCodes.Status404NotFound,
-                detail: "User Not Found"
-            );
+            return HandleResultFailure(result);
         }
 
         UserResponse userResponse = result.Value.ToUserResponse();
@@ -53,15 +51,6 @@ public sealed class UsersController(IMediator mediator) : APIController
         [FromServices] IAuthorizationService authorizationService
     )
     {
-        GetUserByIdQuery query = new((UserId)id);
-
-        Result<UserResult> result = await _mediator.Send(query);
-
-        if (result.IsFailure || result.Value is null)
-        {
-            return HandleProblem(StatusCodes.Status404NotFound, detail: "User not found.");
-        }
-
         var authResult = await authorizationService.AuthorizeAsync(
             HttpContext.User,
             id,
@@ -80,11 +69,9 @@ public sealed class UsersController(IMediator mediator) : APIController
 
         Result updateResult = await _mediator.Send(command);
 
-        // TODO: Send 400 before 404 and 403.
-        // Redundant check: updateResult is IValidationResult
-        if (updateResult.IsFailure && updateResult is IValidationResult)
+        if (updateResult.IsFailure)
         {
-            return HandleBadRequest(updateResult);
+            return HandleResultFailure(updateResult);
         }
 
         return NoContent();
@@ -101,15 +88,6 @@ public sealed class UsersController(IMediator mediator) : APIController
         [FromServices] IAuthorizationService authorizationService
     )
     {
-        GetUserByIdQuery query = new((UserId)id);
-
-        Result<UserResult> result = await _mediator.Send(query);
-
-        if (result.IsFailure || result.Value is null)
-        {
-            return HandleProblem(StatusCodes.Status404NotFound, detail: "User not found.");
-        }
-
         var authResult = await authorizationService.AuthorizeAsync(
             HttpContext.User,
             id,
@@ -128,13 +106,42 @@ public sealed class UsersController(IMediator mediator) : APIController
 
         Result deleteResult = await _mediator.Send(command);
 
-        // TODO: Send 400 before 404 and 403.
-
         if (deleteResult.IsFailure)
         {
-            return HandleProblem(StatusCodes.Status500InternalServerError);
+            return HandleResultFailure(deleteResult);
         }
 
         return NoContent();
+    }
+
+    private ObjectResult HandleResultFailure(Result result)
+    {
+        if (result.IsSuccess)
+        {
+            throw new InvalidOperationException();
+        }
+        if (result is IValidationResult validationResult)
+        {
+            IDictionary<string, object?> extensions = new Dictionary<string, object?>
+            {
+                ["errors"] = validationResult
+                    .Errors.Select(e => new { code = e.Code, message = e.Message })
+                    .ToList(),
+            };
+            return HandleProblem(
+                StatusCodes.Status400BadRequest,
+                detail: result.Error?.Message,
+                extensions: extensions
+            );
+        }
+        if (result.Error == Application.Features.Users.UserErrors.NotFound)
+        {
+            return HandleProblem(StatusCodes.Status404NotFound, detail: result.Error.Message);
+        }
+        if (result.Error == AuthErrors.Forbidden)
+        {
+            return HandleProblem(StatusCodes.Status403Forbidden, detail: result.Error.Message);
+        }
+        return HandleProblem(StatusCodes.Status500InternalServerError);
     }
 }
