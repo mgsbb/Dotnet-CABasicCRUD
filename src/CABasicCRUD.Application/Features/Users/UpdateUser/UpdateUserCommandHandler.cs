@@ -1,5 +1,6 @@
 using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Common.Interfaces.Messaging;
+using CABasicCRUD.Application.Features.Auth;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Users;
 
@@ -31,9 +32,9 @@ internal sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserComma
             return Result.Failure(UserErrors.NotFound);
         }
 
-        if (_currentUser.UserId != request.UserId)
+        if (user.Id != request.UserId)
         {
-            return Result.Failure(UserErrors.NotOwner);
+            return Result.Failure(AuthErrors.Forbidden);
         }
 
         Result<User> result = user.UpdateDetails(request.Name, request.Email);
