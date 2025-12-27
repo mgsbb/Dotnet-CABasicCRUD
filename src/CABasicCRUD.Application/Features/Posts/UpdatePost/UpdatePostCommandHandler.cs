@@ -1,5 +1,6 @@
 using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Common.Interfaces.Messaging;
+using CABasicCRUD.Application.Features.Auth;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
 
@@ -21,6 +22,11 @@ internal sealed class UpdatePostCommandHandler(
         {
             // throw new KeyNotFoundException($"Post with Id: {request.PostId.Value} not found");
             return Result.Failure(PostErrors.NotFound);
+        }
+
+        if (post.UserId != request.UserId)
+        {
+            return Result.Failure(AuthErrors.Forbidden);
         }
 
         Result<Post> result = post.Update(title: request.Title, content: request.Content);

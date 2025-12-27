@@ -18,7 +18,11 @@ internal sealed class CreatePostCommandHandler(
         CancellationToken cancellationToken
     )
     {
-        Result<Post> result = Post.Create(title: request.Title, content: request.Content);
+        Result<Post> result = Post.Create(
+            title: request.Title,
+            content: request.Content,
+            userId: request.UserId
+        );
 
         // Result<Post> postResult = Post.Create(
         //     title: request.CreatePostDTO.Title,
@@ -27,6 +31,7 @@ internal sealed class CreatePostCommandHandler(
 
         if (result.IsFailure || result.Value is null)
         {
+            // Error may be any of the domain errors - TitleEmpty, ContentEmpty, etc. How to handle this in the controller?
             return Result<PostResult>.Failure(result.Error);
         }
 

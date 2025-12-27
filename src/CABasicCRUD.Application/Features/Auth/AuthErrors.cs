@@ -13,4 +13,9 @@ public static class AuthErrors
         "Auth.InvalidCredentials",
         "Given email or password found to be incorrect."
     );
+
+    public static readonly Error Forbidden = new(
+        "Auth.Forbidden",
+        "Requested action cannot be performed."
+    );
 }

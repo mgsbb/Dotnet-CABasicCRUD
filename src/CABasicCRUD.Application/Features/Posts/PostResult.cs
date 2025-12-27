@@ -1,3 +1,3 @@
 namespace CABasicCRUD.Application.Features.Posts;
 
-public sealed record PostResult(Guid Id, string Title, string Content);
+public sealed record PostResult(Guid Id, string Title, string Content, Guid UserId);
