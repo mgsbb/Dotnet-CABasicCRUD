@@ -8,14 +8,21 @@ namespace CABasicCRUD.Application.Features.Posts.DeletePost;
 
 internal sealed class DeletePostCommandHandler(
     IPostRepository postRepository,
-    IUnitOfWork unitOfWork
+    IUnitOfWork unitOfWork,
+    ICurrentUser currentUser
 ) : ICommandHandler<DeletePostCommand>
 {
     private readonly IPostRepository _postRepository = postRepository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly ICurrentUser _currentUser = currentUser;
 
     public async Task<Result> Handle(DeletePostCommand request, CancellationToken cancellationToken)
     {
+        if (!_currentUser.IsAuthenticated)
+        {
+            return Result.Failure(AuthErrors.Unauthenticated);
+        }
+
         Post? post = await _postRepository.GetByIdAsync(id: request.PostId);
 
         if (post is null)
@@ -24,7 +31,7 @@ internal sealed class DeletePostCommandHandler(
             return Result.Failure(PostErrors.NotFound);
         }
 
-        if (request.UserId != post.UserId)
+        if (_currentUser.UserId != post.UserId)
         {
             return Result.Failure(AuthErrors.Forbidden);
         }

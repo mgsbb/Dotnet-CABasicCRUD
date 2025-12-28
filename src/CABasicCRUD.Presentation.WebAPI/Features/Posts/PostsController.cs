@@ -1,4 +1,3 @@
-using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Features.Auth;
 using CABasicCRUD.Application.Features.Posts;
 using CABasicCRUD.Application.Features.Posts.CreatePost;
@@ -8,7 +7,6 @@ using CABasicCRUD.Application.Features.Posts.GetPostById;
 using CABasicCRUD.Application.Features.Posts.UpdatePost;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
-using CABasicCRUD.Domain.Users;
 using CABasicCRUD.Presentation.WebAPI.Common.Abstractions;
 using CABasicCRUD.Presentation.WebAPI.Features.Posts.Contracts;
 using MediatR;
@@ -19,10 +17,9 @@ namespace CABasicCRUD.Presentation.WebAPI.Features.Posts;
 
 [ApiController]
 [Route("/api/v1/[controller]")]
-public class PostsController(IMediator mediator, ICurrentUser currentUser) : APIController
+public class PostsController(IMediator mediator) : APIController
 {
     private readonly IMediator _mediator = mediator;
-    private readonly ICurrentUser _currentUser = currentUser;
 
     [Authorize]
     [HttpPost]
@@ -31,11 +28,7 @@ public class PostsController(IMediator mediator, ICurrentUser currentUser) : API
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<PostResponse>> CreatePost([FromBody] CreatePostRequest request)
     {
-        CreatePostCommand command = new(
-            request.Title,
-            request.Content,
-            (UserId)_currentUser.UserId
-        );
+        CreatePostCommand command = new(request.Title, request.Content);
 
         Result<PostResult> result = await _mediator.Send(request: command);
 
@@ -99,12 +92,7 @@ public class PostsController(IMediator mediator, ICurrentUser currentUser) : API
     [ProducesResponseType(statusCode: StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdatePost([FromBody] UpdatePostRequest request, Guid id)
     {
-        UpdatePostCommand command = new(
-            PostId: (PostId)id,
-            request.Title,
-            request.Content,
-            (UserId)_currentUser.UserId
-        );
+        UpdatePostCommand command = new(PostId: (PostId)id, request.Title, request.Content);
 
         Result result = await _mediator.Send(request: command);
 
@@ -123,7 +111,7 @@ public class PostsController(IMediator mediator, ICurrentUser currentUser) : API
     [ProducesResponseType(statusCode: StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> DeletePost(Guid id)
     {
-        DeletePostCommand command = new((PostId)id, (UserId)_currentUser.UserId);
+        DeletePostCommand command = new((PostId)id);
 
         Result result = await _mediator.Send(request: command);
 

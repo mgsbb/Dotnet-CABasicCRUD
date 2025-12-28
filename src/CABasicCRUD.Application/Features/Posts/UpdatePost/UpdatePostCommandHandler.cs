@@ -8,14 +8,21 @@ namespace CABasicCRUD.Application.Features.Posts.UpdatePost;
 
 internal sealed class UpdatePostCommandHandler(
     IPostRepository postRepository,
-    IUnitOfWork unitOfWork
+    IUnitOfWork unitOfWork,
+    ICurrentUser currentUser
 ) : ICommandHandler<UpdatePostCommand>
 {
     private readonly IPostRepository _postRepository = postRepository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly ICurrentUser _currentUser = currentUser;
 
     public async Task<Result> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
     {
+        if (!_currentUser.IsAuthenticated)
+        {
+            return Result.Failure(AuthErrors.Unauthenticated);
+        }
+
         var post = await _postRepository.GetByIdAsync(id: request.PostId);
 
         if (post is null)
@@ -24,7 +31,7 @@ internal sealed class UpdatePostCommandHandler(
             return Result.Failure(PostErrors.NotFound);
         }
 
-        if (post.UserId != request.UserId)
+        if (post.UserId != _currentUser.UserId)
         {
             return Result.Failure(AuthErrors.Forbidden);
         }

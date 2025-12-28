@@ -18,4 +18,8 @@ public static class AuthErrors
         "Auth.Forbidden",
         "Requested action cannot be performed."
     );
+    public static readonly Error Unauthenticated = new(
+        "Auth.Unauthenticated",
+        "User unauthenticated."
+    );
 }
