@@ -79,7 +79,7 @@ public class PostsController(IMediator mediator) : APIController
         if (result.IsFailure || result.Value == null)
             return Ok();
 
-        IReadOnlyList<PostResponse> postResponses = result.Value.ToListPostResult();
+        IReadOnlyList<PostResponse> postResponses = result.Value.ToListPostResponse();
 
         return Ok(postResponses);
     }
