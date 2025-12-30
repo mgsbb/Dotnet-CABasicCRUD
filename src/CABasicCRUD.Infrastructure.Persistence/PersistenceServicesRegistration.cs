@@ -1,4 +1,5 @@
 using CABasicCRUD.Application.Common.Interfaces;
+using CABasicCRUD.Domain.Comments;
 using CABasicCRUD.Domain.Posts;
 using CABasicCRUD.Domain.Users;
 using CABasicCRUD.Infrastructure.Persistence.Repositories;
@@ -21,6 +22,7 @@ public static class PersistenceServicesRegistration
 
         services.AddScoped<IPostRepository, PostRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ICommentRepository, CommentRepository>();
 
         services.AddScoped<IUnitOfWork>(provider =>
             provider.GetRequiredService<ApplicationDbContext>()
