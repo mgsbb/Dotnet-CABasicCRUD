@@ -1,4 +1,4 @@
-namespace CABasicCRUD.Presentation.WebAPI.Common.Security.Authorization;
+namespace CABasicCRUD.Presentation.WebApi.Common.Security.Authorization;
 
 public static class AuthorizationPolicies
 {

@@ -4,7 +4,7 @@
     <ProjectReference Include="..\CABasicCRUD.Application\CABasicCRUD.Application.csproj" />
     <ProjectReference Include="..\CABasicCRUD.Infrastructure\CABasicCRUD.Infrastructure.csproj" />
     <ProjectReference Include="..\CABasicCRUD.Infrastructure.Persistence\CABasicCRUD.Infrastructure.Persistence.csproj" />
-    <ProjectReference Include="..\CABasicCRUD.Presentation.WebAPI\CABasicCRUD.Presentation.WebAPI.csproj" />
+    <ProjectReference Include="..\CABasicCRUD.Presentation.WebApi\CABasicCRUD.Presentation.WebApi.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>

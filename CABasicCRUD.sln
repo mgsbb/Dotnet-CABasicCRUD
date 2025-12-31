@@ -25,7 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CABasicCRUD.Infrastructure.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{6996BBF7-DB31-59BC-C7DD-9A7CCC6138C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CABasicCRUD.Presentation.WebAPI", "src\CABasicCRUD.Presentation.WebAPI\CABasicCRUD.Presentation.WebAPI.csproj", "{BC2B9AD0-AB27-49D9-9EFC-12B2B31D4D88}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CABasicCRUD.Presentation.WebApi", "src\CABasicCRUD.Presentation.WebApi\CABasicCRUD.Presentation.WebApi.csproj", "{BC2B9AD0-AB27-49D9-9EFC-12B2B31D4D88}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CABasicCRUD.Infrastructure", "src\CABasicCRUD.Infrastructure\CABasicCRUD.Infrastructure.csproj", "{D1AD581B-9A86-43AA-88C8-85F873FCFF55}"
 EndProject

@@ -1,7 +1,7 @@
 using CABasicCRUD.Application.Common.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 
-namespace CABasicCRUD.Presentation.WebAPI.Common.Security.Authorization.ResourceOwner;
+namespace CABasicCRUD.Presentation.WebApi.Common.Security.Authorization.ResourceOwner;
 
 public sealed class ResourceOwnerHandler(ICurrentUser currentUser)
     : AuthorizationHandler<ResourceOwnerRequirement, Guid>

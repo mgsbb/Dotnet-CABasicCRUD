@@ -1,7 +1,7 @@
-using CABasicCRUD.Presentation.WebAPI.Common.Security.Authorization.ResourceOwner;
+using CABasicCRUD.Presentation.WebApi.Common.Security.Authorization.ResourceOwner;
 using Microsoft.AspNetCore.Authorization;
 
-namespace CABasicCRUD.Presentation.WebAPI.Common.Security.Authorization;
+namespace CABasicCRUD.Presentation.WebApi.Common.Security.Authorization;
 
 public static class AuthorizationPoliciesRegistration
 {

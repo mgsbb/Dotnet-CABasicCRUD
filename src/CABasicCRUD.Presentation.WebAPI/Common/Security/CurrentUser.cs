@@ -2,7 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using CABasicCRUD.Application.Common.Interfaces;
 
-namespace CABasicCRUD.Presentation.WebAPI.Common.Security;
+namespace CABasicCRUD.Presentation.WebApi.Common.Security;
 
 internal sealed class CurrentUser(IHttpContextAccessor httpContextAccessor) : ICurrentUser
 {

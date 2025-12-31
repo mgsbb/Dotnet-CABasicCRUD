@@ -1,7 +1,7 @@
 using CABasicCRUD.Application.Features.Auth;
-using CABasicCRUD.Presentation.WebAPI.Features.Auth.Contracts;
+using CABasicCRUD.Presentation.WebApi.Features.Auth.Contracts;
 
-namespace CABasicCRUD.Presentation.WebAPI.Features.Auth;
+namespace CABasicCRUD.Presentation.WebApi.Features.Auth;
 
 public static class AuthMappings
 {

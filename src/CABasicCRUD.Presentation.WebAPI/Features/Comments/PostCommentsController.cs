@@ -4,13 +4,13 @@ using CABasicCRUD.Application.Features.Comments.CreateComment;
 using CABasicCRUD.Application.Features.Comments.GetAllCommentsOfPost;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
-using CABasicCRUD.Presentation.WebAPI.Common.Abstractions;
-using CABasicCRUD.Presentation.WebAPI.Features.Comments.Contracts;
+using CABasicCRUD.Presentation.WebApi.Common.Abstractions;
+using CABasicCRUD.Presentation.WebApi.Features.Comments.Contracts;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CABasicCRUD.Presentation.WebAPI.Features.Comments;
+namespace CABasicCRUD.Presentation.WebApi.Features.Comments;
 
 [ApiController]
 [Route("/api/v1/posts/{postId:guid}/comments")]

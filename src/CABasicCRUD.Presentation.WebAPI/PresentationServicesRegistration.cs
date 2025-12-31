@@ -1,9 +1,9 @@
 using CABasicCRUD.Application.Common.Interfaces;
-using CABasicCRUD.Presentation.WebAPI.Common.Security;
-using CABasicCRUD.Presentation.WebAPI.Common.Security.Authorization;
+using CABasicCRUD.Presentation.WebApi.Common.Security;
+using CABasicCRUD.Presentation.WebApi.Common.Security.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-namespace CABasicCRUD.Presentation.WebAPI;
+namespace CABasicCRUD.Presentation.WebApi;
 
 public static class PresentationServicesRegistration
 {

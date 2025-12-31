@@ -1,7 +1,7 @@
 ﻿using CABasicCRUD.Application;
 using CABasicCRUD.Infrastructure;
 using CABasicCRUD.Infrastructure.Persistence;
-using CABasicCRUD.Presentation.WebAPI;
+using CABasicCRUD.Presentation.WebApi;
 
 var builder = WebApplication.CreateBuilder();
 

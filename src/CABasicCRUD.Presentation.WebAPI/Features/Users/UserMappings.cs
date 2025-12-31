@@ -1,7 +1,7 @@
 using CABasicCRUD.Application.Features.Users;
-using CABasicCRUD.Presentation.WebAPI.Features.Users.Contracts;
+using CABasicCRUD.Presentation.WebApi.Features.Users.Contracts;
 
-namespace CABasicCRUD.Presentation.WebAPI.Features.Users;
+namespace CABasicCRUD.Presentation.WebApi.Features.Users;
 
 public static class UserMappings
 {

@@ -5,14 +5,14 @@ using CABasicCRUD.Application.Features.Users.GetUserById;
 using CABasicCRUD.Application.Features.Users.UpdateUser;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Users;
-using CABasicCRUD.Presentation.WebAPI.Common.Abstractions;
-using CABasicCRUD.Presentation.WebAPI.Common.Security.Authorization;
-using CABasicCRUD.Presentation.WebAPI.Features.Users.Contracts;
+using CABasicCRUD.Presentation.WebApi.Common.Abstractions;
+using CABasicCRUD.Presentation.WebApi.Common.Security.Authorization;
+using CABasicCRUD.Presentation.WebApi.Features.Users.Contracts;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CABasicCRUD.Presentation.WebAPI.Features.Users;
+namespace CABasicCRUD.Presentation.WebApi.Features.Users;
 
 [ApiController]
 [Route("/api/v1/[controller]")]

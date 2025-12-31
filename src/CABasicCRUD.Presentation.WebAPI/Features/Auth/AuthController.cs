@@ -2,13 +2,13 @@ using CABasicCRUD.Application.Features.Auth;
 using CABasicCRUD.Application.Features.Auth.LoginUser;
 using CABasicCRUD.Application.Features.Auth.RegisterUser;
 using CABasicCRUD.Domain.Common;
-using CABasicCRUD.Presentation.WebAPI.Common.Abstractions;
-using CABasicCRUD.Presentation.WebAPI.Features.Auth.Contracts;
-using CABasicCRUD.Presentation.WebAPI.Features.Users;
+using CABasicCRUD.Presentation.WebApi.Common.Abstractions;
+using CABasicCRUD.Presentation.WebApi.Features.Auth.Contracts;
+using CABasicCRUD.Presentation.WebApi.Features.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CABasicCRUD.Presentation.WebAPI.Features.Auth;
+namespace CABasicCRUD.Presentation.WebApi.Features.Auth;
 
 [ApiController]
 [Route("/api/v1/[controller]")]

@@ -1,7 +1,7 @@
 using CABasicCRUD.Application.Features.Comments;
-using CABasicCRUD.Presentation.WebAPI.Features.Comments.Contracts;
+using CABasicCRUD.Presentation.WebApi.Features.Comments.Contracts;
 
-namespace CABasicCRUD.Presentation.WebAPI.Features.Comments;
+namespace CABasicCRUD.Presentation.WebApi.Features.Comments;
 
 internal static class CommentMappings
 {

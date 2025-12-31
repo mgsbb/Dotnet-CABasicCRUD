@@ -1,3 +1,3 @@
-namespace CABasicCRUD.Presentation.WebAPI.Features.Posts.Contracts;
+namespace CABasicCRUD.Presentation.WebApi.Features.Posts.Contracts;
 
 public sealed record UpdateCommentRequest(string Body);
