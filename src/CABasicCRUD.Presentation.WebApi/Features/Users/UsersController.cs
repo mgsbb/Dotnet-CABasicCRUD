@@ -16,7 +16,7 @@ namespace CABasicCRUD.Presentation.WebApi.Features.Users;
 
 [ApiController]
 [Route("/api/v1/[controller]")]
-public sealed class UsersController(IMediator mediator) : APIController
+public sealed class UsersController(IMediator mediator) : ApiController
 {
     private readonly IMediator _mediator = mediator;
 

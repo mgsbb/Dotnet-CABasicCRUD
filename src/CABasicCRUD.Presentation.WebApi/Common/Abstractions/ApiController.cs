@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace CABasicCRUD.Presentation.WebApi.Common.Abstractions;
 
-public abstract class APIController : ControllerBase
+public abstract class ApiController : ControllerBase
 {
     protected BadRequestObjectResult HandleBadRequest(Result result)
     {

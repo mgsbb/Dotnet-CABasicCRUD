@@ -14,7 +14,7 @@ namespace CABasicCRUD.Presentation.WebApi.Features.Comments;
 
 [ApiController]
 [Route("/api/v1/posts/{postId:guid}/comments")]
-public class PostCommentsController(IMediator mediator) : APIController
+public class PostCommentsController(IMediator mediator) : ApiController
 {
     private readonly IMediator _mediator = mediator;
 

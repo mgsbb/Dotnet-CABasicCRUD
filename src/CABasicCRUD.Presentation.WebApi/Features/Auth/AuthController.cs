@@ -12,7 +12,7 @@ namespace CABasicCRUD.Presentation.WebApi.Features.Auth;
 
 [ApiController]
 [Route("/api/v1/[controller]")]
-public sealed class AuthController(IMediator mediator) : APIController
+public sealed class AuthController(IMediator mediator) : ApiController
 {
     private readonly IMediator _mediator = mediator;
 

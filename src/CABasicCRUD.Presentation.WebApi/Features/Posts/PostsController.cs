@@ -17,7 +17,7 @@ namespace CABasicCRUD.Presentation.WebApi.Features.Posts;
 
 [ApiController]
 [Route("/api/v1/[controller]")]
-public class PostsController(IMediator mediator) : APIController
+public class PostsController(IMediator mediator) : ApiController
 {
     private readonly IMediator _mediator = mediator;
 
