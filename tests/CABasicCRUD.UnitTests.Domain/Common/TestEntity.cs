@@ -2,7 +2,7 @@ using CABasicCRUD.Domain.Common;
 
 namespace CABasicCRUD.UnitTests.Domain.Common;
 
-public class TestEntity : EntityBase<TestId>
+public sealed class TestEntity : EntityBase<TestId>
 {
     private TestEntity(TestId? id)
         : base(id) { }

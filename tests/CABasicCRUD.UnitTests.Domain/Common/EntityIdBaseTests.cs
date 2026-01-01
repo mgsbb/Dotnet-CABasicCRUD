@@ -1,6 +1,6 @@
 namespace CABasicCRUD.UnitTests.Domain.Common;
 
-public class EntityIdBaseTests
+public sealed class EntityIdBaseTests
 {
     [Fact]
     public void ExplicitConversion_Should_ReturnCorrectId_WhenGuidIsValid()

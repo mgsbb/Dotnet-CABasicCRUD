@@ -1,6 +1,6 @@
 namespace CABasicCRUD.UnitTests.Domain.Common;
 
-public class EntityBaseTests
+public sealed class EntityBaseTests
 {
     [Fact]
     public void Ctor_Should_ThrowArgumentException_WhenGivenIdIsNull()

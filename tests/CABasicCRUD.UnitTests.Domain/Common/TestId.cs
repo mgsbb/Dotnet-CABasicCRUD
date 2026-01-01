@@ -2,7 +2,7 @@ using CABasicCRUD.Domain.Common;
 
 namespace CABasicCRUD.UnitTests.Domain.Common;
 
-public record TestId : EntityIdBase
+public sealed record TestId : EntityIdBase
 {
     private TestId(Guid guid)
         : base(guid) { }
