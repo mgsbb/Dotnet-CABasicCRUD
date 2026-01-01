@@ -8,12 +8,15 @@ public sealed class UpdateUserCommandValidator : AbstractValidator<UpdateUserCom
     {
         RuleFor(x => x.Name)
             .NotEmpty()
-            .WithMessage("User name cannot be empty")
+            .WithMessage(UserValidationErrorMessages.NameEmpty)
             .MaximumLength(50)
-            .WithMessage("User name cannot exceed 50 characters");
+            .WithMessage(UserValidationErrorMessages.NameExceedsMaxCharacters);
 
-        RuleFor(x => x.Email).NotEmpty().WithMessage("User email cannot be empty").EmailAddress();
+        RuleFor(x => x.Email)
+            .NotEmpty()
+            .WithMessage(UserValidationErrorMessages.EmailEmpty)
+            .EmailAddress();
 
-        RuleFor(x => x.UserId).NotEmpty().WithMessage("User Id cannot be empty");
+        RuleFor(x => x.UserId).NotEmpty().WithMessage(UserValidationErrorMessages.IdEmpty);
     }
 }

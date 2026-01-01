@@ -6,6 +6,6 @@ public sealed class DeleteCommentCommandValidator : AbstractValidator<DeleteComm
 {
     public DeleteCommentCommandValidator()
     {
-        RuleFor(x => x.Id).NotEmpty().WithMessage("Comment Id cannot be empty");
+        RuleFor(x => x.Id).NotEmpty().WithMessage(CommentValidationErrorMessages.IdEmpty);
     }
 }

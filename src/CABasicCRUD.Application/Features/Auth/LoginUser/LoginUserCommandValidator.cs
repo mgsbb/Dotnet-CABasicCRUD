@@ -6,8 +6,11 @@ public sealed class LoginUserCommandValidator : AbstractValidator<LoginUserComma
 {
     public LoginUserCommandValidator()
     {
-        RuleFor(x => x.Email).NotEmpty().WithMessage("User email is required.").EmailAddress();
+        RuleFor(x => x.Email)
+            .NotEmpty()
+            .WithMessage(AuthValidationErrorMessages.EmailEmpty)
+            .EmailAddress();
 
-        RuleFor(x => x.Password).NotEmpty().WithMessage("User password is required.");
+        RuleFor(x => x.Password).NotEmpty().WithMessage(AuthValidationErrorMessages.PasswordEmpty);
     }
 }

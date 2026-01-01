@@ -6,8 +6,8 @@ public sealed class UpdateCommentCommandValidator : AbstractValidator<UpdateComm
 {
     public UpdateCommentCommandValidator()
     {
-        RuleFor(x => x.Id).NotEmpty().WithMessage("Comment Id cannot be empty.");
+        RuleFor(x => x.Id).NotEmpty().WithMessage(CommentValidationErrorMessages.IdEmpty);
 
-        RuleFor(x => x.Body).NotEmpty().WithMessage("Comment body cannot be empty.");
+        RuleFor(x => x.Body).NotEmpty().WithMessage(CommentValidationErrorMessages.BodyEmpty);
     }
 }

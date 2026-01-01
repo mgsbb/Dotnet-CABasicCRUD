@@ -6,6 +6,6 @@ public sealed class DeleteUserCommandValidator : AbstractValidator<DeleteUserCom
 {
     public DeleteUserCommandValidator()
     {
-        RuleFor(x => x.UserId).NotEmpty().WithMessage("User Id cannot be empty");
+        RuleFor(x => x.UserId).NotEmpty().WithMessage(UserValidationErrorMessages.IdEmpty);
     }
 }

@@ -6,6 +6,6 @@ public sealed class GetPostByIdQueryValidator : AbstractValidator<GetPostByIdQue
 {
     public GetPostByIdQueryValidator()
     {
-        RuleFor(x => x.PostId).NotEmpty().WithMessage("Post Id cannot be empty");
+        RuleFor(x => x.PostId).NotEmpty().WithMessage(PostValidationErrorMessages.IdEmpty);
     }
 }

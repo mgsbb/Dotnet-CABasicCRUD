@@ -8,30 +8,31 @@ public sealed class RegisterUserCommandValidator : AbstractValidator<RegisterUse
     {
         RuleFor(x => x.Name)
             .NotEmpty()
-            .WithMessage("User name is required.")
+            .WithMessage(AuthValidationErrorMessages.NameEmpty)
             .MaximumLength(50)
-            .WithMessage("User name must not exceed 50 characters.");
+            .WithMessage(AuthValidationErrorMessages.NameExceedsMaxCharacters);
 
-        RuleFor(x => x.Email).NotEmpty().WithMessage("User email is required.").EmailAddress();
+        RuleFor(x => x.Email)
+            .NotEmpty()
+            .WithMessage(AuthValidationErrorMessages.EmailEmpty)
+            .EmailAddress();
 
         RuleFor(x => x.Password)
             .NotEmpty()
-            .WithMessage("User password is required.")
+            .WithMessage(AuthValidationErrorMessages.PasswordEmpty)
             .MinimumLength(8)
-            .WithMessage("Password must be at least 8 characters long.")
+            .WithMessage(AuthValidationErrorMessages.PasswordMinCharacters)
             .MaximumLength(128)
-            .WithMessage("Password  must not exceed 128 characters.")
+            .WithMessage(AuthValidationErrorMessages.PasswordMaxCharacters)
             .Matches(@"[A-Z]")
-            .WithMessage("Password must contain at least one uppercase letter.")
+            .WithMessage(AuthValidationErrorMessages.PasswordUppercase)
             .Matches(@"[a-z]")
-            .WithMessage("Password must contain at least one lowercase letter.")
+            .WithMessage(AuthValidationErrorMessages.PasswordLowercase)
             .Matches(@"\d")
-            .WithMessage("Password must contain at least one digit.")
+            .WithMessage(AuthValidationErrorMessages.PasswordDigit)
             .Matches(@"[!@#$%^&*(),.?""{}|<>_\-+=]")
-            .WithMessage(
-                @"Password must contain at least one special character from [!@#$%^&*(),.?""{}|<>_\-+=]."
-            )
+            .WithMessage(AuthValidationErrorMessages.PasswordSpecial)
             .Must(p => p == p.Trim())
-            .WithMessage("Password must not start or end with whitespace.");
+            .WithMessage(AuthValidationErrorMessages.PasswordWhitespace);
     }
 }

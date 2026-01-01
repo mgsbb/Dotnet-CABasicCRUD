@@ -8,16 +8,16 @@ public sealed class UpdatePostCommandValidator : AbstractValidator<UpdatePostCom
     {
         RuleFor(x => x.Title)
             .NotEmpty()
-            .WithMessage("Post title cannot be empty")
+            .WithMessage(PostValidationErrorMessages.TitleEmpty)
             .MaximumLength(100)
-            .WithMessage("Post title cannot be more than 100 characters")
+            .WithMessage(PostValidationErrorMessages.TitleExceedsMaxCharacters)
             .OverridePropertyName("Title");
 
         RuleFor(x => x.Content)
             .NotEmpty()
-            .WithMessage("Post content cannot be empty")
+            .WithMessage(PostValidationErrorMessages.ContentEmpty)
             .OverridePropertyName("Content");
 
-        RuleFor(x => x.PostId).NotEmpty().WithMessage("Post ID cannot be empty");
+        RuleFor(x => x.PostId).NotEmpty().WithMessage(PostValidationErrorMessages.IdEmpty);
     }
 }

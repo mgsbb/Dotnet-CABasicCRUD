@@ -6,6 +6,6 @@ public sealed class GetUserByIdQueryValidator : AbstractValidator<GetUserByIdQue
 {
     public GetUserByIdQueryValidator()
     {
-        RuleFor(x => x.UserId).NotEmpty().WithMessage("User Id cannot be empty");
+        RuleFor(x => x.UserId).NotEmpty().WithMessage(UserValidationErrorMessages.IdEmpty);
     }
 }

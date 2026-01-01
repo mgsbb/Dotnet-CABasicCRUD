@@ -1,3 +1,4 @@
+using CABasicCRUD.Application.Features.Posts;
 using FluentValidation;
 
 namespace CABasicCRUD.Application.Features.Comments.GetAllCommentsOfPost;
@@ -7,6 +8,6 @@ public sealed class GetAllCommentsOfPostQueryValidator
 {
     public GetAllCommentsOfPostQueryValidator()
     {
-        RuleFor(x => x.PostId).NotEmpty().WithMessage("Post Id cannot be empty");
+        RuleFor(x => x.PostId).NotEmpty().WithMessage(PostValidationErrorMessages.IdEmpty);
     }
 }

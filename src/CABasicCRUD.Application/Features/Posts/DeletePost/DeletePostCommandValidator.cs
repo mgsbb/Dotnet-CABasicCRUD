@@ -6,6 +6,6 @@ public sealed class DeletePostCommandValidator : AbstractValidator<DeletePostCom
 {
     public DeletePostCommandValidator()
     {
-        RuleFor(x => x.PostId).NotEmpty().WithMessage("Post Id cannot be empty");
+        RuleFor(x => x.PostId).NotEmpty().WithMessage(PostValidationErrorMessages.IdEmpty);
     }
 }
