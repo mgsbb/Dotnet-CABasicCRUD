@@ -2,7 +2,7 @@ using CABasicCRUD.Domain.Comments;
 using CABasicCRUD.Domain.Posts;
 using Microsoft.EntityFrameworkCore;
 
-namespace CABasicCRUD.Infrastructure.Persistence.Repositories;
+namespace CABasicCRUD.Infrastructure.Persistence.Sqlite.Repositories;
 
 public class CommentRepository(ApplicationDbContext dbContext)
     : RepositoryBase<Comment, CommentId>(dbContext),

@@ -3,7 +3,7 @@
     <ProjectReference Include="..\CABasicCRUD.Domain\CABasicCRUD.Domain.csproj" />
     <ProjectReference Include="..\CABasicCRUD.Application\CABasicCRUD.Application.csproj" />
     <ProjectReference Include="..\CABasicCRUD.Infrastructure\CABasicCRUD.Infrastructure.csproj" />
-    <ProjectReference Include="..\CABasicCRUD.Infrastructure.Persistence\CABasicCRUD.Infrastructure.Persistence.csproj" />
+    <ProjectReference Include="..\CABasicCRUD.Infrastructure.Persistence.Sqlite\CABasicCRUD.Infrastructure.Persistence.Sqlite.csproj" />
     <ProjectReference Include="..\CABasicCRUD.Presentation.WebApi\CABasicCRUD.Presentation.WebApi.csproj" />
   </ItemGroup>
   <PropertyGroup>

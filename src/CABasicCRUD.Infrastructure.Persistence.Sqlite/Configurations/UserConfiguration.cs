@@ -2,7 +2,7 @@ using CABasicCRUD.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CABasicCRUD.Infrastructure.Persistence.Configurations;
+namespace CABasicCRUD.Infrastructure.Persistence.Sqlite.Configurations;
 
 public sealed class UserConfiguration : IEntityTypeConfiguration<User>
 {

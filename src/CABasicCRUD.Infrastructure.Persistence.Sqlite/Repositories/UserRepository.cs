@@ -1,7 +1,7 @@
 using CABasicCRUD.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 
-namespace CABasicCRUD.Infrastructure.Persistence.Repositories;
+namespace CABasicCRUD.Infrastructure.Persistence.Sqlite.Repositories;
 
 public class UserRepository(ApplicationDbContext dbContext)
     : RepositoryBase<User, UserId>(dbContext),

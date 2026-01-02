@@ -5,7 +5,7 @@ using CABasicCRUD.Domain.Posts;
 using CABasicCRUD.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 
-namespace CABasicCRUD.Infrastructure.Persistence;
+namespace CABasicCRUD.Infrastructure.Persistence.Sqlite;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbContextOptions)
     : DbContext(dbContextOptions),

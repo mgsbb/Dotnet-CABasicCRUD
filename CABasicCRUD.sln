@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CABasicCRUD.UnitTests.Domai
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{9048EB7F-3875-A59E-E36B-5BD4C6F2A282}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CABasicCRUD.Infrastructure.Persistence", "src\CABasicCRUD.Infrastructure.Persistence\CABasicCRUD.Infrastructure.Persistence.csproj", "{CD7CBE3F-0089-407C-81C6-750AC304324E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CABasicCRUD.Infrastructure.Persistence.Sqlite", "src\CABasicCRUD.Infrastructure.Persistence.Sqlite\CABasicCRUD.Infrastructure.Persistence.Sqlite.csproj", "{CD7CBE3F-0089-407C-81C6-750AC304324E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{6996BBF7-DB31-59BC-C7DD-9A7CCC6138C4}"
 EndProject

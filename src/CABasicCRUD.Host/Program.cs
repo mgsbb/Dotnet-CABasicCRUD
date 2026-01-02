@@ -1,6 +1,6 @@
 ﻿using CABasicCRUD.Application;
 using CABasicCRUD.Infrastructure;
-using CABasicCRUD.Infrastructure.Persistence;
+using CABasicCRUD.Infrastructure.Persistence.Sqlite;
 using CABasicCRUD.Presentation.WebApi;
 
 var builder = WebApplication.CreateBuilder();

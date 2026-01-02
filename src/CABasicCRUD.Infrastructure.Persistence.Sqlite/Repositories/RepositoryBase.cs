@@ -1,7 +1,7 @@
 using CABasicCRUD.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 
-namespace CABasicCRUD.Infrastructure.Persistence.Repositories;
+namespace CABasicCRUD.Infrastructure.Persistence.Sqlite.Repositories;
 
 public class RepositoryBase<TEntity, TId>(ApplicationDbContext dbContext)
     : IRepository<TEntity, TId>

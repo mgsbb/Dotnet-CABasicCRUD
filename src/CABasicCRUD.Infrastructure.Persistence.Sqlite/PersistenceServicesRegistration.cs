@@ -2,12 +2,12 @@ using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Domain.Comments;
 using CABasicCRUD.Domain.Posts;
 using CABasicCRUD.Domain.Users;
-using CABasicCRUD.Infrastructure.Persistence.Repositories;
+using CABasicCRUD.Infrastructure.Persistence.Sqlite.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CABasicCRUD.Infrastructure.Persistence;
+namespace CABasicCRUD.Infrastructure.Persistence.Sqlite;
 
 public static class PersistenceServicesRegistration
 {
