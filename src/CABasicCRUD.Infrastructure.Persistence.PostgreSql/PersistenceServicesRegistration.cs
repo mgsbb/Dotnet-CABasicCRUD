@@ -1,0 +1,35 @@
+using CABasicCRUD.Application.Common.Interfaces;
+using CABasicCRUD.Domain.Comments;
+using CABasicCRUD.Domain.Posts;
+using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Infrastructure.Persistence.PostgreSql.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace CABasicCRUD.Infrastructure.Persistence.PostgreSql;
+
+public static class PersistenceServicesRegistration
+{
+    public static IServiceCollection RegisterPersistenceServices(
+        this IServiceCollection services,
+        IConfiguration configuration
+    )
+    {
+        string connectionString =
+            configuration.GetConnectionString("DefaultConnection")
+            ?? throw new InvalidOperationException("Connection string not found.");
+
+        services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
+
+        services.AddScoped<IPostRepository, PostRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ICommentRepository, CommentRepository>();
+
+        services.AddScoped<IUnitOfWork>(provider =>
+            provider.GetRequiredService<ApplicationDbContext>()
+        );
+
+        return services;
+    }
+}
