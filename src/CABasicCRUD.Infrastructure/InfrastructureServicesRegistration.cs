@@ -3,6 +3,7 @@ using CABasicCRUD.Domain.Services;
 using CABasicCRUD.Infrastructure.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace CABasicCRUD.Infrastructure;
 
@@ -13,7 +14,13 @@ public static class InfrastructureServicesRegistration
         IConfiguration configuration
     )
     {
-        services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
+        services.AddSingleton<IValidateOptions<JwtOptions>, JwtOptionsValidator>();
+
+        services
+            .AddOptions<JwtOptions>()
+            .Bind(configuration.GetRequiredSection(JwtOptions.SectionName))
+            .ValidateOnStart();
+
         services.ConfigureOptions<JwtBearerOptionsSetup>();
 
         services.AddScoped<IJwtProvider, JwtProvider>();
