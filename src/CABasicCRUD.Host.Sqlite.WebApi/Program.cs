@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder();
 
 builder.Services.RegisterApplicationServices();
 builder.Services.RegisterAuthenticationServices(builder.Configuration);
+builder.Services.RegisterEmailSender();
 builder.Services.RegisterPersistenceServices(builder.Configuration);
 builder.Services.RegisterPresentationServices();
 

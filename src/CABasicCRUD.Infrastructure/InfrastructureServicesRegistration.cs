@@ -1,6 +1,7 @@
 ﻿using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Domain.Services;
 using CABasicCRUD.Infrastructure.Authentication;
+using CABasicCRUD.Infrastructure.EmailService;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -26,6 +27,12 @@ public static class InfrastructureServicesRegistration
         services.AddScoped<IJwtProvider, JwtProvider>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
 
+        return services;
+    }
+
+    public static IServiceCollection RegisterEmailSender(this IServiceCollection services)
+    {
+        services.AddScoped<IEmailSender, ConsoleEmailSender>();
         return services;
     }
 }
