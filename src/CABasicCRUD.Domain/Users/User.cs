@@ -41,6 +41,8 @@ public class User : EntityBase<UserId>
 
         User user = new(id: UserId.New(), name: name, email: email, passwordHash: passwordHash);
 
+        user.AddDomainEvent(new UserRegisteredDomainEvent(user.Id, user.Name, user.Email));
+
         return user;
     }
 
