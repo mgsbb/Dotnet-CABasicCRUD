@@ -22,6 +22,8 @@ public static class ApplicationServicesRegistration
 
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
 
+        services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+
         return services;
     }
 }
