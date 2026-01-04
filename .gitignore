@@ -485,3 +485,6 @@ $RECYCLE.BIN/
 
 # Database files
 *.db*
+
+# Ef bundle
+efbundle.exe
