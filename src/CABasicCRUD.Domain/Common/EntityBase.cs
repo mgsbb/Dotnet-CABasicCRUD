@@ -1,9 +1,13 @@
 namespace CABasicCRUD.Domain.Common;
 
-public abstract class EntityBase<TId> : IEquatable<EntityBase<TId>>
+public abstract class EntityBase<TId> : IEquatable<EntityBase<TId>>, IHasDomainEvents
     where TId : EntityIdBase
 {
+    private readonly List<IDomainEvent> _domainEvents = new();
+
     public TId Id { get; protected set; }
+
+    public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
     protected EntityBase(TId? id)
     {
@@ -47,4 +51,14 @@ public abstract class EntityBase<TId> : IEquatable<EntityBase<TId>>
 
     public static bool operator !=(EntityBase<TId>? left, EntityBase<TId>? right) =>
         !(left == right);
+
+    protected void AddDomainEvent(IDomainEvent domainEvent)
+    {
+        _domainEvents.Add(domainEvent);
+    }
+
+    public void ClearDomainEvents()
+    {
+        _domainEvents.Clear();
+    }
 }
