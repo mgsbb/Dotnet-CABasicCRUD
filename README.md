@@ -18,11 +18,13 @@ Projects:
 - Infrastructure.Persistence.Sqlite
 - Presentation.WebApi
 
-Load environment variables:
+### Load environment variables:
 
 ```cmd 
 load-env.cmd .\src\CABasicCRUD.Host.Sqlite.WebApi\.env  
 ```
+
+### Run locally
 
 Apply migrations:
 
@@ -31,19 +33,32 @@ dotnet ef database update --project .\src\CABasicCRUD.Infrastructure.Persistence
 ```
 For connection string `Data Source=data.db`, the database file is created inside the startup project directory.
 
-Run project locally:
+Run project:
 
 ```cmd
 dotnet run --project src\CABasicCRUD.Host.Sqlite.WebApi
 ```
+### Publish and run locally
 
 Publish and run publish artifact locally:
 
+Create migrations bundle:
+
+```cmd
+dotnet ef migrations bundle --project .\src\CABasicCRUD.Host.Sqlite.WebApi
+```
+
+Run migrations bundle:
+
+```cmd
+efbundle.exe
+```
+
+This creates the database file at the project root for `Data Source=data.db`
+
 ```cmd
 dotnet publish .\src\CABasicCRUD.Host.Sqlite.WebApi -c Release -o .\publish
-move .\src\CABasicCRUD.Host.Sqlite.WebApi\data.db .
 dotnet .\publish\CABasicCRUD.Host.Sqlite.WebApi.dll
 ```
 
-`data.db` file moved from src folder to root, so that the publish artifact can access it.
 
