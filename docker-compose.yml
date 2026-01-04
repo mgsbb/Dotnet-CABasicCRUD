@@ -1,0 +1,17 @@
+services:
+    api:
+        build:
+            context: .
+            args:
+                PUBLISH_PROJECT_PATH: ${PUBLISH_PROJECT_PATH}
+                PUBLISHED_PROJECT_ENTRYPOINT: ${PUBLISHED_PROJECT_ENTRYPOINT}
+        ports:
+            - 5001:5001
+        environment:
+            ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+            ASPNETCORE_URLS: ${ASPNETCORE_URLS}
+            Jwt__SecretKey: ${Jwt__SecretKey}
+            Jwt__Issuer: ${Jwt__Issuer}
+            Jwt__Audience: ${Jwt__Audience}
+            Jwt__ExpiryInMinutes: ${Jwt__ExpiryInMinutes}
+            ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection}
