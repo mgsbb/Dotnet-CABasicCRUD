@@ -488,3 +488,6 @@ $RECYCLE.BIN/
 
 # Ef bundle
 efbundle.exe
+
+# VS Code
+.vscode
