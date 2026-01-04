@@ -1,5 +1,8 @@
 using System.Reflection;
+using CABasicCRUD.Application.Common;
 using CABasicCRUD.Application.Common.Behaviors;
+using CABasicCRUD.Application.Common.Interfaces;
+using CABasicCRUD.Application.Features.Auth;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +26,13 @@ public static class ApplicationServicesRegistration
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
 
         services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+
+        services.Scan(scan =>
+            scan.FromAssemblyOf<UserRegisteredDomainEventHandler>()
+                .AddClasses(classes => classes.AssignableTo(typeof(IDomainEventHandler<>)))
+                .AsImplementedInterfaces()
+                .WithScopedLifetime()
+        );
 
         return services;
     }
