@@ -2,7 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using CABasicCRUD.Domain.Users;
 
-namespace CABasicCRUD.Infrastructure.Persistence.Sqlite.Outbox;
+namespace CABasicCRUD.Infrastructure.Serialization;
 
 public sealed class UserIdJsonConverter : JsonConverter<UserId>
 {

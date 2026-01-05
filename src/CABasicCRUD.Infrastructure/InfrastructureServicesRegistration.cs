@@ -1,7 +1,9 @@
-﻿using CABasicCRUD.Application.Common.Interfaces;
+﻿using System.Text.Json;
+using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Domain.Services;
 using CABasicCRUD.Infrastructure.Authentication;
 using CABasicCRUD.Infrastructure.EmailService;
+using CABasicCRUD.Infrastructure.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +20,7 @@ public static class InfrastructureServicesRegistration
     {
         services.RegisterAuthenticationServices(configuration);
         services.RegisterEmailSender();
+        services.RegisterSerializer();
 
         return services;
     }
@@ -53,6 +56,18 @@ public static class InfrastructureServicesRegistration
     public static IServiceCollection RegisterEmailSender(this IServiceCollection services)
     {
         services.AddScoped<IEmailSender, ConsoleEmailSender>();
+        return services;
+    }
+
+    public static IServiceCollection RegisterSerializer(this IServiceCollection services)
+    {
+        services.AddSingleton<JsonSerializerOptions>(sp =>
+        {
+            var options = new JsonSerializerOptions();
+            options.Converters.Add(new UserIdJsonConverter());
+            return options;
+        });
+
         return services;
     }
 }

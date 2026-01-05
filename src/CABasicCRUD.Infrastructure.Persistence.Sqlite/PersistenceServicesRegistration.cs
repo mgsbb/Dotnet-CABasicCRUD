@@ -1,4 +1,3 @@
-using System.Text.Json;
 using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Domain.Comments;
 using CABasicCRUD.Domain.Posts;
@@ -40,13 +39,6 @@ public static class PersistenceServicesRegistration
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddHostedService<OutboxProcessor>();
-
-        services.AddSingleton<JsonSerializerOptions>(sp =>
-        {
-            var options = new JsonSerializerOptions();
-            options.Converters.Add(new UserIdJsonConverter());
-            return options;
-        });
 
         return services;
     }
