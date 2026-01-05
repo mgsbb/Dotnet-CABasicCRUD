@@ -5,8 +5,11 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace CABasicCRUD.Infrastructure.Persistence.Sqlite.Outbox;
 
-public sealed class OutboxSaveChangesInterceptor : SaveChangesInterceptor
+public sealed class OutboxSaveChangesInterceptor(JsonSerializerOptions jsonSerializerOptions)
+    : SaveChangesInterceptor
 {
+    private readonly JsonSerializerOptions _jsonSerializerOptions = jsonSerializerOptions;
+
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,
@@ -25,7 +28,7 @@ public sealed class OutboxSaveChangesInterceptor : SaveChangesInterceptor
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
-    private static void AddOutboxMessages(DbContext dbContext)
+    private void AddOutboxMessages(DbContext dbContext)
     {
         var domainEvents = dbContext
             .ChangeTracker.Entries<IHasDomainEvents>()
@@ -38,9 +41,13 @@ public sealed class OutboxSaveChangesInterceptor : SaveChangesInterceptor
             {
                 Id = Guid.NewGuid(),
                 OccurredOnUtc = DateTime.UtcNow,
-                // Type = domainEvent.GetType().AssemblyQualifiedName,
-                Type = domainEvent.GetType().Name,
-                Content = JsonSerializer.Serialize(domainEvent, domainEvent.GetType()),
+                Type = domainEvent.GetType().AssemblyQualifiedName!,
+                // Type = domainEvent.GetType().Name,
+                Content = JsonSerializer.Serialize(
+                    domainEvent,
+                    domainEvent.GetType(),
+                    _jsonSerializerOptions
+                ),
             });
 
             dbContext.Set<OutboxMessage>().AddRange(outboxMessages);

@@ -38,6 +38,13 @@ public static class PersistenceServicesRegistration
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+        services.AddSingleton<JsonSerializerOptions>(sp =>
+        {
+            var options = new JsonSerializerOptions();
+            options.Converters.Add(new UserIdJsonConverter());
+            return options;
+        });
+
         return services;
     }
 }
