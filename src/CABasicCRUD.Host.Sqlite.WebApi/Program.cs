@@ -6,9 +6,10 @@ using CABasicCRUD.Presentation.WebApi;
 var builder = WebApplication.CreateBuilder();
 
 builder.Services.RegisterApplicationServices();
-builder.Services.RegisterAuthenticationServices(builder.Configuration);
-builder.Services.RegisterEmailSender();
+
+builder.Services.RegisterInfrastructureServices(builder.Configuration);
 builder.Services.RegisterPersistenceServices(builder.Configuration);
+
 builder.Services.RegisterPresentationServices();
 
 var app = builder.Build();
