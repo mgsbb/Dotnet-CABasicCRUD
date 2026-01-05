@@ -2,6 +2,7 @@ using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Domain.Comments;
 using CABasicCRUD.Domain.Posts;
 using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Infrastructure.Persistence.Sqlite.Outbox;
 using CABasicCRUD.Infrastructure.Persistence.Sqlite.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -20,7 +21,16 @@ public static class PersistenceServicesRegistration
             configuration.GetConnectionString("DefaultConnection")
             ?? throw new InvalidOperationException("Connection string not found.");
 
-        services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(connectionString));
+        services.AddScoped<OutboxSaveChangesInterceptor>();
+
+        services.AddDbContext<ApplicationDbContext>(
+            (sp, options) =>
+            {
+                var interceptor = sp.GetRequiredService<OutboxSaveChangesInterceptor>();
+
+                options.UseSqlite(connectionString).AddInterceptors(interceptor);
+            }
+        );
 
         services.AddScoped<IPostRepository, PostRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
