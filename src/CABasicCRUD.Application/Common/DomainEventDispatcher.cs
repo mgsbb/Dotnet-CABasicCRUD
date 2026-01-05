@@ -20,15 +20,20 @@ internal sealed class DomainEventDispatcher : IDomainEventDispatcher
     {
         foreach (var domainEvent in domainEvents)
         {
-            var handlerType = typeof(IDomainEventHandler<>).MakeGenericType(domainEvent.GetType());
+            await DispatchAsync(domainEvent, cancellationToken);
+        }
+    }
 
-            var handlers = _serviceProvider.GetServices(handlerType);
+    public async Task DispatchAsync(IDomainEvent domainEvent, CancellationToken cancellationToken)
+    {
+        var handlerType = typeof(IDomainEventHandler<>).MakeGenericType(domainEvent.GetType());
 
-            foreach (var handler in handlers)
-            {
-                if (handler is not null)
-                    await ((dynamic)handler).Handle((dynamic)domainEvent, cancellationToken);
-            }
+        var handlers = _serviceProvider.GetServices(handlerType);
+
+        foreach (var handler in handlers)
+        {
+            if (handler is not null)
+                await ((dynamic)handler).Handle((dynamic)domainEvent, cancellationToken);
         }
     }
 }

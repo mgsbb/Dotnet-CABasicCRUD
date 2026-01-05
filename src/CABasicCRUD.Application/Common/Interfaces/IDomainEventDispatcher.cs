@@ -8,4 +8,6 @@ public interface IDomainEventDispatcher
         IReadOnlyList<IDomainEvent> domainEvents,
         CancellationToken cancellationToken
     );
+
+    Task DispatchAsync(IDomainEvent domainEvent, CancellationToken cancellationToken);
 }

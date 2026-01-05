@@ -47,12 +47,11 @@ public sealed class OutboxProcessor(IServiceProvider serviceProvider) : Backgrou
                 var domainEvent = (IDomainEvent)
                     JsonSerializer.Deserialize(message.Content, type, jsonSerializerOptions)!;
 
-                // Note: [domainEvent], but there exists only one domainEvent per message
-                await dispatcher.DispatchAsync([domainEvent], cancellationToken);
+                await dispatcher.DispatchAsync(domainEvent, cancellationToken);
 
                 message.ProcessedOnUtc = DateTime.UtcNow;
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 message.Error = ex.ToString();
             }
