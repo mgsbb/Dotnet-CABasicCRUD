@@ -1,18 +1,16 @@
+using System.Text.Json;
 using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Domain.Common;
+using CABasicCRUD.Infrastructure.Persistence.Sqlite.Outbox;
 
 namespace CABasicCRUD.Infrastructure.Persistence.Sqlite;
 
-internal sealed class UnitOfWork(ApplicationDbContext dbContext, IDomainEventDispatcher dispatcher)
-    : IUnitOfWork
+internal sealed class UnitOfWork(ApplicationDbContext dbContext) : IUnitOfWork
 {
     private readonly ApplicationDbContext _dbContext = dbContext;
-    private readonly IDomainEventDispatcher _dispatcher = dispatcher;
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
     {
-        int result = await _dbContext.SaveChangesAsync(cancellationToken);
-
         var domainEvents = _dbContext
             .ChangeTracker.Entries<IHasDomainEvents>()
             .SelectMany(e => e.Entity.DomainEvents)
@@ -20,7 +18,16 @@ internal sealed class UnitOfWork(ApplicationDbContext dbContext, IDomainEventDis
 
         if (domainEvents.Count > 0)
         {
-            await _dispatcher.DispatchAsync(domainEvents, cancellationToken);
+            var outboxMessages = domainEvents.Select(domainEvent => new OutboxMessage
+            {
+                Id = Guid.NewGuid(),
+                OccurredOnUtc = DateTime.UtcNow,
+                // Type = domainEvent.GetType().AssemblyQualifiedName,
+                Type = domainEvent.GetType().Name,
+                Content = JsonSerializer.Serialize(domainEvent, domainEvent.GetType()),
+            });
+
+            _dbContext.AddRange(outboxMessages);
 
             _dbContext
                 .ChangeTracker.Entries<IHasDomainEvents>()
@@ -28,6 +35,6 @@ internal sealed class UnitOfWork(ApplicationDbContext dbContext, IDomainEventDis
                 .ForEach(e => e.Entity.ClearDomainEvents());
         }
 
-        return result;
+        return await _dbContext.SaveChangesAsync(cancellationToken);
     }
 }
