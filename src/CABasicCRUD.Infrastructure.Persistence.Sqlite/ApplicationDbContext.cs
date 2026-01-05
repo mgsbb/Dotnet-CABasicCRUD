@@ -1,4 +1,3 @@
-using System.Reflection;
 using CABasicCRUD.Domain.Comments;
 using CABasicCRUD.Domain.Posts;
 using CABasicCRUD.Domain.Users;
@@ -17,7 +16,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbConte
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        modelBuilder.ApplyConfigurationsFromAssembly(AssemblyReference.Assembly);
 
         base.OnModelCreating(modelBuilder);
     }
