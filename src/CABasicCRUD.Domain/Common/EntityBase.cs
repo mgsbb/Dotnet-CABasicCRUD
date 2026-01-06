@@ -7,6 +7,9 @@ public abstract class EntityBase<TId> : IEquatable<EntityBase<TId>>, IHasDomainE
 
     public TId Id { get; protected set; }
 
+    public DateTime CreatedAt { get; protected init; }
+    public DateTime? UpdatedAt { get; protected set; }
+
     public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
     protected EntityBase(TId? id)

@@ -15,6 +15,7 @@ public class User : EntityBase<UserId>
         Name = name;
         Email = email;
         PasswordHash = passwordHash;
+        CreatedAt = DateTime.UtcNow;
     }
 
     public static Result<User> Create(
@@ -68,6 +69,7 @@ public class User : EntityBase<UserId>
         }
         Name = name;
         Email = email;
+        UpdatedAt = DateTime.UtcNow;
         return this;
     }
 }

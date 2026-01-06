@@ -16,6 +16,7 @@ public sealed class Comment : EntityBase<CommentId>
         Body = body;
         PostId = postId;
         UserId = userId;
+        CreatedAt = DateTime.UtcNow;
     }
 
     public static Result<Comment> Create(string? body, PostId postId, UserId userId)
@@ -36,6 +37,7 @@ public sealed class Comment : EntityBase<CommentId>
             return Result<Comment>.Failure(CommentErrors.BodyEmpty);
         }
         Body = body;
+        UpdatedAt = DateTime.UtcNow;
         return this;
     }
 }
