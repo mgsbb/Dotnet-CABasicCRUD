@@ -28,5 +28,9 @@ public class CommentConfiguration : IEntityTypeConfiguration<Comment>
         builder
             .Property(comment => comment.UserId)
             .HasConversion(userId => userId.Value, value => (UserId)value);
+
+        builder.Property(p => p.CreatedAt).IsRequired();
+
+        builder.Property(p => p.UpdatedAt).IsRequired(false);
     }
 }

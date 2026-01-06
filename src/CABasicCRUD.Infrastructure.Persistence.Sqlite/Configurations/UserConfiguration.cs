@@ -21,5 +21,9 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasIndex(user => user.Email).IsUnique();
 
         builder.Property(user => user.PasswordHash).IsRequired();
+
+        builder.Property(p => p.CreatedAt).IsRequired();
+
+        builder.Property(p => p.UpdatedAt).IsRequired(false);
     }
 }

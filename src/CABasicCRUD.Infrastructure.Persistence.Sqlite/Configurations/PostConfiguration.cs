@@ -22,5 +22,9 @@ public class PostConfiguration : IEntityTypeConfiguration<Post>
         builder
             .Property(p => p.UserId)
             .HasConversion(userId => userId.Value, value => (UserId)value);
+
+        builder.Property(p => p.CreatedAt).IsRequired();
+
+        builder.Property(p => p.UpdatedAt).IsRequired(false);
     }
 }
