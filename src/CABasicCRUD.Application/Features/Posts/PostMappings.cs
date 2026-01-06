@@ -10,7 +10,9 @@ internal static class PostMappings
             Id: post.Id,
             Title: post.Title,
             Content: post.Content,
-            UserId: post.UserId
+            UserId: post.UserId,
+            CreatedAt: post.CreatedAt,
+            UpdatedAt: post.UpdatedAt
         );
     }
 

@@ -44,7 +44,14 @@ internal sealed class LoginUserCommandHandler : ICommandHandler<LoginUserCommand
 
         string token = _jwtProvider.GenerateToken(user);
 
-        AuthResult authResult = new(Id: user.Id, Name: user.Name, Email: user.Email, Token: token);
+        AuthResult authResult = new(
+            Id: user.Id,
+            Name: user.Name,
+            Email: user.Email,
+            Token: token,
+            CreatedAt: user.CreatedAt,
+            UpdatedAt: user.UpdatedAt
+        );
 
         // return Result<LoginUserResult>.Success(loginUserResult);
         return authResult;

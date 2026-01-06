@@ -62,7 +62,9 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserC
             registeredUser.Id,
             registeredUser.Name,
             registeredUser.Email,
-            token
+            token,
+            registeredUser.CreatedAt,
+            registeredUser.UpdatedAt
         );
 
         return Result<AuthResult>.Success(authResult);

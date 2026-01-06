@@ -1,3 +1,10 @@
 namespace CABasicCRUD.Application.Features.Auth;
 
-public sealed record AuthResult(Guid Id, string Name, string Email, string Token);
+public sealed record AuthResult(
+    Guid Id,
+    string Name,
+    string Email,
+    string Token,
+    DateTime CreatedAt,
+    DateTime? UpdatedAt
+);

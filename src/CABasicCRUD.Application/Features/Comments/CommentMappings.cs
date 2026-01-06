@@ -6,7 +6,14 @@ internal static class CommentMappings
 {
     internal static CommentResult ToCommentResult(this Comment comment)
     {
-        return new CommentResult(comment.Id, comment.Body, comment.PostId, comment.UserId);
+        return new CommentResult(
+            comment.Id,
+            comment.Body,
+            comment.PostId,
+            comment.UserId,
+            comment.CreatedAt,
+            comment.UpdatedAt
+        );
     }
 
     internal static IReadOnlyList<CommentResult> ToListCommentResult(
