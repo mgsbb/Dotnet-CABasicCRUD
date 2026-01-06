@@ -11,7 +11,9 @@ internal static class CommentMappings
             commentResult.Id,
             commentResult.Body,
             commentResult.PostId,
-            commentResult.UserId
+            commentResult.UserId,
+            commentResult.CreatedAt,
+            commentResult.UpdatedAt
         );
     }
 

@@ -7,6 +7,12 @@ public static class AuthMappings
 {
     public static AuthResponse ToAuthResponse(this AuthResult authResult)
     {
-        return new(authResult.Id, authResult.Name, authResult.Email);
+        return new(
+            authResult.Id,
+            authResult.Name,
+            authResult.Email,
+            authResult.CreatedAt,
+            authResult.UpdatedAt
+        );
     }
 }
