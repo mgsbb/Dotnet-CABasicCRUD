@@ -2,6 +2,7 @@
 using CABasicCRUD.Infrastructure;
 using CABasicCRUD.Infrastructure.Persistence.Sqlite;
 using CABasicCRUD.Presentation.WebApi;
+using CABasicCRUD.Presentation.WebApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder();
 
@@ -19,6 +20,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();
