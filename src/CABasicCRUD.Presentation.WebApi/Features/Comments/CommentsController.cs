@@ -8,12 +8,15 @@ using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Presentation.WebApi.Common.Abstractions;
 using CABasicCRUD.Presentation.WebApi.Features.Comments.Contracts;
 using CABasicCRUD.Presentation.WebApi.Features.Posts.Contracts;
+using CABasicCRUD.Presentation.WebApi.RateLimiter;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace CABasicCRUD.Presentation.WebApi.Features.Comments;
 
+[EnableRateLimiting(RateLimitPolicies.Authenticated)]
 [ApiController]
 [Route("/api/v1/[controller]")]
 public class CommentsController(IMediator mediator) : ApiController

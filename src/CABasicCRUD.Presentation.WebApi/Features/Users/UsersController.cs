@@ -8,12 +8,15 @@ using CABasicCRUD.Domain.Users;
 using CABasicCRUD.Presentation.WebApi.Common.Abstractions;
 using CABasicCRUD.Presentation.WebApi.Common.Security.Authorization;
 using CABasicCRUD.Presentation.WebApi.Features.Users.Contracts;
+using CABasicCRUD.Presentation.WebApi.RateLimiter;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace CABasicCRUD.Presentation.WebApi.Features.Users;
 
+[EnableRateLimiting(RateLimitPolicies.Authenticated)]
 [ApiController]
 [Route("/api/v1/[controller]")]
 public sealed class UsersController(IMediator mediator) : ApiController
