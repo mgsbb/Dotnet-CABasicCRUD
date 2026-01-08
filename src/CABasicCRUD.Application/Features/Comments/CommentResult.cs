@@ -1,12 +1,14 @@
+using CABasicCRUD.Domain.Comments;
 using CABasicCRUD.Domain.Posts;
+using CABasicCRUD.Domain.Users;
 
 namespace CABasicCRUD.Application.Features.Comments;
 
 public sealed record CommentResult(
-    Guid Id,
+    CommentId Id,
     string Body,
     PostId PostId,
-    Guid UserId,
+    UserId UserId,
     DateTime CreatedAt,
     DateTime? UpdatedAt
 );

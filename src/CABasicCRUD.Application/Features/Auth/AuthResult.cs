@@ -1,7 +1,9 @@
+using CABasicCRUD.Domain.Users;
+
 namespace CABasicCRUD.Application.Features.Auth;
 
 public sealed record AuthResult(
-    Guid Id,
+    UserId Id,
     string Name,
     string Email,
     string Token,

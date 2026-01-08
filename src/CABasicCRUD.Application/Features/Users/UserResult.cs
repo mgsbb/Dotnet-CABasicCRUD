@@ -1,7 +1,9 @@
+using CABasicCRUD.Domain.Users;
+
 namespace CABasicCRUD.Application.Features.Users;
 
 public sealed record UserResult(
-    Guid Id,
+    UserId Id,
     string Name,
     string Email,
     DateTime CreatedAt,
