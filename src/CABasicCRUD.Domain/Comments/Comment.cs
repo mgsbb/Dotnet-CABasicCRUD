@@ -16,7 +16,6 @@ public sealed class Comment : EntityBase<CommentId>
         Body = body;
         PostId = postId;
         UserId = userId;
-        CreatedAt = DateTime.UtcNow;
     }
 
     public static Result<Comment> Create(string? body, PostId postId, UserId userId)

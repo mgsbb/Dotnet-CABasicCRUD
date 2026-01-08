@@ -15,7 +15,6 @@ public class Post : EntityBase<PostId>
         Title = title;
         Content = content;
         UserId = userId;
-        CreatedAt = DateTime.UtcNow;
     }
 
     public static Result<Post> Create(string? title, string? content, UserId userId)

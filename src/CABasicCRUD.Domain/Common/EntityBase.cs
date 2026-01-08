@@ -19,6 +19,7 @@ public abstract class EntityBase<TId> : IEquatable<EntityBase<TId>>, IHasDomainE
             throw new ArgumentException("Entity Id cannot be a null value", nameof(id));
         }
         Id = id;
+        CreatedAt = DateTime.UtcNow;
     }
 
     public bool Equals(EntityBase<TId>? other)
