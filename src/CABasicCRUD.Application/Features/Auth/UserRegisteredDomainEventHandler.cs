@@ -18,7 +18,6 @@ public sealed class UserRegisteredDomainEventHandler
         CancellationToken cancellationToken
     )
     {
-        throw new Exception("Deliberate exception");
         await _emailSender.SendWelcomeEmailAsync(
             domainEvent.Name,
             domainEvent.Email,
