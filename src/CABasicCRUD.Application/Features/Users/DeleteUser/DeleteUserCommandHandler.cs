@@ -1,5 +1,6 @@
 using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Common.Interfaces.Messaging;
+using CABasicCRUD.Application.Features.Auth;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Users;
 
@@ -24,6 +25,11 @@ internal sealed class DeleteUserCommandHandler : ICommandHandler<DeleteUserComma
 
     public async Task<Result> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
+        if (!_currentUser.IsAuthenticated)
+        {
+            return Result.Failure(AuthErrors.Unauthenticated);
+        }
+
         User? user = await _userRepository.GetByIdAsync(request.UserId);
 
         if (user is null)
@@ -33,7 +39,7 @@ internal sealed class DeleteUserCommandHandler : ICommandHandler<DeleteUserComma
 
         if (_currentUser.UserId != request.UserId)
         {
-            return Result.Failure(UserErrors.NotOwner);
+            return Result.Failure(AuthErrors.Forbidden);
         }
 
         await _userRepository.DeleteAsync(user);

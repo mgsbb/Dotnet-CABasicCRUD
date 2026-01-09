@@ -25,6 +25,11 @@ internal sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserComma
 
     public async Task<Result> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
+        if (!_currentUser.IsAuthenticated)
+        {
+            return Result.Failure(AuthErrors.Unauthenticated);
+        }
+
         User? user = await _userRepository.GetByIdAsync(request.UserId);
 
         if (user is null)
@@ -32,7 +37,7 @@ internal sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserComma
             return Result.Failure(UserErrors.NotFound);
         }
 
-        if (user.Id != request.UserId)
+        if (_currentUser.UserId != request.UserId)
         {
             return Result.Failure(AuthErrors.Forbidden);
         }
