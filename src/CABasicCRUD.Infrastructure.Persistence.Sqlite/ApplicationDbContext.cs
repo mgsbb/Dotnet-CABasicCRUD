@@ -1,4 +1,5 @@
 using CABasicCRUD.Domain.Comments;
+using CABasicCRUD.Domain.Conversations;
 using CABasicCRUD.Domain.Posts;
 using CABasicCRUD.Domain.Users;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbConte
     public DbSet<User> Users { get; set; }
 
     public DbSet<Comment> Comments { get; set; }
+
+    public DbSet<Conversation> Conversations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
