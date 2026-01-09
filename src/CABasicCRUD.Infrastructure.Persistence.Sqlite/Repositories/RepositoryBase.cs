@@ -20,9 +20,7 @@ public class RepositoryBase<TEntity, TId>(ApplicationDbContext dbContext)
 
     public async Task<TEntity?> GetByIdAsync(TId id)
     {
-        TEntity? entity = await _dbSet
-            .AsNoTracking()
-            .FirstOrDefaultAsync(entity => entity.Id == id);
+        TEntity? entity = await _dbSet.FirstOrDefaultAsync(entity => entity.Id == id);
 
         return entity;
     }
