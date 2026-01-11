@@ -1,3 +1,4 @@
+using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Features.Posts;
 using CABasicCRUD.Application.Features.Posts.GetAllposts;
 using CABasicCRUD.Domain.Common;
@@ -11,11 +12,13 @@ public sealed class GetAllPostsQueryHandlerTests
 {
     private readonly IPostRepository _postRepository;
     private readonly GetAllPostsQueryHandler _handler;
+    private readonly ICacheService _cacheService;
 
     public GetAllPostsQueryHandlerTests()
     {
         _postRepository = Substitute.For<IPostRepository>();
-        _handler = new GetAllPostsQueryHandler(_postRepository);
+        _cacheService = Substitute.For<ICacheService>();
+        _handler = new GetAllPostsQueryHandler(_postRepository, _cacheService);
     }
 
     [Fact]

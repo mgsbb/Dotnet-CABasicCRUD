@@ -15,13 +15,20 @@ public sealed class DeletePostCommandHandlerTests
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
     private readonly DeletePostCommandHandler _handler;
+    private readonly ICacheService _cacheService;
 
     public DeletePostCommandHandlerTests()
     {
         _postRepository = Substitute.For<IPostRepository>();
         _unitOfWork = Substitute.For<IUnitOfWork>();
         _currentUser = Substitute.For<ICurrentUser>();
-        _handler = new DeletePostCommandHandler(_postRepository, _unitOfWork, _currentUser);
+        _cacheService = Substitute.For<ICacheService>();
+        _handler = new DeletePostCommandHandler(
+            _postRepository,
+            _unitOfWork,
+            _currentUser,
+            _cacheService
+        );
     }
 
     [Fact]

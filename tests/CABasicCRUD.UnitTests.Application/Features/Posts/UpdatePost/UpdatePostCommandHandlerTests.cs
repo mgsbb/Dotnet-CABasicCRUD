@@ -15,13 +15,20 @@ public sealed class UpdatePostCommandHandlerTests
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
     private readonly UpdatePostCommandHandler _handler;
+    private readonly ICacheService _cacheService;
 
     public UpdatePostCommandHandlerTests()
     {
         _postRepository = Substitute.For<IPostRepository>();
         _unitOfWork = Substitute.For<IUnitOfWork>();
         _currentUser = Substitute.For<ICurrentUser>();
-        _handler = new UpdatePostCommandHandler(_postRepository, _unitOfWork, _currentUser);
+        _cacheService = Substitute.For<ICacheService>();
+        _handler = new UpdatePostCommandHandler(
+            _postRepository,
+            _unitOfWork,
+            _currentUser,
+            _cacheService
+        );
     }
 
     [Fact]

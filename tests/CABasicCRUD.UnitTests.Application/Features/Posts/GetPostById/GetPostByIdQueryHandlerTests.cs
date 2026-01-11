@@ -1,3 +1,4 @@
+using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Features.Posts;
 using CABasicCRUD.Application.Features.Posts.GetPostById;
 using CABasicCRUD.Domain.Common;
@@ -12,11 +13,13 @@ public sealed class GetPostByIdQueryHandlerTests
 {
     private readonly IPostRepository _postRepository;
     private readonly GetPostByIdQueryHandler _handler;
+    private readonly ICacheService _cacheService;
 
     public GetPostByIdQueryHandlerTests()
     {
         _postRepository = Substitute.For<IPostRepository>();
-        _handler = new GetPostByIdQueryHandler(_postRepository);
+        _cacheService = Substitute.For<ICacheService>();
+        _handler = new GetPostByIdQueryHandler(_postRepository, _cacheService);
     }
 
     [Fact]
