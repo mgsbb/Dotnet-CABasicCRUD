@@ -26,9 +26,7 @@ public static class PersistenceServicesRegistration
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ICommentRepository, CommentRepository>();
 
-        services.AddScoped<IUnitOfWork>(provider =>
-            provider.GetRequiredService<ApplicationDbContext>()
-        );
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }
