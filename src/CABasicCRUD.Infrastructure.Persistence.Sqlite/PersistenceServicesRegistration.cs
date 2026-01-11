@@ -37,7 +37,7 @@ public static class PersistenceServicesRegistration
 
         services.AddScoped(typeof(RepositoryBase<,>));
 
-        services.AddScoped<IPostRepository, CachedPostRepository>();
+        services.AddScoped<IPostRepository, PostRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ICommentRepository, CommentRepository>();
         services.AddScoped<IConversationRepository, ConversationRepository>();

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace CABasicCRUD.Infrastructure.Persistence.Sqlite.Repositories;
 
+// NOT USED
 public class CachedRepositoryBase<TEntity, TId>(
     RepositoryBase<TEntity, TId> repositoryBase,
     IMemoryCache memoryCache
