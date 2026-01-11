@@ -2,6 +2,7 @@ using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Domain.Comments;
 using CABasicCRUD.Domain.Posts;
 using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Infrastructure.Persistence.PostgreSql.Outbox;
 using CABasicCRUD.Infrastructure.Persistence.PostgreSql.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -27,6 +28,9 @@ public static class PersistenceServicesRegistration
         services.AddScoped<ICommentRepository, CommentRepository>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.AddScoped<OutboxSaveChangesInterceptor>();
+        services.AddHostedService<OutboxProcessor>();
 
         return services;
     }
