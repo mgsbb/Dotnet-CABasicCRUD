@@ -40,8 +40,6 @@ dotnet run --project src\CABasicCRUD.Host.Sqlite.WebApi
 ```
 ### Publish and run locally
 
-Publish and run publish artifact locally:
-
 Create migrations bundle:
 
 ```cmd
@@ -56,9 +54,56 @@ efbundle.exe
 
 This creates the database file at the project root for `Data Source=data.db`
 
+Publish and run publish artifact locally:
+
 ```cmd
 dotnet publish .\src\CABasicCRUD.Host.Sqlite.WebApi -c Release -o .\publish
 dotnet .\publish\CABasicCRUD.Host.Sqlite.WebApi.dll
 ```
 
 
+## 2. Host.PostgreSql.WebApi
+
+Projects:
+- Infrastructure.Persistence.PostgreSql
+- Presentation.WebApi
+
+### Load environment variables:
+
+```cmd 
+load-env.cmd .\src\CABasicCRUD.Host.PostgreSql.WebApi\.env  
+```
+
+### Run locally
+
+Apply migrations:
+
+```cmd
+dotnet ef database update --project .\src\CABasicCRUD.Infrastructure.Persistence.PostgreSql --startup-project .\src\CABasicCRUD.Host.PostgreSql.WebApi
+```
+
+Run project:
+
+```cmd
+dotnet run --project src\CABasicCRUD.Host.PostgreSql.WebApi
+```
+### Publish and run locally
+
+Create migrations bundle:
+
+```cmd
+dotnet ef migrations bundle --project .\src\CABasicCRUD.Host.PostgreSql.WebApi
+```
+
+Run migrations bundle:
+
+```cmd
+efbundle.exe
+```
+
+Publish and run publish artifact locally:
+
+```cmd
+dotnet publish .\src\CABasicCRUD.Host.PostgreSql.WebApi -c Release -o .\publish
+dotnet .\publish\CABasicCRUD.Host.PostgreSql.WebApi.dll
+```
