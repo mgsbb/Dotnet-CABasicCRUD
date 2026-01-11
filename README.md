@@ -31,7 +31,9 @@ Apply migrations:
 ```cmd
 dotnet ef database update --project .\src\CABasicCRUD.Infrastructure.Persistence.Sqlite --startup-project .\src\CABasicCRUD.Host.Sqlite.WebApi
 ```
-For connection string `Data Source=data.db`, the database file is created inside the startup project directory.
+~~For connection string `Data Source=data.db`, the database file is created inside the startup project directory.~~
+Avoid relative file paths for database. Use absolute paths.
+
 
 Run project:
 
@@ -52,14 +54,27 @@ Run migrations bundle:
 efbundle.exe
 ```
 
-This creates the database file at the project root for `Data Source=data.db`
+~~This creates the database file at the project root for `Data Source=data.db`~~ Use absolute file path.
 
 Publish and run publish artifact locally:
 
 ```cmd
 dotnet publish .\src\CABasicCRUD.Host.Sqlite.WebApi -c Release -o .\publish
+```
+
+When running from the root path, set DOTNET_CONTENTROOT environment variable to the absolute path of the folder containing the required appsettings.json configuration, which in our case is the publish directory.
+
+```cmd
 dotnet .\publish\CABasicCRUD.Host.Sqlite.WebApi.dll
 ```
+
+Otherwise
+
+```cmd
+cd publish
+dotnet CABasicCRUD.Host.Sqlite.WebApi.dll
+```
+
 
 
 ## 2. Host.PostgreSql.WebApi
@@ -105,5 +120,17 @@ Publish and run publish artifact locally:
 
 ```cmd
 dotnet publish .\src\CABasicCRUD.Host.PostgreSql.WebApi -c Release -o .\publish
+```
+
+When running from the root path, set DOTNET_CONTENTROOT environment variable to the absolute path of the folder containing the required appsettings.json configuration, which in our case is the publish directory.
+
+```cmd
 dotnet .\publish\CABasicCRUD.Host.PostgreSql.WebApi.dll
+```
+
+Otherwise
+
+```cmd
+cd publish
+dotnet CABasicCRUD.Host.PostgreSql.WebApi.dll
 ```
