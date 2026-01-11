@@ -2,6 +2,7 @@
 using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Domain.Services;
 using CABasicCRUD.Infrastructure.Authentication;
+using CABasicCRUD.Infrastructure.Caching;
 using CABasicCRUD.Infrastructure.EmailService;
 using CABasicCRUD.Infrastructure.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -21,6 +22,7 @@ public static class InfrastructureServicesRegistration
         services.RegisterAuthenticationServices(configuration);
         services.RegisterEmailSender();
         services.RegisterSerializer();
+        services.RegisterCachingServices();
 
         return services;
     }
@@ -65,8 +67,20 @@ public static class InfrastructureServicesRegistration
         {
             var options = new JsonSerializerOptions();
             options.Converters.Add(new UserIdJsonConverter());
+            options.Converters.Add(new PostIdJsonConverter());
             return options;
         });
+
+        return services;
+    }
+
+    public static IServiceCollection RegisterCachingServices(this IServiceCollection services)
+    {
+        services.AddMemoryCache();
+
+        services.AddDistributedMemoryCache();
+
+        services.AddSingleton<ICacheService, DistributedCacheService>();
 
         return services;
     }
