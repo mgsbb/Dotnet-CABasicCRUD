@@ -10,12 +10,14 @@ namespace CABasicCRUD.Application.Features.Posts.CreatePost;
 internal sealed class CreatePostCommandHandler(
     IPostRepository postRepository,
     IUnitOfWork unitOfWork,
-    ICurrentUser currentUser
+    ICurrentUser currentUser,
+    ICacheService cacheService
 ) : ICommandHandler<CreatePostCommand, PostResult>
 {
     private readonly IPostRepository _postRepository = postRepository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly ICurrentUser _currentUser = currentUser;
+    private readonly ICacheService _cacheService = cacheService;
 
     public async Task<Result<PostResult>> Handle(
         CreatePostCommand request,
@@ -51,6 +53,8 @@ internal sealed class CreatePostCommandHandler(
         PostResult postResult = postFromDB.ToPostResult();
 
         await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken);
+
+        await _cacheService.RemoveAsync("posts:all", cancellationToken);
 
         return postResult;
     }

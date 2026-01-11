@@ -9,12 +9,14 @@ namespace CABasicCRUD.Application.Features.Posts.UpdatePost;
 internal sealed class UpdatePostCommandHandler(
     IPostRepository postRepository,
     IUnitOfWork unitOfWork,
-    ICurrentUser currentUser
+    ICurrentUser currentUser,
+    ICacheService cacheService
 ) : ICommandHandler<UpdatePostCommand>
 {
     private readonly IPostRepository _postRepository = postRepository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly ICurrentUser _currentUser = currentUser;
+    private readonly ICacheService _cacheService = cacheService;
 
     public async Task<Result> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
     {
@@ -44,6 +46,12 @@ internal sealed class UpdatePostCommandHandler(
         await _postRepository.UpdateAsync(entity: result.Value);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken);
+
+        string cacheKey = $"posts:{post.Id}";
+
+        await _cacheService.RemoveAsync(cacheKey, cancellationToken);
+
+        await _cacheService.RemoveAsync("posts:all", cancellationToken);
 
         return Result.Success();
     }

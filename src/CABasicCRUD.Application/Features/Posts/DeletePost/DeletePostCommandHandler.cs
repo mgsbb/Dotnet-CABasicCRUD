@@ -9,12 +9,14 @@ namespace CABasicCRUD.Application.Features.Posts.DeletePost;
 internal sealed class DeletePostCommandHandler(
     IPostRepository postRepository,
     IUnitOfWork unitOfWork,
-    ICurrentUser currentUser
+    ICurrentUser currentUser,
+    ICacheService cacheService
 ) : ICommandHandler<DeletePostCommand>
 {
     private readonly IPostRepository _postRepository = postRepository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly ICurrentUser _currentUser = currentUser;
+    private readonly ICacheService _cacheService = cacheService;
 
     public async Task<Result> Handle(DeletePostCommand request, CancellationToken cancellationToken)
     {
@@ -39,6 +41,12 @@ internal sealed class DeletePostCommandHandler(
         await _postRepository.DeleteAsync(entity: post);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken);
+
+        string cacheKey = $"posts:{post.Id}";
+
+        await _cacheService.RemoveAsync(cacheKey, cancellationToken);
+
+        await _cacheService.RemoveAsync("posts:all", cancellationToken);
 
         return Result.Success();
     }
