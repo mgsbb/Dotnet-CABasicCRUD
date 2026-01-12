@@ -1,17 +1,37 @@
 services:
     api:
+        image: cabasiccrud-api
         build:
             context: .
             args:
                 PUBLISH_PROJECT_PATH: ${PUBLISH_PROJECT_PATH}
                 PUBLISHED_PROJECT_ENTRYPOINT: ${PUBLISHED_PROJECT_ENTRYPOINT}
+                PERSISTENCE_PROJECT_PATH: ${PERSISTENCE_PROJECT_PATH}
+                ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection}
+        depends_on:
+            migration-runner:
+                condition: service_completed_successfully
         ports:
-            - 5001:5001
+            - 5002:5002
         environment:
             ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
             ASPNETCORE_URLS: ${ASPNETCORE_URLS}
+            DOTNET_CONTENTROOT: ${DOTNET_CONTENTROOT}
             Jwt__SecretKey: ${Jwt__SecretKey}
             Jwt__Issuer: ${Jwt__Issuer}
             Jwt__Audience: ${Jwt__Audience}
             Jwt__ExpiryInMinutes: ${Jwt__ExpiryInMinutes}
             ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection}
+        volumes:
+            - sqlite_data:/data
+    migration-runner:
+        image: cabasiccrud-api
+        working_dir: /myapp
+        environment:
+            ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection}
+        entrypoint: ['./publish/efbundle']
+        volumes:
+            - sqlite_data:/data
+
+volumes:
+    sqlite_data:

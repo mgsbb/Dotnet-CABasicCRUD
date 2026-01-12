@@ -1,6 +1,13 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /myapp
 
+ARG PUBLISH_PROJECT_PATH
+ARG PERSISTENCE_PROJECT_PATH
+ARG ConnectionStrings__DefaultConnection
+
+RUN dotnet tool install --global dotnet-ef --version 9.*
+ENV PATH="$PATH:/root/.dotnet/tools"
+
 COPY CABasicCRUD.sln .
 
 # copy all projects csproj files (less than ideal?)
@@ -21,22 +28,28 @@ RUN dotnet restore
 
 COPY ./src/ ./src/
 
+# slow
+RUN dotnet ef migrations bundle \
+    --project ${PERSISTENCE_PROJECT_PATH} \
+    --startup-project ${PUBLISH_PROJECT_PATH} \
+    --self-contained \
+    -r linux-x64
+
 # what if a different composition root is to be published? solution: use build time ARG
-ARG PUBLISH_PROJECT_PATH
 RUN dotnet publish ${PUBLISH_PROJECT_PATH} \
     -c Release \
     -o ./publish \
     --no-restore
 
-# when to apply migrations?
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /myapp
 
-COPY --from=build /myapp/publish ./publish
-EXPOSE 5001
-
 ARG PUBLISHED_PROJECT_ENTRYPOINT
+
+COPY --from=build /myapp/publish ./publish
+COPY --from=build /myapp/efbundle ./publish/
+EXPOSE 5002
 
 # JSONArgsRecommended: JSON arguments recommended for ENTRYPOINT to prevent unintended behavior related to OS signals
 # ENTRYPOINT [ "dotnet", ${PUBLISHED_PROJECT_ENTRYPOINT} ]
