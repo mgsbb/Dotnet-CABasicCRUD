@@ -75,6 +75,21 @@ cd publish
 dotnet CABasicCRUD.Host.Sqlite.WebApi.dll
 ```
 
+### Run using docker
+
+After loading environment variables, run the following command from the root of the project:
+
+```cmd
+docker compose -f .\src\CABasicCRUD.Host.Sqlite.WebApi\docker-compose.yml up --build -d
+```
+
+To stop the app:
+
+```cmd
+docker compose -f .\src\CABasicCRUD.Host.Sqlite.WebApi\docker-compose.yml down
+```
+
+
 
 
 ## 2. Host.PostgreSql.WebApi
@@ -133,4 +148,18 @@ Otherwise
 ```cmd
 cd publish
 dotnet CABasicCRUD.Host.PostgreSql.WebApi.dll
+```
+
+### Run using docker
+
+After loading environment variables, run the following command from the root of the project:
+
+```cmd
+docker compose -f .\src\CABasicCRUD.Host.PostgreSql.WebApi\docker-compose.yml up --build -d
+```
+
+To stop the app:
+
+```cmd
+docker compose -f .\src\CABasicCRUD.Host.PostgreSql.WebApi\docker-compose.yml down
 ```
