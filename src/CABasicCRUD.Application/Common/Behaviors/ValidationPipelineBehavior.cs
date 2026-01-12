@@ -67,7 +67,7 @@ public class ValidationPipelineBehavior<TRequest, TResponse>
             return (ValidationResult.WithErrors(errors) as TResult)!;
         }
 
-        Console.WriteLine(typeof(TResult));
+        // Console.WriteLine(typeof(TResult));
 
         // TResult here is Result<TValue>.
         // We convert to ValidationResult<TValue> and invoke the WithErros static method with errors parameter.

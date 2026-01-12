@@ -33,9 +33,9 @@ public static class PersistenceServicesRegistration
             }
         );
 
-        services.AddMemoryCache();
+        // services.AddMemoryCache();
 
-        services.AddScoped(typeof(RepositoryBase<,>));
+        // services.AddScoped(typeof(RepositoryBase<,>));
 
         services.AddScoped<IPostRepository, PostRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
