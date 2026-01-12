@@ -1,0 +1,34 @@
+services:
+    api:
+        image: cabasiccrud-sqlite-webapi
+        build:
+            context: ../..
+            dockerfile: ./src/CABasicCRUD.Host.Sqlite.WebApi/Dockerfile
+            args:
+                ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection}
+        depends_on:
+            migration-runner:
+                condition: service_completed_successfully
+        ports:
+            - 5002:5002
+        environment:
+            ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+            ASPNETCORE_URLS: ${ASPNETCORE_URLS}
+            Jwt__SecretKey: ${Jwt__SecretKey}
+            Jwt__Issuer: ${Jwt__Issuer}
+            Jwt__Audience: ${Jwt__Audience}
+            Jwt__ExpiryInMinutes: ${Jwt__ExpiryInMinutes}
+            ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection}
+        volumes:
+            - sqlite_data:/data
+    migration-runner:
+        image: cabasiccrud-sqlite-webapi
+        working_dir: /myapp
+        environment:
+            ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection}
+        entrypoint: ['./publish/efbundle']
+        volumes:
+            - sqlite_data:/data
+
+volumes:
+    sqlite_data:
