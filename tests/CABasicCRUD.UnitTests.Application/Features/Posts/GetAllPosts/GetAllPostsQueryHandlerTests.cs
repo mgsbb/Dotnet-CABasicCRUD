@@ -22,7 +22,42 @@ public sealed class GetAllPostsQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WhenPostsExists_ShouldReturnsThePosts()
+    public async Task Handle_WhenPostsExistsInCache_ShouldReturnsThePostsFromCache()
+    {
+        // // Arrange
+        UserId userId = UserId.New();
+        Post post = Post.Create("title", "content", userId).Value!;
+
+        GetAllPostsQuery query = new();
+        CancellationToken token = default;
+
+        _cacheService
+            .GetAsync<IReadOnlyList<PostResult>>(Arg.Any<string>(), token)
+            .Returns([post.ToPostResult()]);
+
+        // Act
+        Result<IReadOnlyList<PostResult>> result = await _handler.Handle(query, token);
+
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.False(result.IsFailure);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Value);
+        Assert.IsAssignableFrom<IReadOnlyList<PostResult>>(result.Value);
+        Assert.NotEqual(result.Value, []);
+
+        await _postRepository.DidNotReceive().GetAllAsync();
+        await _cacheService
+            .DidNotReceive()
+            .SetAsync(
+                Arg.Any<string>(),
+                Arg.Any<IReadOnlyList<PostResult>>(),
+                Arg.Any<CancellationToken>()
+            );
+    }
+
+    [Fact]
+    public async Task Handle_WhenPostsExistsButNotInCache_ShouldReturnsThePostsFromDatabaseAndSetCache()
     {
         // // Arrange
         UserId userId = UserId.New();
@@ -32,6 +67,9 @@ public sealed class GetAllPostsQueryHandlerTests
         CancellationToken token = default;
 
         _postRepository.GetAllAsync().Returns([post]);
+        _cacheService
+            .GetAsync<IReadOnlyList<PostResult>>(Arg.Any<string>(), token)
+            .Returns(null as IReadOnlyList<PostResult>);
 
         // Act
         Result<IReadOnlyList<PostResult>> result = await _handler.Handle(query, token);
@@ -45,6 +83,13 @@ public sealed class GetAllPostsQueryHandlerTests
         Assert.NotEqual(result.Value, []);
 
         await _postRepository.Received(1).GetAllAsync();
+        await _cacheService
+            .Received(1)
+            .SetAsync(
+                Arg.Any<string>(),
+                Arg.Any<IReadOnlyList<PostResult>>(),
+                Arg.Any<CancellationToken>()
+            );
     }
 
     [Fact]
@@ -57,6 +102,9 @@ public sealed class GetAllPostsQueryHandlerTests
 
         // is this necessary?
         _postRepository.GetAllAsync().Returns([]);
+        _cacheService
+            .GetAsync<IReadOnlyList<PostResult>>(Arg.Any<string>(), token)
+            .Returns(null as IReadOnlyList<PostResult>);
 
         // Act
         Result<IReadOnlyList<PostResult>> result = await _handler.Handle(query, token);
@@ -70,5 +118,12 @@ public sealed class GetAllPostsQueryHandlerTests
         Assert.Equal(result.Value, []);
 
         await _postRepository.Received(1).GetAllAsync();
+        await _cacheService
+            .Received(1)
+            .SetAsync(
+                Arg.Any<string>(),
+                Arg.Any<IReadOnlyList<PostResult>>(),
+                Arg.Any<CancellationToken>()
+            );
     }
 }

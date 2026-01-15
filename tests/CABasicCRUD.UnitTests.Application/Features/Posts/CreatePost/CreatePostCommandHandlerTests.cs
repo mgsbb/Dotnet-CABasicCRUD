@@ -66,6 +66,7 @@ public sealed class CreatePostCommandHandlerTests
                 )
             );
         await _unitOfWork.Received(1).SaveChangesAsync(token);
+        await _cacheService.Received(1).RemoveAsync("posts:all", token);
     }
 
     [Fact]
@@ -87,6 +88,9 @@ public sealed class CreatePostCommandHandlerTests
 
         await _postRepository.DidNotReceive().AddAsync(Arg.Any<Post>());
         await _unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
+        await _cacheService
+            .DidNotReceive()
+            .RemoveAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -112,6 +116,9 @@ public sealed class CreatePostCommandHandlerTests
 
         await _postRepository.DidNotReceive().AddAsync(Arg.Any<Post>());
         await _unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
+        await _cacheService
+            .DidNotReceive()
+            .RemoveAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -137,5 +144,8 @@ public sealed class CreatePostCommandHandlerTests
 
         await _postRepository.DidNotReceive().AddAsync(Arg.Any<Post>());
         await _unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
+        await _cacheService
+            .DidNotReceive()
+            .RemoveAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
     }
 }

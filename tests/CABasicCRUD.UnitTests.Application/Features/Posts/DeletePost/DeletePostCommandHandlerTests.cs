@@ -62,6 +62,9 @@ public sealed class DeletePostCommandHandlerTests
                 )
             );
         await _unitOfWork.Received(1).SaveChangesAsync(token);
+
+        // 2 calls - for cacheKey, posts:all
+        await _cacheService.Received(2).RemoveAsync(Arg.Any<string>(), token);
     }
 
     [Fact]
@@ -83,6 +86,9 @@ public sealed class DeletePostCommandHandlerTests
 
         await _postRepository.DidNotReceive().DeleteAsync(Arg.Any<Post>());
         await _unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
+        await _cacheService
+            .DidNotReceive()
+            .RemoveAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -106,6 +112,9 @@ public sealed class DeletePostCommandHandlerTests
 
         await _postRepository.DidNotReceive().AddAsync(Arg.Any<Post>());
         await _unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
+        await _cacheService
+            .DidNotReceive()
+            .RemoveAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -132,5 +141,8 @@ public sealed class DeletePostCommandHandlerTests
 
         await _postRepository.DidNotReceive().AddAsync(Arg.Any<Post>());
         await _unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
+        await _cacheService
+            .DidNotReceive()
+            .RemoveAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
     }
 }
