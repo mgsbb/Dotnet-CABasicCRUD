@@ -165,7 +165,10 @@ public class ConversationsController(IMediator mediator) : ApiController
         {
             return HandleProblem(StatusCodes.Status409Conflict, detail: result.Error.Message);
         }
-
+        if (result.Error == Domain.Conversations.ConversationErrors.NotAParticipant)
+        {
+            return HandleProblem(StatusCodes.Status403Forbidden, detail: result.Error.Message);
+        }
         return HandleProblem(StatusCodes.Status500InternalServerError);
     }
 }
