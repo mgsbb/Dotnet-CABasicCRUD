@@ -37,13 +37,6 @@ internal sealed class SendMessageCommandHandler(
             return Result<MessageResult>.Failure(ConversationErrors.NotFound);
         }
 
-        if (
-            !conversation.Participants.Any(participant => participant.UserId == _currentUser.UserId)
-        )
-        {
-            return Result<MessageResult>.Failure(AuthErrors.Forbidden);
-        }
-
         Result<Message> result = conversation.SendMessage(
             (UserId)_currentUser.UserId,
             request.Content
