@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a href="/Home/Index">Home</a>
+            <a href="/Posts">Posts</a>
+            <a href="/Auth/Logout">Logout</a>
+        </nav>
+    </header>
+
+    <main>
+        @RenderBody()
+    </main>
+
+    <footer>
+        <p>&copy; @DateTime.UtcNow.Year</p>
+    </footer>
+</body>
+
+</html>
