@@ -491,3 +491,5 @@ efbundle.exe
 
 # VS Code
 .vscode
+
+**/wwwroot/lib

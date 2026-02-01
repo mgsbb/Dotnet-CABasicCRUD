@@ -28,4 +28,7 @@
     <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageReference Include="Serilog.Sinks.OpenTelemetry" Version="4.2.1-nblumhardt-02317" />
   </ItemGroup>
+  <Target Name="RestoreClientSideLibraries" BeforeTargets="PreBuildEvent">
+    <Exec Command="libman restore" />
+  </Target>
 </Project>
