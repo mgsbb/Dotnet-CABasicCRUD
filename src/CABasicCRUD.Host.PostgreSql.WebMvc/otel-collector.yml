@@ -1,0 +1,40 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+exporters:
+  otlp/tempo:
+    endpoint: http://tempo:4317
+    tls:
+      insecure: true
+  otlphttp/loki:
+    endpoint: http://loki:3100/otlp
+    tls:
+      insecure: true
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+  otlp/aspire:
+    endpoint: http://aspire-dashboard:18889 
+    tls:  
+      insecure: true
+  # debug:
+  #   verbosity: detailed 
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      # exporters: [otlp/tempo, otlp/aspire, debug]
+      exporters: [otlp/tempo, otlp/aspire]
+    logs:
+      receivers: [otlp]
+      # exporters: [otlphttp/loki, otlp/aspire, debug]
+      exporters: [otlphttp/loki, otlp/aspire]
+    metrics:
+      receivers: [otlp]
+      # exporters: [prometheus, otlp/aspire, debug]
+      exporters: [prometheus, otlp/aspire]
