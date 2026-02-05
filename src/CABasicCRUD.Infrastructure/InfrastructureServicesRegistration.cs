@@ -32,14 +32,6 @@ public static class InfrastructureServicesRegistration
         IConfiguration configuration
     )
     {
-        services
-            .AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer();
-
         services.AddSingleton<IValidateOptions<JwtOptions>, JwtOptionsValidator>();
 
         services
