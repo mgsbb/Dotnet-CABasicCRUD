@@ -1,0 +1,22 @@
+@model CABasicCRUD.Presentation.WebMvc.Models.Posts.PostCreateViewModel
+@{
+    ViewData["Title"] = "Create Post";
+}
+
+<h1>Create Post</h1>
+
+<form asp-controller="Posts" asp-action="Create" method="post">
+    <div>
+        <label for="Title">Title</label>
+        <input asp-for="Title" />
+        <span asp-validation-for="Title"></span>
+    </div>
+
+    <div>
+        <label for="Content">Content</label>
+        <textarea asp-for="Content"></textarea>
+        <span asp-validation-for="Content"></span>
+    </div>
+
+    <button type="submit">Create</button>
+</form>

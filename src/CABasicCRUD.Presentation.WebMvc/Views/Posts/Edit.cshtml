@@ -1,0 +1,22 @@
+@model CABasicCRUD.Presentation.WebMvc.Models.Posts.PostEditViewModel
+@{
+    ViewData["Title"] = "Edit Post";
+}
+
+<h1>Edit Post</h1>
+
+<form method="post">
+    <div>
+        <label for="Title">Title</label>
+        <input asp-for="Title" />
+        <span asp-validation-for="Title"></span>
+    </div>
+
+    <div>
+        <label for="Content">Content</label>
+        <textarea asp-for="Content"></textarea>
+        <span asp-validation-for="Content"></span>
+    </div>
+
+    <button type="submit">Save</button>
+</form>

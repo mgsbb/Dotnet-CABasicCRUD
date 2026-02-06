@@ -1,0 +1,17 @@
+@{
+    ViewData["Title"] = "Delete Post";
+}
+
+<section>
+    <h1>Delete Post</h1>
+
+    <p>
+        Are you sure you want to delete
+        <strong>@Model.Title</strong>?
+    </p>
+
+    <form method="post">
+        <button type="submit">Yes, delete</button>
+        <a href="/posts/@Model.Id">Cancel</a>
+    </form>
+</section>

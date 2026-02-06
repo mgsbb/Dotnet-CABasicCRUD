@@ -1,0 +1,16 @@
+@model CABasicCRUD.Presentation.WebMvc.Models.Posts.PostDetailsViewModel
+
+@{
+    ViewData["Title"] = "Post";
+}
+
+<article>
+    <h1>@Model.Title</h1>
+
+    <p>@Model.Content</p>
+
+    <nav>
+        <a href="/posts/@Model.Id/edit">Edit</a>
+        <a href="/posts">Back to posts</a>
+    </nav>
+</article>
