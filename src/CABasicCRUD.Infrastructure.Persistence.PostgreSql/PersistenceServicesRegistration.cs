@@ -22,7 +22,16 @@ public static class PersistenceServicesRegistration
             configuration.GetConnectionString("DefaultConnection")
             ?? throw new InvalidOperationException("Connection string not found.");
 
-        services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
+        services.AddScoped<OutboxSaveChangesInterceptor>();
+
+        services.AddDbContext<ApplicationDbContext>(
+            (sp, options) =>
+            {
+                var interceptor = sp.GetRequiredService<OutboxSaveChangesInterceptor>();
+
+                options.UseNpgsql(connectionString).AddInterceptors(interceptor);
+            }
+        );
 
         services.AddScoped<IPostRepository, PostRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
@@ -31,7 +40,6 @@ public static class PersistenceServicesRegistration
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-        services.AddScoped<OutboxSaveChangesInterceptor>();
         services.AddHostedService<OutboxProcessor>();
 
         return services;
