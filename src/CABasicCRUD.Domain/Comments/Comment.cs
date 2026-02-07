@@ -4,7 +4,7 @@ using CABasicCRUD.Domain.Users;
 
 namespace CABasicCRUD.Domain.Comments;
 
-public sealed class Comment : EntityBase<CommentId>
+public sealed class Comment : AggregateRoot<CommentId>
 {
     public string Body { get; private set; }
     public PostId PostId { get; private set; }

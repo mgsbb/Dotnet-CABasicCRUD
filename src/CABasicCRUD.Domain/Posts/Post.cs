@@ -3,7 +3,7 @@ using CABasicCRUD.Domain.Users;
 
 namespace CABasicCRUD.Domain.Posts;
 
-public class Post : EntityBase<PostId>
+public class Post : AggregateRoot<PostId>
 {
     public string Title { get; private set; }
     public string Content { get; private set; }

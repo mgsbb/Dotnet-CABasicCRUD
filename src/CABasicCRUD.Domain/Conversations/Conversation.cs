@@ -4,7 +4,7 @@ using CABasicCRUD.Domain.Users;
 
 namespace CABasicCRUD.Domain.Conversations;
 
-public sealed class Conversation : EntityBase<ConversationId>
+public sealed class Conversation : AggregateRoot<ConversationId>
 {
     private readonly List<Message> _messages = new();
     private readonly List<ConversationParticipant> _participants = new();

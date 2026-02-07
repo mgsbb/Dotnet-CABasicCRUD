@@ -3,7 +3,7 @@ using CABasicCRUD.Domain.Services;
 
 namespace CABasicCRUD.Domain.Users;
 
-public class User : EntityBase<UserId>
+public class User : AggregateRoot<UserId>
 {
     public string Name { get; private set; }
     public string Email { get; private set; }
