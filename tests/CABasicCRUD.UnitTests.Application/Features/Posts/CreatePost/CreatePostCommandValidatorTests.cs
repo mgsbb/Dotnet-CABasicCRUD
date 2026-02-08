@@ -1,5 +1,6 @@
 using CABasicCRUD.Application.Features.Posts;
 using CABasicCRUD.Application.Features.Posts.CreatePost;
+using CABasicCRUD.Domain.Users;
 using FluentValidation.TestHelper;
 
 namespace CABasicCRUD.UnitTests.Application.Features.Posts.CreatePost;
@@ -17,7 +18,7 @@ public sealed class CreatePostCommandValidatorTests
     public void Validate_WhenInputIsValid_ShouldNotHaveValidationError()
     {
         // Arrange
-        CreatePostCommand command = new("title", "content");
+        CreatePostCommand command = new("title", "content", UserId.New());
 
         // Act
         var result = _validator.TestValidate(command);
@@ -35,7 +36,7 @@ public sealed class CreatePostCommandValidatorTests
     public void Validate_WhenTitleIsNullOrWhitespace_ShouldHaveValidationError(string? title)
     {
         // Arrange
-        CreatePostCommand command = new(title!, "content");
+        CreatePostCommand command = new(title!, "content", UserId.New());
 
         // Act
         var result = _validator.TestValidate(command);
@@ -52,7 +53,7 @@ public sealed class CreatePostCommandValidatorTests
     public void Validate_WhenTitleExceedsMaxLength_ShouldHaveValidationError()
     {
         // Arrange
-        CreatePostCommand command = new(new string('a', 101), "content");
+        CreatePostCommand command = new(new string('a', 101), "content", UserId.New());
 
         // Act
         var result = _validator.TestValidate(command);
@@ -74,7 +75,7 @@ public sealed class CreatePostCommandValidatorTests
     public void Validate_WhenContentIsNullOrWhitespace_ShouldHaveValidationError(string? content)
     {
         // Arrange
-        CreatePostCommand command = new("title", content!);
+        CreatePostCommand command = new("title", content!, UserId.New());
 
         // Act
         var result = _validator.TestValidate(command);

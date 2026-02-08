@@ -13,7 +13,6 @@ public sealed class DeletePostCommandHandlerTests
 {
     private readonly IPostRepository _postRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ICurrentUser _currentUser;
     private readonly DeletePostCommandHandler _handler;
     private readonly ICacheService _cacheService;
 
@@ -21,30 +20,22 @@ public sealed class DeletePostCommandHandlerTests
     {
         _postRepository = Substitute.For<IPostRepository>();
         _unitOfWork = Substitute.For<IUnitOfWork>();
-        _currentUser = Substitute.For<ICurrentUser>();
         _cacheService = Substitute.For<ICacheService>();
-        _handler = new DeletePostCommandHandler(
-            _postRepository,
-            _unitOfWork,
-            _currentUser,
-            _cacheService
-        );
+        _handler = new DeletePostCommandHandler(_postRepository, _unitOfWork, _cacheService);
     }
 
     [Fact]
-    public async Task Handle_WhenUserIsAuthenticatedAndPostExists_ShouldDeletePostSuccessfully()
+    public async Task Handle_WhenUserIsAuthorizedAndPostExists_ShouldDeletePostSuccessfully()
     {
         // // Arrange
         UserId userId = UserId.New();
         Post postToDelete = Post.Create("title", "content", userId).Value!;
         PostId postId = postToDelete.Id;
 
-        DeletePostCommand command = new(postId);
+        DeletePostCommand command = new(postId, userId);
         CancellationToken token = default;
 
-        _currentUser.IsAuthenticated.Returns(true);
         _postRepository.GetByIdAsync(Arg.Any<PostId>()).Returns(postToDelete);
-        _currentUser.UserId.Returns(userId.Value);
 
         // Act
         Result result = await _handler.Handle(command, token);
@@ -68,37 +59,12 @@ public sealed class DeletePostCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WhenUserIsNotAuthenticated_ShouldReturnAuthenticationError()
-    {
-        // // Arrange
-        PostId postId = PostId.New();
-        DeletePostCommand command = new(postId);
-        CancellationToken token = default;
-        _currentUser.IsAuthenticated.Returns(false);
-
-        // Act
-        Result result = await _handler.Handle(command, token);
-
-        // Assert
-        Assert.False(result.IsSuccess);
-        Assert.True(result.IsFailure);
-        Assert.Equal(result.Error, AuthErrors.Unauthenticated);
-
-        await _postRepository.DidNotReceive().DeleteAsync(Arg.Any<Post>());
-        await _unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
-        await _cacheService
-            .DidNotReceive()
-            .RemoveAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
-    }
-
-    [Fact]
-    public async Task Handle_WhenUserIsAuthenticatedButPostDoesNotExist_ShouldReturnNotFoundError()
+    public async Task Handle_WhenPostDoesNotExist_ShouldReturnNotFoundError()
     {
         // Arrange
         PostId postId = PostId.New();
-        DeletePostCommand command = new(postId);
+        DeletePostCommand command = new(postId, UserId.New());
         CancellationToken token = default;
-        _currentUser.IsAuthenticated.Returns(true);
         _postRepository.GetByIdAsync(Arg.Any<PostId>()).Returns(null as Post);
 
         // Act
@@ -124,10 +90,8 @@ public sealed class DeletePostCommandHandlerTests
         UserId differentUserId = UserId.New();
         UserId postOwnerId = UserId.New();
         Post postToDelete = Post.Create("title", "content", postOwnerId).Value!;
-        DeletePostCommand command = new(postToDelete.Id);
+        DeletePostCommand command = new(postToDelete.Id, differentUserId);
         CancellationToken token = default;
-        _currentUser.IsAuthenticated.Returns(true);
-        _currentUser.UserId.Returns(differentUserId.Value);
         _postRepository.GetByIdAsync(Arg.Any<PostId>()).Returns(postToDelete);
 
         // Act

@@ -1,5 +1,6 @@
 using CABasicCRUD.Application.Features.Posts.UpdatePost;
 using CABasicCRUD.Domain.Posts;
+using CABasicCRUD.Domain.Users;
 
 namespace CABasicCRUD.UnitTests.Application.Features.Posts.UpdatePost;
 
@@ -16,7 +17,7 @@ public sealed class UpdatePostCommandValidatorTests
     public void Validate_WhenInputIsValid_ShouldNotHaveValidationError()
     {
         // Arrange
-        UpdatePostCommand command = new(PostId.New(), "title", "content");
+        UpdatePostCommand command = new(PostId.New(), "title", "content", UserId.New());
 
         // Act
         var result = _validator.Validate(command);
@@ -35,7 +36,7 @@ public sealed class UpdatePostCommandValidatorTests
     public void Validate_WhenTitleIsNullOrWhitespace_ShouldHaveValidationError(string? title)
     {
         // Arrange
-        UpdatePostCommand command = new(PostId.New(), title!, "content");
+        UpdatePostCommand command = new(PostId.New(), title!, "content", UserId.New());
 
         // Act
         var result = _validator.Validate(command);
@@ -49,7 +50,12 @@ public sealed class UpdatePostCommandValidatorTests
     public void Validate_WhenTitleExceedsMaxLength_ShouldHaveValidationError()
     {
         // Arrange
-        UpdatePostCommand command = new(PostId.New(), new string('a', 101), "content");
+        UpdatePostCommand command = new(
+            PostId.New(),
+            new string('a', 101),
+            "content",
+            UserId.New()
+        );
 
         // Act
         var result = _validator.Validate(command);
@@ -68,7 +74,7 @@ public sealed class UpdatePostCommandValidatorTests
     public void Validate_WhenContentIsNullOrWhitespace_ShouldHaveValidationError(string? content)
     {
         // Arrange
-        UpdatePostCommand command = new(PostId.New(), "title", content!);
+        UpdatePostCommand command = new(PostId.New(), "title", content!, UserId.New());
 
         // Act
         var result = _validator.Validate(command);
@@ -82,7 +88,7 @@ public sealed class UpdatePostCommandValidatorTests
     public void Validate_WhenPostIdIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        UpdatePostCommand command = new(null!, "title", "content");
+        UpdatePostCommand command = new(null!, "title", "content", UserId.New());
 
         // Act
         var result = _validator.Validate(command);

@@ -1,6 +1,7 @@
 using CABasicCRUD.Application.Features.Posts;
 using CABasicCRUD.Application.Features.Posts.DeletePost;
 using CABasicCRUD.Domain.Posts;
+using CABasicCRUD.Domain.Users;
 
 namespace CABasicCRUD.UnitTests.Application.Features.Posts.DeletePost;
 
@@ -17,7 +18,7 @@ public sealed class DeletePostCommandValidatorTests
     public void Validate_WhenInputIsValid_ShouldNotHaveValidationError()
     {
         // Arrange
-        DeletePostCommand command = new(PostId.New());
+        DeletePostCommand command = new(PostId.New(), UserId.New());
 
         // Act
         var result = _validator.Validate(command);
@@ -31,7 +32,7 @@ public sealed class DeletePostCommandValidatorTests
     public void Validate_WhenPostIdIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        DeletePostCommand command = new(null!);
+        DeletePostCommand command = new(null!, UserId.New());
 
         // Act
         var result = _validator.Validate(command);

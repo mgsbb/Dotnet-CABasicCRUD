@@ -13,7 +13,6 @@ public sealed class CreatePostCommandHandlerTests
 {
     private readonly IPostRepository _postRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ICurrentUser _currentUser;
     private readonly CreatePostCommandHandler _handler;
 
     private readonly ICacheService _cacheService;
@@ -22,26 +21,17 @@ public sealed class CreatePostCommandHandlerTests
     {
         _postRepository = Substitute.For<IPostRepository>();
         _unitOfWork = Substitute.For<IUnitOfWork>();
-        _currentUser = Substitute.For<ICurrentUser>();
         _cacheService = Substitute.For<ICacheService>();
-        _handler = new CreatePostCommandHandler(
-            _postRepository,
-            _unitOfWork,
-            _currentUser,
-            _cacheService
-        );
+        _handler = new CreatePostCommandHandler(_postRepository, _unitOfWork, _cacheService);
     }
 
     [Fact]
-    public async Task Handle_WhenUserIsAuthenticatedAndInputIsValid_ShouldCreatePostSuccessfully()
+    public async Task Handle_WhenInputIsValid_ShouldCreatePostSuccessfully()
     {
         // // Arrange
         UserId userId = UserId.New();
-        CreatePostCommand command = new("title", "content");
+        CreatePostCommand command = new("title", "content", userId);
         CancellationToken token = default;
-
-        _currentUser.IsAuthenticated.Returns(true);
-        _currentUser.UserId.Returns(userId.Value);
 
         Post expectedPost = Post.Create("title", "content", userId).Value!;
         _postRepository.AddAsync(Arg.Any<Post>()).Returns(expectedPost);
@@ -70,39 +60,12 @@ public sealed class CreatePostCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WhenUserIsNotAuthenticated_ShouldReturnAuthenticationError()
-    {
-        // // Arrange
-        CreatePostCommand command = new("title", "content");
-        CancellationToken token = default;
-        _currentUser.IsAuthenticated.Returns(false);
-
-        // Act
-        Result<PostResult> result = await _handler.Handle(command, token);
-
-        // Assert
-        Assert.False(result.IsSuccess);
-        Assert.True(result.IsFailure);
-        Assert.Null(result.Value);
-        Assert.Equal(result.Error, AuthErrors.Unauthenticated);
-
-        await _postRepository.DidNotReceive().AddAsync(Arg.Any<Post>());
-        await _unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
-        await _cacheService
-            .DidNotReceive()
-            .RemoveAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
-    }
-
-    [Fact]
     public async Task Handle_WhenPostTitleIsEmpty_ShouldReturnFailure()
     {
         // Arrange
         UserId userId = UserId.New();
-        CreatePostCommand command = new("", "content");
+        CreatePostCommand command = new("", "content", UserId.New());
         CancellationToken token = default;
-
-        _currentUser.IsAuthenticated.Returns(true);
-        _currentUser.UserId.Returns(userId.Value);
 
         // Act
         Result<PostResult> result = await _handler.Handle(command, token);
@@ -126,11 +89,8 @@ public sealed class CreatePostCommandHandlerTests
     {
         // Arrange
         UserId userId = UserId.New();
-        CreatePostCommand command = new("title", "");
+        CreatePostCommand command = new("title", "", UserId.New());
         CancellationToken token = default;
-
-        _currentUser.IsAuthenticated.Returns(true);
-        _currentUser.UserId.Returns(userId.Value);
 
         // Act
         Result<PostResult> result = await _handler.Handle(command, token);

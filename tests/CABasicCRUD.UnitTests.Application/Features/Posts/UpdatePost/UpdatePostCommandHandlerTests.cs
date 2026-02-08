@@ -13,7 +13,6 @@ public sealed class UpdatePostCommandHandlerTests
 {
     private readonly IPostRepository _postRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ICurrentUser _currentUser;
     private readonly UpdatePostCommandHandler _handler;
     private readonly ICacheService _cacheService;
 
@@ -21,27 +20,18 @@ public sealed class UpdatePostCommandHandlerTests
     {
         _postRepository = Substitute.For<IPostRepository>();
         _unitOfWork = Substitute.For<IUnitOfWork>();
-        _currentUser = Substitute.For<ICurrentUser>();
         _cacheService = Substitute.For<ICacheService>();
-        _handler = new UpdatePostCommandHandler(
-            _postRepository,
-            _unitOfWork,
-            _currentUser,
-            _cacheService
-        );
+        _handler = new UpdatePostCommandHandler(_postRepository, _unitOfWork, _cacheService);
     }
 
     [Fact]
-    public async Task Handle_WhenUserIsAuthenticatedAndInputIsValid_ShouldUpdatePostSuccessfully()
+    public async Task Handle_WhenUserIsAuthorizedAndInputIsValid_ShouldUpdatePostSuccessfully()
     {
         // // Arrange
         UserId userId = UserId.New();
         Post post = Post.Create("title", "content", userId).Value!;
-        UpdatePostCommand command = new(post.Id, "title_updated", "content_updated");
+        UpdatePostCommand command = new(post.Id, "title_updated", "content_updated", userId);
         CancellationToken token = default;
-
-        _currentUser.IsAuthenticated.Returns(true);
-        _currentUser.UserId.Returns(userId.Value);
 
         _postRepository.GetByIdAsync(Arg.Any<PostId>()).Returns(post);
 
@@ -68,36 +58,12 @@ public sealed class UpdatePostCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WhenUserIsNotAuthenticated_ShouldReturnAuthenticationError()
-    {
-        // Arrange
-        UpdatePostCommand command = new(PostId.New(), "title", "content");
-        CancellationToken token = default;
-        _currentUser.IsAuthenticated.Returns(false);
-
-        // Act
-        Result result = await _handler.Handle(command, token);
-
-        // Assert
-        Assert.False(result.IsSuccess);
-        Assert.True(result.IsFailure);
-        Assert.Equal(result.Error, AuthErrors.Unauthenticated);
-
-        await _postRepository.DidNotReceive().UpdateAsync(Arg.Any<Post>());
-        await _unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
-        await _cacheService
-            .DidNotReceive()
-            .RemoveAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
-    }
-
-    [Fact]
     public async Task Handle_PostDoesNotExist_ShouldReturnNotFoundError()
     {
         // Arrange
-        UpdatePostCommand command = new(PostId.New(), "title", "content");
+        UpdatePostCommand command = new(PostId.New(), "title", "content", UserId.New());
         CancellationToken token = default;
 
-        _currentUser.IsAuthenticated.Returns(true);
         _postRepository.GetByIdAsync(Arg.Any<PostId>()).Returns(null as Post);
 
         // Act
@@ -123,11 +89,9 @@ public sealed class UpdatePostCommandHandlerTests
         UserId ownerId = UserId.New();
         UserId anotherUserId = UserId.New();
         Post post = Post.Create("title", "content", ownerId).Value!;
-        UpdatePostCommand command = new(post.Id, "title", "content");
+        UpdatePostCommand command = new(post.Id, "title", "content", UserId.New());
         CancellationToken token = default;
 
-        _currentUser.IsAuthenticated.Returns(true);
-        _currentUser.UserId.Returns(anotherUserId);
         _postRepository.GetByIdAsync(Arg.Any<PostId>()).Returns(post);
 
         // Act
@@ -152,11 +116,9 @@ public sealed class UpdatePostCommandHandlerTests
         // Arrange
         UserId userId = UserId.New();
         Post post = Post.Create("title", "content", userId).Value!;
-        UpdatePostCommand command = new(post.Id, "", "content");
+        UpdatePostCommand command = new(post.Id, "", "content", userId);
         CancellationToken token = default;
 
-        _currentUser.IsAuthenticated.Returns(true);
-        _currentUser.UserId.Returns(userId.Value);
         _postRepository.GetByIdAsync(Arg.Any<PostId>()).Returns(post);
 
         // Act
@@ -181,11 +143,9 @@ public sealed class UpdatePostCommandHandlerTests
         // Arrange
         UserId userId = UserId.New();
         Post post = Post.Create("title", "content", userId).Value!;
-        UpdatePostCommand command = new(post.Id, "title", "");
+        UpdatePostCommand command = new(post.Id, "title", "", userId);
         CancellationToken token = default;
 
-        _currentUser.IsAuthenticated.Returns(true);
-        _currentUser.UserId.Returns(userId.Value);
         _postRepository.GetByIdAsync(Arg.Any<PostId>()).Returns(post);
 
         // Act
