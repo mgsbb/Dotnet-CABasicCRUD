@@ -7,21 +7,33 @@
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
     <header>
-        <nav>
-            <a href="/Home/Index">Home</a>
-            <a href="/Posts">Posts</a>
-            <a href="/Auth/Logout">Logout</a>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom px-4">
+            <a href="/" class="navbar-brand fw-bold">Home</a>
+
+
+            <div class="collapse navbar-collapse show">
+                <ul class="navbar-nav ms-auto gap-2">
+
+                    <li class="nav-item">
+                        <a href="/Posts" class="nav-link px-3">Posts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/Auth/Logout" class="nav-link px-3">Logout</a>
+                    </li>
+                </ul>
+            </div>
+
         </nav>
     </header>
 
-    <main>
+    <main class="flex-fill">
         @RenderBody()
     </main>
 
-    <footer>
-        <p>&copy; @DateTime.UtcNow.Year</p>
+    <footer class="bg-light border-top text-center py-3">
+        <small class="text-muted">&copy; @DateTime.UtcNow.Year</small>
     </footer>
 </body>
 

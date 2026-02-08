@@ -2,16 +2,18 @@
     ViewData["Title"] = "Delete Post";
 }
 
-<section>
-    <h1>Delete Post</h1>
+<section class="d-flex py-5 align-items-center justify-content-center">
+    <div class="card shadow-sm p-4" style="width: 100%; max-width: 420px;">
+        <h1 class="h3 mb-4 text-center">Delete Post</h1>
 
-    <p>
-        Are you sure you want to delete
-        <strong>@Model.Title</strong>?
-    </p>
+        <p>
+            Are you sure you want to delete
+            <strong>@Model.Title</strong>?
+        </p>
 
-    <form method="post">
-        <button type="submit">Yes, delete</button>
-        <a href="/posts/@Model.Id">Cancel</a>
-    </form>
+        <form method="post">
+            <button type="submit" class="btn btn-danger w-100 mb-3">Yes, delete</button>
+            <a href="/posts/@Model.Id" class="btn btn-outline-secondary w-100">Cancel</a>
+        </form>
+    </div>
 </section>

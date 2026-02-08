@@ -4,13 +4,27 @@
     ViewData["Title"] = "Post";
 }
 
-<article>
-    <h1>@Model.Title</h1>
+<article class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <div class="card shadow-sm p-4">
+                <h1 class="mb-3">@Model.Title</h1>
 
-    <p>@Model.Content</p>
+                <p class="text-muted mb-4">
+                    @Model.Content
+                </p>
 
-    <nav>
-        <a href="/posts/@Model.Id/edit">Edit</a>
-        <a href="/posts">Back to posts</a>
-    </nav>
+
+
+                <nav class="d-flex gap-3 border-top pt-3">
+                    <a href="/posts/@Model.Id/edit" class="nav-link">
+                        Edit
+                    </a>
+                    <a href="/posts" class="nav-link">
+                        Back to posts
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </div>
 </article>
