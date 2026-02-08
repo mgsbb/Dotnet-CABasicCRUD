@@ -1,3 +1,6 @@
+using CABasicCRUD.Application.Features.Comments;
+using CABasicCRUD.Application.Features.Comments.CreateComment;
+using CABasicCRUD.Application.Features.Comments.GetAllCommentsOfPost;
 using CABasicCRUD.Application.Features.Posts;
 using CABasicCRUD.Application.Features.Posts.CreatePost;
 using CABasicCRUD.Application.Features.Posts.DeletePost;
@@ -51,6 +54,25 @@ public class PostsController : Controller
             return NotFound();
         }
 
+        GetAllCommentsOfPostQuery commentsQuery = new((PostId)id);
+        Result<IReadOnlyList<CommentResult>> commentsResult = await _mediator.Send(commentsQuery);
+
+        if (commentsResult.IsFailure || commentsResult.Value is null)
+        {
+            return NotFound();
+        }
+
+        IReadOnlyList<CommentViewModel> commentViewModels = commentsResult
+            .Value.Select(comment => new CommentViewModel
+            {
+                Id = comment.Id,
+                Body = comment.Body,
+                UserId = comment.UserId,
+                CreatedAt = comment.CreatedAt,
+                UpdatedAt = comment.UpdatedAt,
+            })
+            .ToList();
+
         PostDetailsViewModel viewModel = new()
         {
             Id = result.Value.Id,
@@ -59,9 +81,32 @@ public class PostsController : Controller
             UserId = result.Value.UserId,
             CreatedAt = result.Value.CreatedAt,
             UpdatedAt = result.Value.UpdatedAt,
+            Comments = commentViewModels,
         };
 
         return View(viewModel);
+    }
+
+    [HttpPost("/posts/{id}/comments")]
+    public async Task<IActionResult> CreateComment(
+        Guid id,
+        [Bind(Prefix = "NewComment")] CommentCreateViewModel model
+    )
+    {
+        if (!ModelState.IsValid)
+        {
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        CreateCommentCommand command = new(model.Body, (PostId)id);
+        Result<CommentResult> result = await _mediator.Send(command);
+
+        if (result.IsFailure || result.Value is null)
+        {
+            return NotFound();
+        }
+
+        return RedirectToAction(nameof(Details), new { id });
     }
 
     [HttpGet("create")]
