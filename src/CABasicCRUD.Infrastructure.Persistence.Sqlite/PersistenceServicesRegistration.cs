@@ -5,6 +5,7 @@ using CABasicCRUD.Domain.Posts;
 using CABasicCRUD.Domain.Users;
 using CABasicCRUD.Infrastructure.Persistence.Sqlite.Outbox;
 using CABasicCRUD.Infrastructure.Persistence.Sqlite.Repositories;
+using CABasicCRUD.Infrastructure.Persistence.Sqlite.Seeding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,6 +46,9 @@ public static class PersistenceServicesRegistration
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddHostedService<OutboxProcessor>();
+
+        services.Configure<DatabaseSeedOptions>(configuration.GetSection("Database"));
+        services.AddScoped<ApplicationCommandSeeder>();
 
         return services;
     }
