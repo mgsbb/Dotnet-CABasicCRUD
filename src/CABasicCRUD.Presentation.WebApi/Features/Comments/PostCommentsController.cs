@@ -1,9 +1,11 @@
+using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Features.Auth;
 using CABasicCRUD.Application.Features.Comments;
 using CABasicCRUD.Application.Features.Comments.CreateComment;
 using CABasicCRUD.Application.Features.Comments.GetAllCommentsOfPost;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
+using CABasicCRUD.Domain.Users;
 using CABasicCRUD.Presentation.WebApi.Common.Abstractions;
 using CABasicCRUD.Presentation.WebApi.Features.Comments.Contracts;
 using CABasicCRUD.Presentation.WebApi.RateLimiter;
@@ -17,9 +19,10 @@ namespace CABasicCRUD.Presentation.WebApi.Features.Comments;
 [EnableRateLimiting(RateLimitPolicies.Authenticated)]
 [ApiController]
 [Route("/api/v1/posts/{postId:guid}/comments")]
-public class PostCommentsController(IMediator mediator) : ApiController
+public class PostCommentsController(IMediator mediator, ICurrentUser currentUser) : ApiController
 {
     private readonly IMediator _mediator = mediator;
+    private readonly ICurrentUser _currentUser = currentUser;
 
     [Authorize]
     [HttpPost]
@@ -31,7 +34,11 @@ public class PostCommentsController(IMediator mediator) : ApiController
         Guid postId
     )
     {
-        CreateCommentCommand command = new(request.Body, (PostId)postId);
+        CreateCommentCommand command = new(
+            request.Body,
+            (PostId)postId,
+            (UserId)_currentUser.UserId
+        );
 
         Result<CommentResult> result = await _mediator.Send(command);
 

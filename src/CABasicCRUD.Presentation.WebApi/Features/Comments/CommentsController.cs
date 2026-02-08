@@ -1,3 +1,4 @@
+using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Features.Auth;
 using CABasicCRUD.Application.Features.Comments;
 using CABasicCRUD.Application.Features.Comments.DeleteComment;
@@ -5,6 +6,7 @@ using CABasicCRUD.Application.Features.Comments.GetCommentById;
 using CABasicCRUD.Application.Features.Comments.UpdateComment;
 using CABasicCRUD.Domain.Comments;
 using CABasicCRUD.Domain.Common;
+using CABasicCRUD.Domain.Users;
 using CABasicCRUD.Presentation.WebApi.Common.Abstractions;
 using CABasicCRUD.Presentation.WebApi.Features.Comments.Contracts;
 using CABasicCRUD.Presentation.WebApi.RateLimiter;
@@ -18,9 +20,10 @@ namespace CABasicCRUD.Presentation.WebApi.Features.Comments;
 [EnableRateLimiting(RateLimitPolicies.Authenticated)]
 [ApiController]
 [Route("/api/v1/[controller]")]
-public class CommentsController(IMediator mediator) : ApiController
+public class CommentsController(IMediator mediator, ICurrentUser currentUser) : ApiController
 {
     private readonly IMediator _mediator = mediator;
+    private readonly ICurrentUser _currentUser = currentUser;
 
     [HttpGet("{id}")]
     [ProducesResponseType(type: typeof(CommentResponse), statusCode: StatusCodes.Status200OK)]
@@ -49,7 +52,11 @@ public class CommentsController(IMediator mediator) : ApiController
     [ProducesResponseType(statusCode: StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateComment([FromBody] UpdateCommentRequest request, Guid id)
     {
-        UpdateCommentCommand command = new((CommentId)id, request.Body);
+        UpdateCommentCommand command = new(
+            (CommentId)id,
+            request.Body,
+            (UserId)_currentUser.UserId
+        );
 
         Result result = await _mediator.Send(request: command);
 
@@ -68,7 +75,7 @@ public class CommentsController(IMediator mediator) : ApiController
     [ProducesResponseType(statusCode: StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> DeleteComment(Guid id)
     {
-        DeleteCommentCommand command = new((CommentId)id);
+        DeleteCommentCommand command = new((CommentId)id, (UserId)_currentUser.UserId);
 
         Result result = await _mediator.Send(command);
 

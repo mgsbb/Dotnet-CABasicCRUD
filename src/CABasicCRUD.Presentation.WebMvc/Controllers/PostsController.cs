@@ -1,3 +1,4 @@
+using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Features.Comments;
 using CABasicCRUD.Application.Features.Comments.CreateComment;
 using CABasicCRUD.Application.Features.Comments.GetAllCommentsOfPost;
@@ -9,6 +10,7 @@ using CABasicCRUD.Application.Features.Posts.GetPostById;
 using CABasicCRUD.Application.Features.Posts.UpdatePost;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
+using CABasicCRUD.Domain.Users;
 using CABasicCRUD.Presentation.WebMvc.Models.Posts;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -19,10 +21,12 @@ namespace CABasicCRUD.Presentation.WebMvc.Controllers;
 public class PostsController : Controller
 {
     private readonly IMediator _mediator;
+    private readonly ICurrentUser _currentUser;
 
-    public PostsController(IMediator mediator)
+    public PostsController(IMediator mediator, ICurrentUser currentUser)
     {
         _mediator = mediator;
+        _currentUser = currentUser;
     }
 
     [HttpGet("")]
@@ -98,7 +102,7 @@ public class PostsController : Controller
             return RedirectToAction(nameof(Details), new { id });
         }
 
-        CreateCommentCommand command = new(model.Body, (PostId)id);
+        CreateCommentCommand command = new(model.Body, (PostId)id, (UserId)_currentUser.UserId);
         Result<CommentResult> result = await _mediator.Send(command);
 
         if (result.IsFailure || result.Value is null)
@@ -120,7 +124,7 @@ public class PostsController : Controller
             return View(model);
         }
 
-        CreatePostCommand command = new(model.Title, model.Content);
+        CreatePostCommand command = new(model.Title, model.Content, (UserId)_currentUser.UserId);
         Result<PostResult> result = await _mediator.Send(command);
 
         if (result.IsFailure || result.Value is null)
@@ -147,7 +151,12 @@ public class PostsController : Controller
             return View(model);
         }
 
-        UpdatePostCommand command = new((PostId)id, model.Title, model.Content);
+        UpdatePostCommand command = new(
+            (PostId)id,
+            model.Title,
+            model.Content,
+            (UserId)_currentUser.UserId
+        );
         Result result = await _mediator.Send(command);
 
         if (result.IsFailure)
@@ -184,7 +193,7 @@ public class PostsController : Controller
     [HttpPost("{id}/delete")]
     public async Task<IActionResult> DeleteConfirmed(Guid id)
     {
-        DeletePostCommand command = new((PostId)id);
+        DeletePostCommand command = new((PostId)id, (UserId)_currentUser.UserId);
         Result result = await _mediator.Send(command);
 
         if (result.IsFailure)

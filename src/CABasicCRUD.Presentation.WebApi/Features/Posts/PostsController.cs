@@ -1,3 +1,4 @@
+using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Features.Auth;
 using CABasicCRUD.Application.Features.Posts;
 using CABasicCRUD.Application.Features.Posts.CreatePost;
@@ -7,6 +8,7 @@ using CABasicCRUD.Application.Features.Posts.GetPostById;
 using CABasicCRUD.Application.Features.Posts.UpdatePost;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
+using CABasicCRUD.Domain.Users;
 using CABasicCRUD.Presentation.WebApi.Common.Abstractions;
 using CABasicCRUD.Presentation.WebApi.Features.Posts.Contracts;
 using CABasicCRUD.Presentation.WebApi.RateLimiter;
@@ -20,9 +22,10 @@ namespace CABasicCRUD.Presentation.WebApi.Features.Posts;
 [EnableRateLimiting(RateLimitPolicies.Authenticated)]
 [ApiController]
 [Route("/api/v1/[controller]")]
-public class PostsController(IMediator mediator) : ApiController
+public class PostsController(IMediator mediator, ICurrentUser currentUser) : ApiController
 {
     private readonly IMediator _mediator = mediator;
+    private readonly ICurrentUser _currentUser = currentUser;
 
     [Authorize]
     [HttpPost]
@@ -31,7 +34,11 @@ public class PostsController(IMediator mediator) : ApiController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<PostResponse>> CreatePost([FromBody] CreatePostRequest request)
     {
-        CreatePostCommand command = new(request.Title, request.Content);
+        CreatePostCommand command = new(
+            request.Title,
+            request.Content,
+            (UserId)_currentUser.UserId
+        );
 
         Result<PostResult> result = await _mediator.Send(request: command);
 
@@ -95,7 +102,12 @@ public class PostsController(IMediator mediator) : ApiController
     [ProducesResponseType(statusCode: StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdatePost([FromBody] UpdatePostRequest request, Guid id)
     {
-        UpdatePostCommand command = new(PostId: (PostId)id, request.Title, request.Content);
+        UpdatePostCommand command = new(
+            PostId: (PostId)id,
+            request.Title,
+            request.Content,
+            (UserId)_currentUser.UserId
+        );
 
         Result result = await _mediator.Send(request: command);
 
@@ -114,7 +126,7 @@ public class PostsController(IMediator mediator) : ApiController
     [ProducesResponseType(statusCode: StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> DeletePost(Guid id)
     {
-        DeletePostCommand command = new((PostId)id);
+        DeletePostCommand command = new((PostId)id, (UserId)_currentUser.UserId);
 
         Result result = await _mediator.Send(request: command);
 
