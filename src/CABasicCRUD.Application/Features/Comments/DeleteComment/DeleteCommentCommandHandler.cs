@@ -10,26 +10,19 @@ namespace CABasicCRUD.Application.Features.Comments.DeleteComment;
 internal sealed class DeleteCommentCommandHandler(
     ICommentRepository commentRepository,
     IUserRepository userRepository,
-    IUnitOfWork unitOfWork,
-    ICurrentUser currentUser
+    IUnitOfWork unitOfWork
 ) : ICommandHandler<DeleteCommentCommand>
 {
     private readonly ICommentRepository _commentRepository = commentRepository;
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    private readonly ICurrentUser _currentUser = currentUser;
 
     public async Task<Result> Handle(
         DeleteCommentCommand request,
         CancellationToken cancellationToken
     )
     {
-        if (!_currentUser.IsAuthenticated)
-        {
-            return Result<CommentResult>.Failure(AuthErrors.Unauthenticated);
-        }
-
-        User? user = await _userRepository.GetByIdAsync((UserId)_currentUser.UserId);
+        User? user = await _userRepository.GetByIdAsync(request.UserId);
 
         if (user is null)
         {
@@ -43,7 +36,7 @@ internal sealed class DeleteCommentCommandHandler(
             return Result.Failure(CommentErrors.NotFound);
         }
 
-        if (_currentUser.UserId != comment.UserId)
+        if (request.UserId != comment.UserId)
         {
             return Result.Failure(AuthErrors.Forbidden);
         }

@@ -1,22 +1,18 @@
 using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Common.Interfaces.Messaging;
-using CABasicCRUD.Application.Features.Auth;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
-using CABasicCRUD.Domain.Users;
 
 namespace CABasicCRUD.Application.Features.Posts.CreatePost;
 
 internal sealed class CreatePostCommandHandler(
     IPostRepository postRepository,
     IUnitOfWork unitOfWork,
-    ICurrentUser currentUser,
     ICacheService cacheService
 ) : ICommandHandler<CreatePostCommand, PostResult>
 {
     private readonly IPostRepository _postRepository = postRepository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    private readonly ICurrentUser _currentUser = currentUser;
     private readonly ICacheService _cacheService = cacheService;
 
     public async Task<Result<PostResult>> Handle(
@@ -24,15 +20,10 @@ internal sealed class CreatePostCommandHandler(
         CancellationToken cancellationToken
     )
     {
-        if (!_currentUser.IsAuthenticated)
-        {
-            return Result<PostResult>.Failure(AuthErrors.Unauthenticated);
-        }
-
         Result<Post> result = Post.Create(
             title: request.Title,
             content: request.Content,
-            userId: (UserId)_currentUser.UserId
+            userId: request.UserId
         );
 
         // Result<Post> postResult = Post.Create(

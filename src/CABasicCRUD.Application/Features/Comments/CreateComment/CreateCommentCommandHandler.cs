@@ -1,6 +1,5 @@
 using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Common.Interfaces.Messaging;
-using CABasicCRUD.Application.Features.Auth;
 using CABasicCRUD.Domain.Comments;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
@@ -12,27 +11,20 @@ internal sealed class CreateCommentCommandHandler(
     ICommentRepository commentRepository,
     IPostRepository postRepository,
     IUserRepository userRepository,
-    IUnitOfWork unitOfWork,
-    ICurrentUser currentUser
+    IUnitOfWork unitOfWork
 ) : ICommandHandler<CreateCommentCommand, CommentResult>
 {
     private readonly ICommentRepository _commentRepository = commentRepository;
     private readonly IPostRepository _postRepository = postRepository;
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    private readonly ICurrentUser _currentUser = currentUser;
 
     public async Task<Result<CommentResult>> Handle(
         CreateCommentCommand request,
         CancellationToken cancellationToken
     )
     {
-        if (!_currentUser.IsAuthenticated)
-        {
-            return Result<CommentResult>.Failure(AuthErrors.Unauthenticated);
-        }
-
-        User? user = await _userRepository.GetByIdAsync((UserId)_currentUser.UserId);
+        User? user = await _userRepository.GetByIdAsync(request.UserId);
 
         if (user is null)
         {
@@ -46,11 +38,7 @@ internal sealed class CreateCommentCommandHandler(
             return Result<CommentResult>.Failure(Posts.PostErrors.NotFound);
         }
 
-        Result<Comment> result = Comment.Create(
-            request.Body,
-            request.PostId,
-            (UserId)_currentUser.UserId
-        );
+        Result<Comment> result = Comment.Create(request.Body, request.PostId, request.UserId);
 
         if (result.IsFailure || result.Value is null)
         {
