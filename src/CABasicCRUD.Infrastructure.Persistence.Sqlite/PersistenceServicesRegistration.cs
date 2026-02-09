@@ -49,6 +49,7 @@ public static class PersistenceServicesRegistration
 
         services.Configure<DatabaseSeedOptions>(configuration.GetSection("Database"));
         services.AddScoped<ApplicationCommandSeeder>();
+        services.AddScoped<RawSqlSeeder>();
 
         return services;
     }

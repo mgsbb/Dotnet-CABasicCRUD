@@ -43,7 +43,7 @@ var seedOptions = app.Configuration.GetSection("Database").Get<DatabaseSeedOptio
 if (seedOptions?.IsSeedDatabase == true)
 {
     using var scope = app.Services.CreateScope();
-    var seeder = scope.ServiceProvider.GetRequiredService<ApplicationCommandSeeder>();
+    var seeder = scope.ServiceProvider.GetRequiredService<RawSqlSeeder>();
 
     await seeder.SeedAsync();
 }
