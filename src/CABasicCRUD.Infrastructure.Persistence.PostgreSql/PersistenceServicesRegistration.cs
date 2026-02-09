@@ -5,6 +5,7 @@ using CABasicCRUD.Domain.Posts;
 using CABasicCRUD.Domain.Users;
 using CABasicCRUD.Infrastructure.Persistence.PostgreSql.Outbox;
 using CABasicCRUD.Infrastructure.Persistence.PostgreSql.Repositories;
+using CABasicCRUD.Infrastructure.Persistence.PostgreSql.Seeding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,6 +42,10 @@ public static class PersistenceServicesRegistration
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddHostedService<OutboxProcessor>();
+
+        services.Configure<DatabaseSeedOptions>(configuration.GetSection("Database"));
+        services.AddScoped<ApplicationCommandSeeder>();
+        services.AddScoped<RawSqlSeeder>();
 
         return services;
     }

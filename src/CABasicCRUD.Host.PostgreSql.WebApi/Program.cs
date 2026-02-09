@@ -1,6 +1,7 @@
 ﻿using CABasicCRUD.Application;
 using CABasicCRUD.Infrastructure;
 using CABasicCRUD.Infrastructure.Persistence.PostgreSql;
+using CABasicCRUD.Infrastructure.Persistence.PostgreSql.Seeding;
 using CABasicCRUD.Presentation.WebApi;
 using CABasicCRUD.Presentation.WebApi.Middlewares;
 using OpenTelemetry.Logs;
@@ -58,6 +59,16 @@ app.UseAuthorization();
 app.UseRateLimiter();
 
 app.MapControllers();
+
+var seedOptions = app.Configuration.GetSection("Database").Get<DatabaseSeedOptions>();
+
+if (seedOptions?.IsSeedDatabase == true)
+{
+    using var scope = app.Services.CreateScope();
+    var seeder = scope.ServiceProvider.GetRequiredService<RawSqlSeeder>();
+
+    await seeder.SeedAsync();
+}
 
 app.MapGet("/", () => "Hello World!");
 

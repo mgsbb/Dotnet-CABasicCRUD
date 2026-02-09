@@ -1,6 +1,7 @@
 ﻿using CABasicCRUD.Application;
 using CABasicCRUD.Infrastructure;
 using CABasicCRUD.Infrastructure.Persistence.PostgreSql;
+using CABasicCRUD.Infrastructure.Persistence.PostgreSql.Seeding;
 using CABasicCRUD.Presentation.WebMvc;
 // using Microsoft.Extensions.FileProviders;
 using OpenTelemetry.Logs;
@@ -96,6 +97,16 @@ Moving wwwroot into host project seems to be the best option for now.
 // {
 //     Console.WriteLine(ex);
 // }
+
+var seedOptions = app.Configuration.GetSection("Database").Get<DatabaseSeedOptions>();
+
+if (seedOptions?.IsSeedDatabase == true)
+{
+    using var scope = app.Services.CreateScope();
+    var seeder = scope.ServiceProvider.GetRequiredService<RawSqlSeeder>();
+
+    await seeder.SeedAsync();
+}
 
 app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
