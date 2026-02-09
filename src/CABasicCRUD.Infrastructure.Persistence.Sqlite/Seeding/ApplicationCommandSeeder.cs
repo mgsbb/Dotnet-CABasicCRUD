@@ -1,6 +1,14 @@
+using System.Diagnostics;
+using Bogus;
+using CABasicCRUD.Application.Features.Auth;
 using CABasicCRUD.Application.Features.Auth.RegisterUser;
+using CABasicCRUD.Application.Features.Comments;
 using CABasicCRUD.Application.Features.Comments.CreateComment;
+using CABasicCRUD.Application.Features.Posts;
 using CABasicCRUD.Application.Features.Posts.CreatePost;
+using CABasicCRUD.Domain.Common;
+using CABasicCRUD.Domain.Posts;
+using CABasicCRUD.Domain.Users;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -26,20 +34,63 @@ public sealed class ApplicationCommandSeeder(
 
         _logger.LogInformation("Running database seeder.");
 
-        var user1 = await _mediator.Send(
-            new RegisterUserCommand("User1", "user1@email.com", _options.SeedUserPassword)
-        );
+        Randomizer.Seed = new Random(100);
 
-        var user2 = await _mediator.Send(
-            new RegisterUserCommand("User2", "user2@email.com", _options.SeedUserPassword)
-        );
+        var userIds = new List<UserId>();
+        var postIds = new List<PostId>();
 
-        var post1 = await _mediator.Send(
-            new CreatePostCommand("New post tile 1", "New post content 1", user1.Value!.Id)
-        );
+        var faker = new Faker();
 
-        var comment1 = await _mediator.Send(
-            new CreateCommentCommand("Comment body1", post1.Value!.Id, user2.Value!.Id)
-        );
+        var stopWatch = Stopwatch.StartNew();
+
+        // 50 users
+        for (var i = 0; i < 50; i++)
+        {
+            // RegisterUserCommand results in domain events being raised, and external systems such as email sender are effected
+            Result<AuthResult> result = await _mediator.Send(
+                new RegisterUserCommand(
+                    faker.Name.FullName(),
+                    faker.Internet.Email(),
+                    _options.SeedUserPassword
+                )
+            );
+
+            userIds.Add(result.Value!.Id);
+        }
+
+        // each user creates 10 posts, so 500 posts
+        foreach (UserId userId in userIds)
+        {
+            for (var i = 0; i < 10; i++)
+            {
+                string postContent = string.Join(
+                    " ",
+                    Enumerable.Range(0, 10).Select(_ => faker.Hacker.Phrase())
+                );
+
+                Result<PostResult> result = await _mediator.Send(
+                    new CreatePostCommand(faker.Commerce.ProductName(), postContent, userId)
+                );
+
+                postIds.Add(result.Value!.Id);
+            }
+        }
+
+        // each post has 10 comments, so 5000 comments
+        foreach (PostId postId in postIds)
+        {
+            for (var i = 0; i < 10; i++)
+            {
+                var userId = faker.PickRandom(userIds);
+
+                Result<CommentResult> result = await _mediator.Send(
+                    new CreateCommentCommand(faker.Hacker.Phrase(), postId, userId)
+                );
+            }
+        }
+
+        stopWatch.Stop();
+
+        _logger.LogInformation("Seeding took {elapsedTime}", stopWatch.Elapsed);
     }
 }
