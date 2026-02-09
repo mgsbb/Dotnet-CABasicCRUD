@@ -18,12 +18,14 @@ namespace CABasicCRUD.Infrastructure.Persistence.Sqlite.Seeding;
 public sealed class ApplicationCommandSeeder(
     IMediator mediator,
     IOptions<DatabaseSeedOptions> options,
-    ILogger<ApplicationCommandSeeder> logger
+    ILogger<ApplicationCommandSeeder> logger,
+    IUserRepository userRepository
 )
 {
     private readonly IMediator _mediator = mediator;
     private readonly DatabaseSeedOptions _options = options.Value;
     private readonly ILogger<ApplicationCommandSeeder> _logger = logger;
+    private readonly IUserRepository _userRepository = userRepository;
 
     public async Task SeedAsync()
     {
@@ -34,6 +36,14 @@ public sealed class ApplicationCommandSeeder(
 
         _logger.LogInformation("Running database seeder.");
 
+        User? defaultSeededUser = await _userRepository.GetByEmailAsync("default_user@email.com");
+
+        if (defaultSeededUser is not null)
+        {
+            _logger.LogInformation("Database already seeded.");
+            return;
+        }
+
         Randomizer.Seed = new Random(100);
 
         var userIds = new List<UserId>();
@@ -43,8 +53,14 @@ public sealed class ApplicationCommandSeeder(
 
         var stopWatch = Stopwatch.StartNew();
 
-        // 50 users
-        for (var i = 0; i < 50; i++)
+        Result<AuthResult> defaultUserResult = await _mediator.Send(
+            new RegisterUserCommand("John Doe", "default_user@email.com", _options.SeedUserPassword)
+        );
+
+        userIds.Add(defaultUserResult.Value!.Id);
+
+        // 49 users
+        for (var i = 0; i < 49; i++)
         {
             // RegisterUserCommand results in domain events being raised, and external systems such as email sender are effected
             Result<AuthResult> result = await _mediator.Send(
