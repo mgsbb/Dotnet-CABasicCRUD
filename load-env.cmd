@@ -9,5 +9,5 @@ if "%~1"=="" (
 
 for /f "usebackq tokens=1,* delims==" %%A in ("%~1") do (
     set %%A=%%B
-    echo %%A==%%B
+    echo %%A=%%B
 )
