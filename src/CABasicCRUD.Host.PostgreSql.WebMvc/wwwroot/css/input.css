@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+/* Watch changes for these files */
+@source "../../../**/*.cshtml"
+
+
