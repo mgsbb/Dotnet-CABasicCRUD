@@ -31,4 +31,14 @@
   <Target Name="RestoreClientSideLibraries" BeforeTargets="PreBuildEvent">
     <Exec Command="libman restore" />
   </Target>
+  <ItemGroup>
+    <UpToDateCheckBuilt Include="wwwroot/css/site.css" Set="Css" />
+  </ItemGroup>
+  <Target Name="Tailwind" BeforeTargets="Build;PrepareForPublish">
+    <Exec Command="npm install" />
+    <Exec Command="npm run build:css" />
+    <ItemGroup>
+      <Content Include="wwwroot/css/site.css" CopyToPublishDirectory="Always" />
+    </ItemGroup>
+  </Target>
 </Project>
