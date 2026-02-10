@@ -5,8 +5,8 @@ using CABasicCRUD.Application.Features.Comments.GetAllCommentsOfPost;
 using CABasicCRUD.Application.Features.Posts;
 using CABasicCRUD.Application.Features.Posts.CreatePost;
 using CABasicCRUD.Application.Features.Posts.DeletePost;
-using CABasicCRUD.Application.Features.Posts.GetAllposts;
 using CABasicCRUD.Application.Features.Posts.GetPostById;
+using CABasicCRUD.Application.Features.Posts.SearchPosts;
 using CABasicCRUD.Application.Features.Posts.UpdatePost;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts;
@@ -30,9 +30,19 @@ public class PostsController : Controller
     }
 
     [HttpGet("")]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(PostListViewModel model)
     {
-        GetAllPostsQuery query = new();
+        // if (!ModelState.IsValid)
+        //     return RedirectToAction(nameof(Index));
+
+        SearchPostsQuery query = new(
+            model.SearchTerm,
+            model.Page,
+            model.PageSize,
+            model.OrderBy,
+            model.SortDirection
+        );
+
         Result<IReadOnlyList<PostResult>> result = await _mediator.Send(query);
 
         if (result.IsFailure || result.Value is null)
@@ -40,9 +50,11 @@ public class PostsController : Controller
             return View(new List<PostListItemViewModel>());
         }
 
-        IReadOnlyList<PostListItemViewModel> viewModel = result
+        IReadOnlyList<PostListItemViewModel> postListItems = result
             .Value.Select(p => new PostListItemViewModel { Id = p.Id, Title = p.Title })
             .ToList();
+
+        PostListViewModel viewModel = new() { Posts = postListItems };
 
         return View(viewModel);
     }
