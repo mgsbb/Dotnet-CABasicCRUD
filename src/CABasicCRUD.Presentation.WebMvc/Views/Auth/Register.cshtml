@@ -4,30 +4,43 @@
 }
 
 
-<section class="d-flex py-5 align-items-center justify-content-center">
-    <div class="card shadow-sm p-4" style="width: 100%; max-width: 420px;">
-        <h1 class="h3 mb-4 text-center">Register</h1>
+<div class="flex min-h-screen">
+    <section class="bg-gray-800 flex-1"></section>
 
-        <form asp-controller="Auth" asp-action="Register" method="post">
-            <div class="mb-3">
-                <label for="Name" class="form-label">Name</label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger small"></span>
-            </div>
+    <section class="flex-1 pt-40">
+        <div class="w-1/2 mx-auto">
+            <h1 class="text-5xl font-semibold text-gray-700 mb-4">Create an account</h1>
 
-            <div class="mb-3">
-                <label for="Email" class="form-label">Email</label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger small"></span>
-            </div>
+            <a href="/Auth/Login" class="text-gray-500 text-center">Already have an account? Login</a>
 
-            <div class="mb-3">
-                <label for="Password" class="form-label">Password</label>
-                <input asp-for="Password" type="password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger small"></span>
-            </div>
+            <hr class="border border-gray-300 mb-12 mt-4">
 
-            <button type="submit" class="btn btn-primary w-100">Register</button>
-        </form>
-    </div>
-</section>
+            <form asp-controller="Auth" asp-action="Register" method="post" class="flex flex-col gap-10">
+                <div class="flex flex-col gap-4">
+                    <div class="flex flex-col gap-1">
+                        <label for="Name" class="font-medium text-gray-500">Name</label>
+                        <input asp-for="Name" class="border border-gray-300 rounded-sm p-2" />
+                        <span asp-validation-for="Name" class="text-sm font-semibold text-red-600"></span>
+                    </div>
+
+                    <div class="flex flex-col gap-1">
+                        <label for="Email" class="font-medium text-gray-500">Email</label>
+                        <input asp-for="Email" class="border border-gray-300 rounded-sm p-2" />
+                        <span asp-validation-for="Email" class="text-sm font-semibold text-red-600"></span>
+                    </div>
+
+                    <div class="flex flex-col gap-1">
+                        <label for="Password" class="font-medium text-gray-500">Password</label>
+                        <input asp-for="Password" type="password" class="border border-gray-300 rounded-sm p-2" />
+                        <span asp-validation-for="Password" class="text-sm font-semibold text-red-600"></span>
+                    </div>
+                </div>
+
+                <button type="submit"
+                        class="bg-gray-900 text-white py-3 rounded-sm cursor-pointer font-semibold text-sm">Create
+                    Account
+                </button>
+            </form>
+        </div>
+    </section>
+</div>
