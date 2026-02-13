@@ -45,10 +45,26 @@ public class AuthController : Controller
 
         if (result.IsFailure || result.Value is null)
         {
-            if (result.Error == null)
+            if (result.Error == null || result.IsSuccess)
                 throw new InvalidOperationException();
 
-            ModelState.AddModelError(string.Empty, result.Error.ToString());
+            if (result.Error == AuthErrors.AlreadyExists)
+            {
+                ModelState.AddModelError(nameof(model.Email), result.Error.Message.ToString());
+            }
+            // TODO: handle this better
+            if (result is IValidationResult validationResult)
+            {
+                string passwordErrorMessage = "";
+
+                foreach (var e in validationResult.Errors)
+                {
+                    if (e.Code == "Password")
+                        passwordErrorMessage += $" {e.Message}";
+                }
+                ModelState.AddModelError(nameof(model.Password), passwordErrorMessage);
+            }
+
             return View(model);
         }
 
@@ -82,10 +98,14 @@ public class AuthController : Controller
 
         if (result.IsFailure || result.Value is null)
         {
-            if (result.Error == null)
+            if (result.Error == null || result.IsSuccess)
                 throw new InvalidOperationException();
 
-            ModelState.AddModelError(string.Empty, result.Error.ToString());
+            if (result.Error == AuthErrors.InvalidCredentials)
+            {
+                ModelState.AddModelError(string.Empty, result.Error.Message.ToString());
+            }
+
             return View(model);
         }
 
