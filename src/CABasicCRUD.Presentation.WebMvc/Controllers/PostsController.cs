@@ -51,7 +51,12 @@ public class PostsController : Controller
         }
 
         IReadOnlyList<PostListItemViewModel> postListItems = result
-            .Value.Select(p => new PostListItemViewModel { Id = p.Id, Title = p.Title })
+            .Value.Select(p => new PostListItemViewModel
+            {
+                Id = p.Id,
+                Title = p.Title,
+                ContentPreview = string.Concat(p.Content.AsSpan(0, 100), "..."),
+            })
             .ToList();
 
         PostListViewModel viewModel = new() { Posts = postListItems };
