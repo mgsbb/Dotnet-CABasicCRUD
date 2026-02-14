@@ -4,66 +4,67 @@
     ViewData["Title"] = "Post";
 }
 
-<article class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-12 col-md-10 col-lg-8">
-            <div class="card shadow-sm p-4 mb-1">
+<article class="mx-auto bg-white w-2/3 py-28 px-20 border-x border-gray-300 min-h-screen">
 
-                @* Post *@
-                <h1 class="mb-3">@Model.Title</h1>
+    @* Post *@
+    <h1 class="font-bold text-3xl text-gray-700">@Model.Title</h1>
 
-                <p class="text-muted mb-4">
-                    @Model.Content
-                </p>
+    <nav class="flex gap-6 mt-6 items-center">
+        <a href="/posts/@Model.Id/edit">
+            <button class="bg-gray-100 px-2 py-1 text-gray-700 font-semibold rounded-sm cursor-pointer">
+                Edit
+            </button>
+        </a>
+        <a href="/posts" class="text-gray-500 font-medium">
+            Back to posts
+        </a>
+    </nav>
 
-                <nav class="d-flex gap-3 border-top pt-3">
-                    <a href="/posts/@Model.Id/edit" class="nav-link">
-                        Edit
-                    </a>
-                    <a href="/posts" class="nav-link">
-                        Back to posts
-                    </a>
-                </nav>
+    <p class="mt-8">
+        @Model.Content
+    </p>
 
-                @* Add comment *@
-                <section class="mt-4">
-                    <h6 class="mb-2">Add a comment</h6>
+    @* Add comment *@
+    <section class="mt-16 w-full">
+        <h6 class="font-bold text-gray-700">Add a comment</h6>
 
-                    <form asp-controller="Posts" asp-action="CreateComment" asp-route-id="@Model.Id" method="post">
-                        <div class="mb-3">
-                            <textarea class="form-control" asp-for="NewComment.Body"
-                                      placeholder="Write your comment..."></textarea>
-                            <span asp-validation-for="NewComment.Body" class="text-danger small"></span>
-                        </div>
-
-                        <button class="btn btn-primary btn-sm" type="submit">
-                            Submit
-                        </button>
-                    </form>
-                </section>
-
-                @* Comments *@
-                <section class="mt-4">
-                    <h4 class="mb-3">Comments (@Model.Comments.Count)</h4>
-
-                    @if (!Model.Comments.Any())
-                    {
-                        <p class="text-muted">No comments yet.</p>
-                    }
-                    else
-                    {
-                        @foreach (var comment in Model.Comments)
-                        {
-                            <div class="border-bottom pb-2 mb-3">
-                                <p class="mb-1">@comment.Body</p>
-                                <small class="text-muted">
-                                    @comment.CreatedAt.ToString("g")
-                                </small>
-                            </div>
-                        }
-                    }
-                </section>
+        <form asp-controller="Posts" asp-action="CreateComment" asp-route-id="@Model.Id" method="post"
+              class="mt-5 flex flex-col gap-3">
+            <div class="flex flex-col gap-1">
+                <textarea asp-for="NewComment.Body" placeholder="Write your comment..."
+                          class="border border-gray-300 rounded-sm p-2"></textarea>
+                <span asp-validation-for="NewComment.Body" class="text-sm font-semibold text-red-600"></span>
             </div>
-        </div>
-    </div>
+
+            <button type="submit"
+                    class="bg-gray-900 text-white py-2 px-4 rounded-sm cursor-pointer font-semibold text-sm w-1/6">
+                Submit
+            </button>
+        </form>
+    </section>
+
+    @* Comments *@
+    <section class="mt-16">
+        <h4 class="text-2xl text-gray-700 font-semibold mb-8">Comments (@Model.Comments.Count)</h4>
+
+        @if (!Model.Comments.Any())
+        {
+            <p class="text-gray-800">No comments yet.</p>
+        }
+        else
+        {
+            <div class="flex flex-col gap-6">
+                @foreach (var comment in Model.Comments)
+                {
+                    <div>
+                        <p class="mb-1">@comment.Body</p>
+                        <small class="text-gray-600 font-medium">
+                            @comment.CreatedAt.ToString("g")
+                        </small>
+                    </div>
+                }
+            </div>
+        }
+    </section>
+
 </article>

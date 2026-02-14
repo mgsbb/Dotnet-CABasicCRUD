@@ -4,24 +4,26 @@
 }
 
 
-<section class="d-flex py-5 align-items-center justify-content-center">
-    <div class="card shadow-sm p-4" style="width: 100%; max-width: 420px;">
-        <h1 class="h3 mb-4 text-center">Create Post</h1>
+<section class="mx-auto bg-white w-2/3 py-20 border-x border-gray-300 min-h-screen">
 
-        <form asp-controller="Posts" asp-action="Create" method="post">
-            <div class="mb-3">
-                <label for="Title" class="form-label">Title</label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger small"></span>
-            </div>
+    <h1 class="text-3xl font-medium text-gray-700 my-10 text-center">Create Post</h1>
 
-            <div class="mb-3">
-                <label for="Content" class="form-label">Content</label>
-                <textarea asp-for="Content" class="form-control"></textarea>
-                <span asp-validation-for="Content" class="text-danger small"></span>
-            </div>
+    <form asp-controller="Posts" asp-action="Create" method="post" class="flex flex-col gap-10 w-3/4 mx-auto">
+        <div class="flex flex-col gap-1">
+            <label for="Title" class="font-medium text-gray-500">Title</label>
+            <input asp-for="Title" class="border border-gray-300 rounded-sm p-2" />
+            <span asp-validation-for="Title" class="text-sm font-semibold text-red-600"></span>
+        </div>
 
-            <button type="submit" class="btn btn-primary w-100">Create</button>
-        </form>
-    </div>
+        <div class="flex flex-col gap-1">
+            <label for="Content" class="font-medium text-gray-500">Content</label>
+            <textarea asp-for="Content" class="border border-gray-300 rounded-sm p-2" rows="15"></textarea>
+            <span asp-validation-for="Content" class="text-sm font-semibold text-red-600"></span>
+        </div>
+
+        <button type="submit" class="bg-gray-900 text-white py-3 px-4 rounded-sm cursor-pointer font-semibold text-sm">
+            Create
+        </button>
+    </form>
+
 </section>

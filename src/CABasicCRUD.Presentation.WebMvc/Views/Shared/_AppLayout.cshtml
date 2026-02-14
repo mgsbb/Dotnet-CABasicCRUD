@@ -1,40 +1,55 @@
+@using CABasicCRUD.Application.Common.Interfaces
+@inject ICurrentUser CurrentUser
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8" />
     <title>@ViewData["Title"]</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
 </head>
 
-<body class="d-flex flex-column min-vh-100">
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom px-4">
-            <a href="/" class="navbar-brand fw-bold">Home</a>
+<body class="">
+    @* sidebar *@
+    <aside class="fixed h-screen w-96 border border-l border-gray-300 p-4">
+        @* user details *@
+        <div class="px-4 py-10 flex flex-col gap-4 items-center">
+            @* replace with user profile image *@
+            <div class="border border-gray-400 rounded-sm p-4 w-32 h-32"></div>
+            @* replace with username instead *@
+            <p class="font-bold text-gray-700">
+                <a href="/Profile">
+                    @CurrentUser.Email
+                </a>
+            </p>
+        </div>
+
+        <div class="px-10 py-10 h-10">
+            @* home icon *@
+            <a href="/" class="text-gray-500 text-lg font-medium inline-flex gap-4 w-full">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                     stroke="currentColor" class="size-6 ">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                </svg>
+                <span>Home</span>
+            </a>
 
 
-            <div class="collapse navbar-collapse show">
-                <ul class="navbar-nav ms-auto gap-2">
+        </div>
+    </aside>
 
-                    <li class="nav-item">
-                        <a href="/Posts" class="nav-link px-3">Posts</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/Auth/Logout" class="nav-link px-3">Logout</a>
-                    </li>
-                </ul>
-            </div>
-
-        </nav>
+    @* top navbar *@
+    <header class="ml-96 h-16 w-full bg-white border-b border-gray-300 fixed">
+        <nav></nav>
     </header>
 
-    <main class="flex-fill">
+    <main class="ml-96 bg-gray-100 min-h-screen">
         @RenderBody()
     </main>
-
-    <footer class="bg-light border-top text-center py-3">
-        <small class="text-muted">&copy; @DateTime.UtcNow.Year</small>
-    </footer>
 </body>
 
 </html>

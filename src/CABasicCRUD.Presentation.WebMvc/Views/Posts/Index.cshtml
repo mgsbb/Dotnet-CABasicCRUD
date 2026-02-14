@@ -4,71 +4,70 @@
     ViewData["Title"] = "Posts";
 }
 
-<section class="container py-5">
+<section class="mx-auto bg-white w-2/3 p-10 border-x border-gray-300">
     @* title and button *@
-    <div class="d-flex align-items-center mb-4">
-        <h1 class="mb-3">Posts</h1>
+    <div class="flex gap-10 items-center pt-20">
+        <h1 class="font-bold text-3xl">Posts</h1>
 
-        <nav class="d-flex justify-content-center gap-3">
-            <a href="/Posts/Create" class="btn btn-primary btn-sm px-3 mx-3">
-                Create new
+        <nav class="">
+            <a href="/Posts/Create">
+                <button class="bg-gray-800 text-white py-2 px-4 rounded-sm cursor-pointer text-sm">
+                    Create new
+                </button>
             </a>
         </nav>
     </div>
 
     @* filter form *@
-    <form method="get" class="mb-3">
-        <div class="d-flex align-items-center gap-2 mb-3">
-            <div class="col-6">
-                <input asp-for="SearchTerm" placeholder="Search posts..." class="form-control"/>
-            </div>
+    <form method="get" class="mt-10 flex items-center gap-2 text-sm w-full">
+        <input asp-for="SearchTerm" placeholder="Search posts..." class="border border-gray-300 rounded-sm p-2 w-1/2" />
 
-            <div class="col">
-                <select asp-for="OrderBy" asp-items="Html.GetEnumSelectList<PostOrderBy>()"
-                        class="form-select" onchange="this.form.submit()"></select>
-            </div>
+        <select asp-for="OrderBy" asp-items="Html.GetEnumSelectList<PostOrderBy>()"
+                class="border border-gray-300 rounded-sm p-2" onchange="this.form.submit()"></select>
 
-            <div class="col">
-                <select asp-for="SortDirection" asp-items="Html.GetEnumSelectList<SortDirection>()"
-                        class="form-select" onchange="this.form.submit()"></select>
-            </div>
+        <select asp-for="SortDirection" asp-items="Html.GetEnumSelectList<SortDirection>()"
+                class="border border-gray-300 rounded-sm p-2" onchange="this.form.submit()"></select>
 
-            <select asp-for="PageSize" class="form-select col" onchange="this.form.submit()">
-                <option value="10">10/page</option>
-                <option value="20">20/page</option>
-                <option value="30">30/page</option>
-            </select>
+        <select asp-for="PageSize" class="border border-gray-300 rounded-sm p-2" onchange="this.form.submit()">
+            <option value="10">10/page</option>
+            <option value="20">20/page</option>
+            <option value="30">30/page</option>
+        </select>
 
-            <div class="col-auto">
-                <input asp-for="Page" value="1" type="hidden" class="form-control" />
+        <div>
+            <input asp-for="Page" value="1" type="hidden" />
 
-                <input asp-for="PageSize" type="hidden" class="form-control" />
+            <input asp-for="PageSize" type="hidden" />
 
-                <button type="submit" class="btn btn-outline-primary">Filter</button>
-            </div>
-
-            
+            <button type="submit" class="bg-gray-800 text-white py-2 px-4 rounded-sm cursor-pointer">Filter</button>
         </div>
-
-       
     </form>
 
     @* list of posts *@
-    <ul class="list-group shadow-sm">
+    <ul class="mt-10 w-3/4 flex flex-col gap-6">
         @foreach (var post in Model.Posts)
         {
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <a href="/posts/@post.Id" class="text-decoration-none fw-semibold">
-                    @post.Title
-                </a>
+            <li class="">
+                <div class="flex items-start justify-between">
+                    <a href="/posts/@post.Id">
+                        <p class="text-gray-700 font-bold">@post.Title</p>
+                        <p class="w-2/3">@post.ContentPreview</p>
+                    </a>
 
-                <div class="d-flex gap-3">
-                    <a href="/posts/@post.Id/edit" class="nav-link">
-                        Edit
-                    </a>
-                    <a href="/posts/@post.Id/delete" class="nav-link text-danger">
-                        Delete
-                    </a>
+                    <nav class="flex gap-4">
+                        <a href="/posts/@post.Id/edit">
+                            <button
+                                class="bg-gray-100 px-2 py-1 text-gray-700 text-sm font-semibold rounded-sm cursor-pointer">
+                                Edit
+                            </button>
+                        </a>
+                        <a href="/posts/@post.Id/delete">
+                            <button
+                                class="bg-red-100 px-2 py-1 text-red-700 text-sm font-semibold rounded-sm cursor-pointer">
+                                Delete
+                            </button>
+                        </a>
+                    </nav>
                 </div>
             </li>
         }
