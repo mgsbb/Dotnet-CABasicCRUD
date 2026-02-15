@@ -1,0 +1,52 @@
+@using CABasicCRUD.Domain.Users
+@model CABasicCRUD.Presentation.WebMvc.Models.Users.UserListViewModel;
+@{
+    ViewData["Title"] = "Posts";
+}
+
+<section class="mx-auto bg-white w-2/3 p-10 border-x border-gray-300">
+    @* title *@
+    <div class="flex gap-10 items-center pt-20">
+        <h1 class="font-bold text-3xl">Users</h1>
+    </div>
+
+    @* filter form *@
+    <form method="get" class="mt-10 flex items-center gap-2 text-sm w-full">
+        <input asp-for="SearchTerm" placeholder="Search users..." class="border border-gray-300 rounded-sm p-2 w-1/2" />
+
+        <select asp-for="OrderBy" asp-items="Html.GetEnumSelectList<UserOrderBy>()"
+                class="border border-gray-300 rounded-sm p-2" onchange="this.form.submit()"></select>
+
+        <select asp-for="SortDirection" asp-items="Html.GetEnumSelectList<SortDirection>()"
+                class="border border-gray-300 rounded-sm p-2" onchange="this.form.submit()"></select>
+
+        <select asp-for="PageSize" class="border border-gray-300 rounded-sm p-2" onchange="this.form.submit()">
+            <option value="10">10/page</option>
+            <option value="20">20/page</option>
+            <option value="30">30/page</option>
+        </select>
+
+        <div>
+            <input asp-for="Page" value="1" type="hidden" />
+
+            <input asp-for="PageSize" type="hidden" />
+
+            <button type="submit" class="bg-gray-800 text-white py-2 px-4 rounded-sm cursor-pointer">Filter</button>
+        </div>
+    </form>
+
+    @* list of users *@
+    <ul class="mt-10 w-3/4 flex flex-col gap-6">
+        @foreach (var user in Model.Users)
+        {
+            <li class="">
+                <div class="flex items-start justify-between">
+                    <a href="/users/@user.Id" class="w-full">
+                        <p class="text-gray-700 font-bold">@user.Name</p>
+                        <p class="w-2/3">@user.Email</p>
+                    </a>
+                </div>
+            </li>
+        }
+    </ul>
+</section>
