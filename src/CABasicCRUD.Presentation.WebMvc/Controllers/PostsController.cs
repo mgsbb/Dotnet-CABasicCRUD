@@ -13,10 +13,12 @@ using CABasicCRUD.Domain.Posts;
 using CABasicCRUD.Domain.Users;
 using CABasicCRUD.Presentation.WebMvc.Models.Posts;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CABasicCRUD.Presentation.WebMvc.Controllers;
 
+[Authorize]
 [Route("posts")]
 public class PostsController : Controller
 {

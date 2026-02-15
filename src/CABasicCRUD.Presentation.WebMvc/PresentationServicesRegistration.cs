@@ -16,6 +16,8 @@ public static class PresentationServicesRegistration
             })
             .AddJwtBearer();
 
+        services.AddAuthorization();
+
         services.ConfigureOptions<JwtBearerOptionsSetup>();
 
         services.AddHttpContextAccessor();
