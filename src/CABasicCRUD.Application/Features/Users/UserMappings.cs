@@ -14,4 +14,12 @@ internal static class UserMappings
             UpdatedAt: user.UpdatedAt
         );
     }
+
+    internal static IReadOnlyList<UserResult> ToListUserResult(this IReadOnlyList<User> users)
+    {
+        if (users == null)
+            return new List<UserResult>();
+
+        return users.Select(user => user.ToUserResult()).ToList();
+    }
 }
