@@ -1,7 +1,9 @@
 using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Features.Users;
+using CABasicCRUD.Application.Features.Users.GetUserById;
 using CABasicCRUD.Application.Features.Users.SearchUsers;
 using CABasicCRUD.Domain.Common;
+using CABasicCRUD.Domain.Users;
 using CABasicCRUD.Presentation.WebMvc.Models.Users;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -53,6 +55,27 @@ public sealed class UsersController : Controller
             .ToList();
 
         UserListViewModel viewModel = new() { Users = userListItems };
+
+        return View(viewModel);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> Details(Guid id)
+    {
+        GetUserByIdQuery query = new((UserId)id);
+        Result<UserResult> result = await _mediator.Send(query);
+
+        if (result.IsFailure || result.Value is null)
+        {
+            return NotFound();
+        }
+
+        UserDetailsViewModel viewModel = new()
+        {
+            Id = result.Value.Id,
+            Name = result.Value.Name,
+            Email = result.Value.Email,
+        };
 
         return View(viewModel);
     }
