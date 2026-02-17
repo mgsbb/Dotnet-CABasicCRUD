@@ -42,7 +42,8 @@ public class PostsController : Controller
             model.Page,
             model.PageSize,
             model.OrderBy,
-            model.SortDirection
+            model.SortDirection,
+            null
         );
 
         Result<IReadOnlyList<PostResult>> result = await _mediator.Send(query);

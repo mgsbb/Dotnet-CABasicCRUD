@@ -1,9 +1,12 @@
 using CABasicCRUD.Application.Common.Interfaces;
+using CABasicCRUD.Application.Features.Posts;
+using CABasicCRUD.Application.Features.Posts.SearchPosts;
 using CABasicCRUD.Application.Features.Users;
 using CABasicCRUD.Application.Features.Users.GetUserById;
 using CABasicCRUD.Application.Features.Users.SearchUsers;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Presentation.WebMvc.Models.Posts;
 using CABasicCRUD.Presentation.WebMvc.Models.Users;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -60,7 +63,7 @@ public sealed class UsersController : Controller
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Details(Guid id)
+    public async Task<IActionResult> Details(Guid id, UserDetailsViewModel model)
     {
         GetUserByIdQuery query = new((UserId)id);
         Result<UserResult> result = await _mediator.Send(query);
@@ -70,11 +73,39 @@ public sealed class UsersController : Controller
             return NotFound();
         }
 
+        SearchPostsQuery searchPostsQuery = new(
+            model.PostsList.SearchTerm,
+            model.PostsList.Page,
+            model.PostsList.PageSize,
+            model.PostsList.OrderBy,
+            model.PostsList.SortDirection,
+            (UserId)id
+        );
+
+        Result<IReadOnlyList<PostResult>> postsResult = await _mediator.Send(searchPostsQuery);
+
+        if (postsResult.IsFailure || postsResult.Value is null)
+        {
+            return View();
+        }
+
+        IReadOnlyList<PostListItemViewModel> postListItems = postsResult
+            .Value.Select(p => new PostListItemViewModel
+            {
+                Id = p.Id,
+                Title = p.Title,
+                ContentPreview = string.Concat(p.Content.AsSpan(0, 100), "..."),
+            })
+            .ToList();
+
+        PostListViewModel postListViewModel = new() { Posts = postListItems };
+
         UserDetailsViewModel viewModel = new()
         {
             Id = result.Value.Id,
             Name = result.Value.Name,
             Email = result.Value.Email,
+            PostsList = postListViewModel,
         };
 
         return View(viewModel);
