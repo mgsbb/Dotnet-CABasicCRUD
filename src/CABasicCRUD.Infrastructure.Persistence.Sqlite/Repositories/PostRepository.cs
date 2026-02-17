@@ -1,4 +1,6 @@
 using CABasicCRUD.Domain.Posts;
+using CABasicCRUD.Domain.Users;
+using SortDirection = CABasicCRUD.Domain.Posts.SortDirection;
 
 namespace CABasicCRUD.Infrastructure.Persistence.Sqlite.Repositories;
 
@@ -12,6 +14,7 @@ public class PostRepository(ApplicationDbContext dbContext)
         int pageSize,
         PostOrderBy orderBy,
         SortDirection sortDirection,
+        UserId? userId,
         CancellationToken cancellationToken
     )
     {

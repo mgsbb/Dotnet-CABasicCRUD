@@ -20,6 +20,7 @@ internal sealed class SearchPostsQueryHandler(IPostRepository postRepository)
             request.PageSize,
             request.OrderBy,
             request.SortDirection,
+            request.UserId,
             cancellationToken
         );
 

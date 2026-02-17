@@ -11,4 +11,16 @@ public class UserRepository(ApplicationDbContext dbContext)
     {
         return await _dbSet.FirstOrDefaultAsync(u => u.Email == email);
     }
+
+    public Task<IReadOnlyList<User>> SearchUsersAsync(
+        string searchTerm,
+        int page,
+        int pageSize,
+        UserOrderBy orderBy,
+        SortDirection sortDirection,
+        CancellationToken cancellationToken
+    )
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -1,5 +1,7 @@
 using CABasicCRUD.Domain.Posts;
+using CABasicCRUD.Domain.Users;
 using Microsoft.EntityFrameworkCore;
+using SortDirection = CABasicCRUD.Domain.Posts.SortDirection;
 
 namespace CABasicCRUD.Infrastructure.Persistence.PostgreSql.Repositories;
 
@@ -13,10 +15,16 @@ public class PostRepository(ApplicationDbContext dbContext)
         int pageSize,
         PostOrderBy orderBy,
         SortDirection sortDirection,
+        UserId? userId,
         CancellationToken cancellationToken
     )
     {
         var query = _dbSet.AsNoTracking();
+
+        if (userId is not null)
+        {
+            query = query.Where(p => p.UserId == userId);
+        }
 
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
