@@ -1,4 +1,5 @@
 using CABasicCRUD.Application.Common.Interfaces;
+using CABasicCRUD.Application.Features.Auth;
 using CABasicCRUD.Application.Features.Comments;
 using CABasicCRUD.Application.Features.Comments.CreateComment;
 using CABasicCRUD.Application.Features.Comments.GetAllCommentsOfPost;
@@ -185,10 +186,14 @@ public class PostsController : Controller
 
         if (result.IsFailure)
         {
-            if (result.Error == null)
+            if (result.Error is null)
                 throw new InvalidOperationException();
 
-            ModelState.AddModelError(string.Empty, result.Error.ToString());
+            if (result.Error == AuthErrors.Forbidden)
+            {
+                ModelState.AddModelError(string.Empty, "Cannot edit post of another user");
+            }
+
             return View(model);
         }
 
@@ -203,7 +208,9 @@ public class PostsController : Controller
         Result<PostResult> result = await _mediator.Send(query);
 
         if (result.IsFailure || result.Value is null)
+        {
             return NotFound();
+        }
 
         var viewModel = new PostDeleteViewModel
         {
@@ -215,13 +222,23 @@ public class PostsController : Controller
     }
 
     [HttpPost("{id}/delete")]
-    public async Task<IActionResult> DeleteConfirmed(Guid id)
+    public async Task<IActionResult> DeleteAsync(PostDeleteViewModel model, Guid id)
     {
         DeletePostCommand command = new((PostId)id, (UserId)_currentUser.UserId);
         Result result = await _mediator.Send(command);
 
         if (result.IsFailure)
-            return NotFound();
+        {
+            if (result.Error is null)
+                throw new InvalidOperationException();
+
+            if (result.Error == AuthErrors.Forbidden)
+            {
+                ModelState.AddModelError(string.Empty, "Cannot delete post of another user");
+            }
+
+            return View(model);
+        }
 
         return RedirectToAction(nameof(Index));
     }
