@@ -47,7 +47,7 @@ public class PostsController : Controller
             null
         );
 
-        Result<IReadOnlyList<PostResult>> result = await _mediator.Send(query);
+        Result<IReadOnlyList<PostWithAuthorResult>> result = await _mediator.Send(query);
 
         if (result.IsFailure || result.Value is null)
         {
@@ -64,6 +64,7 @@ public class PostsController : Controller
                         ? p.Content
                         : string.Concat(p.Content.AsSpan(0, 100), "..."),
                 UserId = p.UserId,
+                Username = p.Username,
             })
             .ToList();
 

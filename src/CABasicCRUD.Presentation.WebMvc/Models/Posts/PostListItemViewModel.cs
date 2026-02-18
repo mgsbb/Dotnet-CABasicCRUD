@@ -7,5 +7,8 @@ public class PostListItemViewModel
     public string Title { get; init; } = default!;
 
     public string ContentPreview { get; init; } = default!;
+
     public Guid UserId { get; init; } = default!;
+
+    public string Username { get; init; } = default!;
 }

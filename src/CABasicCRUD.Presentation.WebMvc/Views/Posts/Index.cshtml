@@ -1,5 +1,5 @@
 @using CABasicCRUD.Application.Common.Interfaces
-@using CABasicCRUD.Domain.Posts
+@using CABasicCRUD.Application.Features.Posts
 @inject ICurrentUser CurrentUser
 @model CABasicCRUD.Presentation.WebMvc.Models.Posts.PostListViewModel
 @{
@@ -51,10 +51,19 @@
         {
             <li class="">
                 <div class="flex items-start justify-between">
-                    <a href="/posts/@post.Id" class="w-full">
-                        <p class="text-gray-700 font-bold">@post.Title</p>
-                        <p class="w-3/4">@post.ContentPreview</p>
-                    </a>
+                    <div class="flex flex-col">
+                        <div class="flex items-end gap-4">
+                            <a href="/posts/@post.Id" class="flex flex-col">
+                                <p class="text-gray-700 font-bold">@post.Title</p>
+                            </a>
+                            <a href="/users/@post.UserId" class="">
+                                <p class="text-sm font-bold text-gray-500 ">- @post.Username</p>
+                            </a>
+                        </div>
+                        <a href="/posts/@post.Id" class="flex flex-col">
+                            <p class="w-3/4">@post.ContentPreview</p>
+                        </a>
+                    </div>
                     @if (CurrentUser.UserId == post.UserId)
                     {
                         <nav class="flex gap-4">

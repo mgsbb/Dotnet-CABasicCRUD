@@ -1,9 +1,11 @@
 using CABasicCRUD.Application.Common.Interfaces;
+using CABasicCRUD.Application.Features.Auth;
 using CABasicCRUD.Application.Features.Posts;
 using CABasicCRUD.Application.Features.Posts.SearchPosts;
 using CABasicCRUD.Application.Features.Users;
 using CABasicCRUD.Application.Features.Users.GetUserById;
 using CABasicCRUD.Application.Features.Users.SearchUsers;
+using CABasicCRUD.Application.Features.Users.UpdateUser;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Users;
 using CABasicCRUD.Presentation.WebMvc.Models.Posts;
@@ -82,7 +84,9 @@ public sealed class UsersController : Controller
             (UserId)id
         );
 
-        Result<IReadOnlyList<PostResult>> postsResult = await _mediator.Send(searchPostsQuery);
+        Result<IReadOnlyList<PostWithAuthorResult>> postsResult = await _mediator.Send(
+            searchPostsQuery
+        );
 
         if (postsResult.IsFailure || postsResult.Value is null)
         {
@@ -99,6 +103,7 @@ public sealed class UsersController : Controller
                         ? p.Content
                         : string.Concat(p.Content.AsSpan(0, 100), "..."),
                 UserId = p.UserId,
+                Username = p.Username,
             })
             .ToList();
 
