@@ -1,9 +1,11 @@
 using CABasicCRUD.Application.Common.Interfaces;
+using CABasicCRUD.Application.Features.Posts;
 using CABasicCRUD.Domain.Comments;
 using CABasicCRUD.Domain.Conversations;
 using CABasicCRUD.Domain.Posts;
 using CABasicCRUD.Domain.Users;
 using CABasicCRUD.Infrastructure.Persistence.PostgreSql.Outbox;
+using CABasicCRUD.Infrastructure.Persistence.PostgreSql.ReadServices;
 using CABasicCRUD.Infrastructure.Persistence.PostgreSql.Repositories;
 using CABasicCRUD.Infrastructure.Persistence.PostgreSql.Seeding;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +40,8 @@ public static class PersistenceServicesRegistration
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ICommentRepository, CommentRepository>();
         services.AddScoped<IConversationRepository, ConversationRepository>();
+
+        services.AddScoped<IPostReadService, PostReadService>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 

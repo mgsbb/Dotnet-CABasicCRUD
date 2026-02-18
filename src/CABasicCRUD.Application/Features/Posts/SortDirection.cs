@@ -1,4 +1,4 @@
-namespace CABasicCRUD.Domain.Posts;
+namespace CABasicCRUD.Application.Features.Posts;
 
 public enum SortDirection
 {

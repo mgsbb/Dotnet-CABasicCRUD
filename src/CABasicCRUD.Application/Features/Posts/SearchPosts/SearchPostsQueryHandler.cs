@@ -1,20 +1,19 @@
 using CABasicCRUD.Application.Common.Interfaces.Messaging;
 using CABasicCRUD.Domain.Common;
-using CABasicCRUD.Domain.Posts;
 
 namespace CABasicCRUD.Application.Features.Posts.SearchPosts;
 
-internal sealed class SearchPostsQueryHandler(IPostRepository postRepository)
-    : IQueryHander<SearchPostsQuery, IReadOnlyList<PostResult>>
+internal sealed class SearchPostsQueryHandler(IPostReadService postReadService)
+    : IQueryHander<SearchPostsQuery, IReadOnlyList<PostWithAuthorResult>>
 {
-    private readonly IPostRepository _postRepository = postRepository;
+    private readonly IPostReadService _postReadService = postReadService;
 
-    public async Task<Result<IReadOnlyList<PostResult>>> Handle(
+    public async Task<Result<IReadOnlyList<PostWithAuthorResult>>> Handle(
         SearchPostsQuery request,
         CancellationToken cancellationToken
     )
     {
-        IReadOnlyList<Post> posts = await _postRepository.SearchPostsAsync(
+        IReadOnlyList<PostWithAuthorResult> posts = await _postReadService.SearchPostsAsync(
             request.SearchTerm,
             request.Page,
             request.PageSize,
@@ -24,8 +23,6 @@ internal sealed class SearchPostsQueryHandler(IPostRepository postRepository)
             cancellationToken
         );
 
-        IReadOnlyList<PostResult> postResults = posts.ToListPostResult();
-
-        return Result<IReadOnlyList<PostResult>>.Success(postResults);
+        return Result<IReadOnlyList<PostWithAuthorResult>>.Success(posts);
     }
 }
