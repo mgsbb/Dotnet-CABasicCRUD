@@ -94,7 +94,10 @@ public sealed class UsersController : Controller
             {
                 Id = p.Id,
                 Title = p.Title,
-                ContentPreview = string.Concat(p.Content.AsSpan(0, 100), "..."),
+                ContentPreview =
+                    p.Content.Length <= 100
+                        ? p.Content
+                        : string.Concat(p.Content.AsSpan(0, 100), "..."),
             })
             .ToList();
 
