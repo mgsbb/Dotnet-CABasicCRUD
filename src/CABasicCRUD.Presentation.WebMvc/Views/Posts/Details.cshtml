@@ -1,4 +1,6 @@
+@using CABasicCRUD.Application.Common.Interfaces
 @model CABasicCRUD.Presentation.WebMvc.Models.Posts.PostDetailsViewModel
+@inject ICurrentUser CurrentUser
 
 @{
     ViewData["Title"] = "Post";
@@ -10,11 +12,21 @@
     <h1 class="font-bold text-3xl text-gray-700">@Model.Title</h1>
 
     <nav class="flex gap-6 mt-6 items-center">
-        <a href="/posts/@Model.Id/edit">
-            <button class="bg-gray-100 px-2 py-1 text-gray-700 font-semibold rounded-sm cursor-pointer">
-                Edit
-            </button>
-        </a>
+        @if (Model.UserId == CurrentUser.UserId)
+        {
+            <div class="flex gap-2">
+                <a href="/posts/@Model.Id/edit">
+                    <button class="bg-gray-100 px-2 py-1 text-gray-700 font-semibold rounded-sm cursor-pointer">
+                        Edit
+                    </button>
+                </a>
+                <a href="/posts/@Model.Id/delete">
+                    <button class="bg-red-100 px-2 py-1 text-red-700 font-semibold rounded-sm cursor-pointer">
+                        Delete
+                    </button>
+                </a>
+            </div>
+        }
         <a href="/posts" class="text-gray-500 font-medium">
             Back to posts
         </a>
