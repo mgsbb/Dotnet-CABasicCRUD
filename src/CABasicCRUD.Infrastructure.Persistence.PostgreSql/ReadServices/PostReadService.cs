@@ -79,4 +79,27 @@ public class PostReadService(ApplicationDbContext dbContext) : IPostReadService
             _ => query.OrderByDescending(p => p.CreatedAt),
         };
     }
+
+    public async Task<PostWithAuthorResult?> GetPostByIdWithAuthor(
+        PostId postId,
+        CancellationToken cancellationToken
+    )
+    {
+        return await (
+            from p in _dbContext.Posts
+            join u in _dbContext.Users on p.UserId equals u.Id
+            where p.Id == postId
+            select new PostWithAuthorResult(
+                p.Id,
+                p.Title,
+                p.Content,
+                p.UserId,
+                u.Name,
+                p.CreatedAt,
+                p.UpdatedAt
+            )
+        )
+            .AsNoTracking()
+            .FirstOrDefaultAsync(cancellationToken);
+    }
 }

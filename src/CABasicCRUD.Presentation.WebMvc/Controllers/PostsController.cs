@@ -7,6 +7,7 @@ using CABasicCRUD.Application.Features.Posts;
 using CABasicCRUD.Application.Features.Posts.CreatePost;
 using CABasicCRUD.Application.Features.Posts.DeletePost;
 using CABasicCRUD.Application.Features.Posts.GetPostById;
+using CABasicCRUD.Application.Features.Posts.GetPostByIdWithAuthor;
 using CABasicCRUD.Application.Features.Posts.SearchPosts;
 using CABasicCRUD.Application.Features.Posts.UpdatePost;
 using CABasicCRUD.Domain.Common;
@@ -76,8 +77,8 @@ public class PostsController : Controller
     [HttpGet("{id}")]
     public async Task<IActionResult> Details(Guid id)
     {
-        GetPostByIdQuery query = new((PostId)id);
-        Result<PostResult> result = await _mediator.Send(query);
+        GetPostByIdWithAuthorQuery query = new((PostId)id);
+        Result<PostWithAuthorResult> result = await _mediator.Send(query);
 
         if (result.IsFailure || result.Value is null)
         {
@@ -112,6 +113,7 @@ public class PostsController : Controller
             CreatedAt = result.Value.CreatedAt,
             UpdatedAt = result.Value.UpdatedAt,
             Comments = commentViewModels,
+            Username = result.Value.Username,
         };
 
         return View(viewModel);
