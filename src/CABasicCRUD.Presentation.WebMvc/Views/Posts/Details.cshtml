@@ -77,8 +77,9 @@
                 {
                     <div>
                         <p class="mb-1">@comment.Body</p>
-                        <small class="text-gray-600 font-medium">
-                            @comment.CreatedAt.ToString("g")
+                        <a href="/users/@comment.UserId" class="text-sm text-gray-600 font-medium">by @comment.Username</a>
+                        <small class="text-gray-500 font-medium">
+                            at @comment.CreatedAt.ToString("g")
                         </small>
                     </div>
                 }

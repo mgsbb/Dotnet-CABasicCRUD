@@ -2,7 +2,7 @@ using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Features.Auth;
 using CABasicCRUD.Application.Features.Comments;
 using CABasicCRUD.Application.Features.Comments.CreateComment;
-using CABasicCRUD.Application.Features.Comments.GetAllCommentsOfPost;
+using CABasicCRUD.Application.Features.Comments.GetCommentsWithAuthorOfPost;
 using CABasicCRUD.Application.Features.Posts;
 using CABasicCRUD.Application.Features.Posts.CreatePost;
 using CABasicCRUD.Application.Features.Posts.DeletePost;
@@ -85,8 +85,10 @@ public class PostsController : Controller
             return NotFound();
         }
 
-        GetAllCommentsOfPostQuery commentsQuery = new((PostId)id);
-        Result<IReadOnlyList<CommentResult>> commentsResult = await _mediator.Send(commentsQuery);
+        GetCommentsWithAuthorOfPostQuery commentsQuery = new((PostId)id);
+        Result<IReadOnlyList<CommentWithAuthorResult>> commentsResult = await _mediator.Send(
+            commentsQuery
+        );
 
         if (commentsResult.IsFailure || commentsResult.Value is null)
         {
@@ -101,6 +103,7 @@ public class PostsController : Controller
                 UserId = comment.UserId,
                 CreatedAt = comment.CreatedAt,
                 UpdatedAt = comment.UpdatedAt,
+                Username = comment.Username,
             })
             .ToList();
 
