@@ -98,6 +98,7 @@ public sealed class UsersController : Controller
                     p.Content.Length <= 100
                         ? p.Content
                         : string.Concat(p.Content.AsSpan(0, 100), "..."),
+                UserId = p.UserId,
             })
             .ToList();
 
