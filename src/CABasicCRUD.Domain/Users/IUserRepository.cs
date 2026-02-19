@@ -14,4 +14,10 @@ public interface IUserRepository : IRepository<User, UserId>
         SortDirection sortDirection,
         CancellationToken cancellationToken
     );
+
+    Task<UserProfile?> AddUserProfileAsync(UserProfile userProfile);
+
+    Task UpdateUserProfileAsync(UserProfile userProfile);
+
+    Task DeleteUserProfileAsync(UserProfile userProfile);
 }
