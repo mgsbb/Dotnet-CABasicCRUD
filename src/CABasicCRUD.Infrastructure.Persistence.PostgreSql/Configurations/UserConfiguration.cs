@@ -22,8 +22,34 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(user => user.PasswordHash).IsRequired();
 
-        builder.Property(p => p.CreatedAt).IsRequired();
+        builder.Property(user => user.CreatedAt).IsRequired();
 
-        builder.Property(p => p.UpdatedAt).IsRequired(false);
+        builder.Property(user => user.UpdatedAt).IsRequired(false);
+
+        ConfigureUserProfile(builder);
+    }
+
+    private static void ConfigureUserProfile(EntityTypeBuilder<User> builder)
+    {
+        builder.OwnsOne(
+            user => user.UserProfile,
+            profileBuilder =>
+            {
+                profileBuilder.ToTable("UserProfiles");
+
+                profileBuilder.HasKey(userProfile => userProfile.Id);
+                profileBuilder
+                    .Property(userProfile => userProfile.Id)
+                    .HasConversion(userProfileId => userProfileId.Value, value => (UserId)value);
+
+                profileBuilder.Property(userProfile => userProfile.Bio).HasMaxLength(200);
+
+                profileBuilder.Property(userProfile => userProfile.ProfileImageUrl);
+
+                profileBuilder.Property(userProfile => userProfile.CreatedAt).IsRequired();
+
+                profileBuilder.Property(userProfile => userProfile.UpdatedAt).IsRequired();
+            }
+        );
     }
 }

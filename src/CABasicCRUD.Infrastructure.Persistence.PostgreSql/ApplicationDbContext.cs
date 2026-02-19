@@ -1,5 +1,3 @@
-using System.Reflection;
-using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Domain.Comments;
 using CABasicCRUD.Domain.Posts;
 using CABasicCRUD.Domain.Users;
@@ -15,6 +13,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbConte
     public DbSet<User> Users { get; set; }
 
     public DbSet<Comment> Comments { get; set; }
+
+    public DbSet<UserProfile> UserProfiles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
