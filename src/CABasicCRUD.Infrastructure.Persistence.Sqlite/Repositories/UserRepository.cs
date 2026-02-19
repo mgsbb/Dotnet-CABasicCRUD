@@ -23,4 +23,19 @@ public class UserRepository(ApplicationDbContext dbContext)
     {
         throw new NotImplementedException();
     }
+
+    public Task<UserProfile?> AddUserProfileAsync(UserProfile userProfile)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task UpdateUserProfileAsync(UserProfile userProfile)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task DeleteUserProfileAsync(UserProfile userProfile)
+    {
+        throw new NotImplementedException();
+    }
 }
