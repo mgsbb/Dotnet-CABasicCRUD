@@ -119,4 +119,35 @@ public sealed class UsersController : Controller
 
         return View(viewModel);
     }
+
+    [HttpGet("{id}/edit")]
+    public IActionResult Edit() => View();
+
+    [HttpPost("{id}/edit")]
+    public async Task<IActionResult> Edit(UserEditViewModel model, Guid id)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        UpdateUserCommand command = new((UserId)id, model.Name, model.Email);
+        Result result = await _mediator.Send(command);
+
+        if (result.IsFailure)
+        {
+            if (result.Error is null)
+                throw new InvalidOperationException();
+
+            if (result.Error == AuthErrors.Forbidden)
+            {
+                ModelState.AddModelError(string.Empty, "Cannot edit another user");
+            }
+
+            return View(model);
+        }
+
+        return RedirectToAction("Index");
+        // return RedirectToAction(nameof(Details), new { id = result.Value.Id.Value });
+    }
 }
