@@ -42,6 +42,11 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
                     .Property(userProfile => userProfile.Id)
                     .HasConversion(userProfileId => userProfileId.Value, value => (UserId)value);
 
+                profileBuilder
+                    .Property(userProfile => userProfile.FullName)
+                    .HasMaxLength(50)
+                    .IsRequired(false);
+
                 profileBuilder.Property(userProfile => userProfile.Bio).HasMaxLength(200);
 
                 profileBuilder.Property(userProfile => userProfile.ProfileImageUrl);
