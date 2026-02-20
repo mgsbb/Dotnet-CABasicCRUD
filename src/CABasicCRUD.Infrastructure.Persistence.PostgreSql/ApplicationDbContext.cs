@@ -14,8 +14,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbConte
 
     public DbSet<Comment> Comments { get; set; }
 
-    public DbSet<UserProfile> UserProfiles { get; set; }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(AssemblyReference.Assembly);

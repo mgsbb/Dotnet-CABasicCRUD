@@ -61,25 +61,4 @@ public class UserRepository(ApplicationDbContext dbContext)
             _ => query.OrderByDescending(p => p.CreatedAt),
         };
     }
-
-    public async Task<UserProfile?> AddUserProfileAsync(UserProfile userProfile)
-    {
-        await _dbContext.UserProfiles.AddAsync(userProfile);
-
-        return userProfile;
-    }
-
-    public Task UpdateUserProfileAsync(UserProfile userProfile)
-    {
-        _dbContext.UserProfiles.Update(userProfile);
-
-        return Task.CompletedTask;
-    }
-
-    public Task DeleteUserProfileAsync(UserProfile userProfile)
-    {
-        _dbContext.UserProfiles.Remove(userProfile);
-
-        return Task.CompletedTask;
-    }
 }

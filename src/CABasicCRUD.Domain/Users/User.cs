@@ -8,14 +8,15 @@ public class User : AggregateRoot<UserId>
     public string Name { get; private set; }
     public string Email { get; private set; }
     public string PasswordHash { get; private set; }
-    public UserProfile? UserProfile { get; private set; }
+    public UserProfile UserProfile { get; private set; }
 
-    private User(UserId id, string name, string email, string passwordHash)
+    private User(UserId id, string name, string email, string passwordHash, UserProfile userProfile)
         : base(id)
     {
         Name = name;
         Email = email;
         PasswordHash = passwordHash;
+        UserProfile = userProfile;
     }
 
     public static Result<User> Create(
@@ -40,7 +41,11 @@ public class User : AggregateRoot<UserId>
 
         string passwordHash = HashPassword(password, passwordHasher);
 
-        User user = new(id: UserId.New(), name: name, email: email, passwordHash: passwordHash);
+        UserId userId = UserId.New();
+
+        UserProfile userProfile = UserProfile.Create(userId, null, null);
+
+        User user = new(userId, name, email, passwordHash, userProfile);
 
         user.AddDomainEvent(new UserRegisteredDomainEvent(user.Id, user.Name, user.Email));
 
