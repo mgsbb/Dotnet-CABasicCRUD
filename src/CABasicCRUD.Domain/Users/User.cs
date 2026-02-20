@@ -16,7 +16,7 @@ public class User : AggregateRoot<UserId>
         Name = name;
         Email = email;
         PasswordHash = passwordHash;
-        UserProfile = UserProfile.Create(id, null, null);
+        UserProfile = UserProfile.Create(id, Name, null, null);
     }
 
     public static Result<User> Create(
