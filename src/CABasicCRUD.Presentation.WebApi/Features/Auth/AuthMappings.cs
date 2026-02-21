@@ -11,6 +11,7 @@ public static class AuthMappings
             authResult.Id,
             authResult.Name,
             authResult.Email,
+            authResult.Username,
             authResult.CreatedAt,
             authResult.UpdatedAt
         );

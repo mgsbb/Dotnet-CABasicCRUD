@@ -103,7 +103,7 @@ public sealed class UsersController : Controller
                         ? p.Content
                         : string.Concat(p.Content.AsSpan(0, 100), "..."),
                 UserId = p.UserId,
-                Username = p.Username,
+                AuthorName = p.AuthorName,
             })
             .ToList();
 
@@ -113,7 +113,7 @@ public sealed class UsersController : Controller
         {
             Id = result.Value.Id,
             Name = result.Value.Name,
-            Email = result.Value.Email,
+            Username = result.Value.Username,
             PostsList = postListViewModel,
         };
 

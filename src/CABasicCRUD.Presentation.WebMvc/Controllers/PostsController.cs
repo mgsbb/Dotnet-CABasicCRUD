@@ -65,7 +65,7 @@ public class PostsController : Controller
                         ? p.Content
                         : string.Concat(p.Content.AsSpan(0, 100), "..."),
                 UserId = p.UserId,
-                Username = p.Username,
+                AuthorName = p.AuthorName,
             })
             .ToList();
 
@@ -103,7 +103,7 @@ public class PostsController : Controller
                 UserId = comment.UserId,
                 CreatedAt = comment.CreatedAt,
                 UpdatedAt = comment.UpdatedAt,
-                Username = comment.Username,
+                AuthorName = comment.AuthorName,
             })
             .ToList();
 
@@ -116,7 +116,7 @@ public class PostsController : Controller
             CreatedAt = result.Value.CreatedAt,
             UpdatedAt = result.Value.UpdatedAt,
             Comments = commentViewModels,
-            Username = result.Value.Username,
+            AuthorName = result.Value.AuthorName,
         };
 
         return View(viewModel);

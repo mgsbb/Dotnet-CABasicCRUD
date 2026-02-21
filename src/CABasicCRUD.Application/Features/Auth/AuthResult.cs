@@ -7,6 +7,7 @@ public sealed record AuthResult(
     string Name,
     string Email,
     string Token,
+    string Username,
     DateTime CreatedAt,
     DateTime? UpdatedAt
 );

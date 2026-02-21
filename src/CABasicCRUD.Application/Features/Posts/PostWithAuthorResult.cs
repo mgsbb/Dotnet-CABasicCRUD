@@ -8,7 +8,7 @@ public sealed record PostWithAuthorResult(
     string Title,
     string Content,
     UserId UserId,
-    string Username,
+    string AuthorName,
     DateTime CreatedAt,
     DateTime? UpdatedAt
 );

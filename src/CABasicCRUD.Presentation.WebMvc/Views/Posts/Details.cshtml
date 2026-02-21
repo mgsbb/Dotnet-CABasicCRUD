@@ -14,7 +14,7 @@
     @* author name *@
     <a href="/users/@Model.UserId">
         <p class="font-bold text-gray-600 mt-2"><span class="text-sm text-gray-500">written by</span>
-            @Model.Username
+            @Model.AuthorName
         </p>
     </a>
 
@@ -78,26 +78,27 @@
                     <div class="flex items-start justify-between">
                         <div>
                             <p class="mb-1">@comment.Body</p>
-                            <a href="/users/@comment.UserId" class="text-sm text-gray-600 font-medium">by @comment.Username</a>
-                            <small class="text-gray-500 font-medium">
-                                at @comment.CreatedAt.ToString("g")
-                            </small>
+                            <a href="/users/@comment.UserId" class="text-sm text-gray-600 font-medium">by
+                                @comment.AuthorName</a>
+                                <small class="text-gray-500 font-medium">
+                                    at @comment.CreatedAt.ToString("g")
+                                </small>
+                            </div>
+                            @if (comment.UserId == CurrentUser.UserId)
+                            {
+                                <nav>
+                                    <a href="/comments/@comment.Id/delete">
+                                        <button
+                                            class="bg-red-100 px-2 py-1 text-red-700 text-sm font-semibold rounded-sm cursor-pointer">
+                                            Delete
+                                        </button>
+                                    </a>
+                                </nav>
+                            }
                         </div>
-                        @if (comment.UserId == CurrentUser.UserId)
-                        {
-                            <nav>
-                                <a href="/comments/@comment.Id/delete">
-                                    <button
-                                        class="bg-red-100 px-2 py-1 text-red-700 text-sm font-semibold rounded-sm cursor-pointer">
-                                        Delete
-                                    </button>
-                                </a>
-                            </nav>
-                        }
-                    </div>
-                }
-            </div>
-        }
-    </section>
+                    }
+                </div>
+            }
+        </section>
 
-</article>
+    </article>

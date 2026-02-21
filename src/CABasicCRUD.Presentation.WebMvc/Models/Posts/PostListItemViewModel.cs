@@ -10,5 +10,5 @@ public class PostListItemViewModel
 
     public Guid UserId { get; init; } = default!;
 
-    public string Username { get; init; } = default!;
+    public string AuthorName { get; init; } = default!;
 }

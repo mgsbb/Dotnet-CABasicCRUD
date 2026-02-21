@@ -71,6 +71,7 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserC
             registeredUser.Name,
             registeredUser.Email,
             token,
+            registeredUser.Username,
             registeredUser.CreatedAt,
             registeredUser.UpdatedAt
         );

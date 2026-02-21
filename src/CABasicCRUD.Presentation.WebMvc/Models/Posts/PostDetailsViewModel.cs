@@ -6,7 +6,7 @@ public class PostDetailsViewModel
     public string Title { get; init; } = default!;
     public string Content { get; init; } = default!;
     public Guid UserId { get; init; }
-    public string Username { get; init; } = default!;
+    public string AuthorName { get; init; } = default!;
     public DateTime CreatedAt { get; init; }
     public DateTime? UpdatedAt { get; init; }
 

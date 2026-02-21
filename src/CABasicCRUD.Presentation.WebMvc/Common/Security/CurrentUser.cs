@@ -26,4 +26,7 @@ internal sealed class CurrentUser(IHttpContextAccessor httpContextAccessor) : IC
         ?? throw new UnauthorizedAccessException();
 
     public bool IsAuthenticated => User?.Identity?.IsAuthenticated == true;
+
+    public string Username =>
+        User?.FindFirstValue("username") ?? throw new UnauthorizedAccessException();
 }

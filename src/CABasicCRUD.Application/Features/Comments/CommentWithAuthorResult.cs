@@ -9,7 +9,7 @@ public sealed record CommentWithAuthorResult(
     string Body,
     PostId PostId,
     UserId UserId,
-    string Username,
+    string AuthorName,
     DateTime CreatedAt,
     DateTime? UpdatedAt
 );

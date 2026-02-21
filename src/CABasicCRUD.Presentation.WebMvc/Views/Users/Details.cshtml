@@ -24,7 +24,7 @@
                 }
             </div>
 
-            <p>@Model.Email</p>
+            <p>@Model.Username</p>
         </div>
     </div>
 
@@ -71,7 +71,7 @@
                                     <p class="text-gray-700 font-bold">@post.Title</p>
                                 </a>
                                 <a href="/users/@post.UserId" class="">
-                                    <p class="text-sm font-bold text-gray-500">- @post.Username</p>
+                                    <p class="text-sm font-bold text-gray-500">- @post.AuthorName</p>
                                 </a>
                             </div>
                             <a href="/posts/@post.Id" class="flex flex-col">

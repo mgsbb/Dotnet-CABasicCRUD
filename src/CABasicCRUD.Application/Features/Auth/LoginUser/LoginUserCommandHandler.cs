@@ -50,7 +50,8 @@ internal sealed class LoginUserCommandHandler : ICommandHandler<LoginUserCommand
             Email: user.Email,
             Token: token,
             CreatedAt: user.CreatedAt,
-            UpdatedAt: user.UpdatedAt
+            UpdatedAt: user.UpdatedAt,
+            Username: user.Username
         );
 
         // return Result<LoginUserResult>.Success(loginUserResult);
