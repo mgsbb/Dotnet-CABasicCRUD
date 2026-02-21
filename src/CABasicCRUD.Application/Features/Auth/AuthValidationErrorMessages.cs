@@ -2,8 +2,11 @@ namespace CABasicCRUD.Application.Features.Auth;
 
 public static class AuthValidationErrorMessages
 {
-    public const string NameEmpty = "User name is required.";
-    public const string NameExceedsMaxCharacters = "User name must not exceed 50 characters.";
+    public const string NameEmpty = "User fullname is required.";
+    public const string NameExceedsMaxCharacters = "User fullname must not exceed 50 characters.";
+    public const string UsernameEmtpy = "Username is required.";
+    public const string UsernameExceedsMaxCharacters = "Username must not exceed 30 characters.";
+    public const string UsernameLessThanMinCharacters = "Username must be at least 5 characters.";
     public const string EmailEmpty = "User email is required.";
     public const string PasswordEmpty = "User password is required.";
     public const string PasswordMinCharacters = "Password must be at least 8 characters long.";

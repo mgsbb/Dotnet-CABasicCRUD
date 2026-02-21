@@ -35,11 +35,19 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserC
 
         if (user is not null)
         {
-            return Result<AuthResult>.Failure(AuthErrors.AlreadyExists);
+            return Result<AuthResult>.Failure(AuthErrors.AlreadyExistsEmail);
+        }
+
+        User? userByUsername = await _userRepository.GetByUsernameAsync(request.Username);
+
+        if (userByUsername is not null)
+        {
+            return Result<AuthResult>.Failure(AuthErrors.AlreadyExistsUsername);
         }
 
         Result<User> result = User.Create(
             name: request.Name,
+            username: request.Username,
             email: request.Email,
             password: request.Password,
             passwordHasher: _passwordHasher

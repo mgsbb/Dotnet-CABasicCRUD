@@ -12,6 +12,14 @@ public sealed class RegisterUserCommandValidator : AbstractValidator<RegisterUse
             .MaximumLength(50)
             .WithMessage(AuthValidationErrorMessages.NameExceedsMaxCharacters);
 
+        RuleFor(x => x.Username)
+            .NotEmpty()
+            .WithMessage(AuthValidationErrorMessages.UsernameEmtpy)
+            .MinimumLength(5)
+            .WithMessage(AuthValidationErrorMessages.UsernameLessThanMinCharacters)
+            .MaximumLength(30)
+            .WithMessage(AuthValidationErrorMessages.UsernameExceedsMaxCharacters);
+
         RuleFor(x => x.Email)
             .NotEmpty()
             .WithMessage(AuthValidationErrorMessages.EmailEmpty)

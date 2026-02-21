@@ -4,9 +4,14 @@ namespace CABasicCRUD.Application.Features.Auth;
 
 public static class AuthErrors
 {
-    public static readonly Error AlreadyExists = new(
+    public static readonly Error AlreadyExistsEmail = new(
         "Auth.AlreadyExists",
         "User with the given email already exists."
+    );
+
+    public static readonly Error AlreadyExistsUsername = new(
+        "Auth.AlreadyExists",
+        "User with the given username already exists."
     );
 
     public static readonly Error InvalidCredentials = new(
