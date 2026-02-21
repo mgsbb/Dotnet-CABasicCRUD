@@ -12,6 +12,7 @@ if (args.Length == 0)
     Console.WriteLine(ScriptNames.CreateMissingUserProfiles + " [--dry-run]");
     Console.WriteLine(ScriptNames.BackFillUserProfileFullName + " [--dry-run]");
     Console.WriteLine(ScriptNames.VerifyUserProfileFullName);
+    Console.WriteLine(ScriptNames.BackfillUserUsername + " [--dry-run]");
     return;
 }
 
@@ -31,6 +32,7 @@ builder.ConfigureServices(
         services.AddScoped<CreateMissingUserProfiles>();
         services.AddScoped<BackFillUserProfileFullName>();
         services.AddScoped<VerifyUserProfileFullName>();
+        services.AddScoped<BackfillUserUsername>();
     }
 );
 
@@ -50,6 +52,9 @@ switch (scriptName)
         break;
     case ScriptNames.VerifyUserProfileFullName:
         await services.GetRequiredService<VerifyUserProfileFullName>().ExecuteAsync();
+        break;
+    case ScriptNames.BackfillUserUsername:
+        await services.GetRequiredService<BackfillUserUsername>().ExecuteAsync(isDryRun);
         break;
     default:
         Console.WriteLine("Unknown script");
