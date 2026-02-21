@@ -12,6 +12,11 @@ public class UserRepository(ApplicationDbContext dbContext)
         return await _dbSet.FirstOrDefaultAsync(u => u.Email == email);
     }
 
+    public Task<User?> GetByUsernameAsync(string username)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<IReadOnlyList<User>> SearchUsersAsync(
         string searchTerm,
         int page,

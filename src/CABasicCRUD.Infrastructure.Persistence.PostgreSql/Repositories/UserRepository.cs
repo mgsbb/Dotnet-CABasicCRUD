@@ -61,4 +61,9 @@ public class UserRepository(ApplicationDbContext dbContext)
             _ => query.OrderByDescending(p => p.CreatedAt),
         };
     }
+
+    public async Task<User?> GetByUsernameAsync(string username)
+    {
+        return await _dbSet.FirstOrDefaultAsync(u => u.Username == username);
+    }
 }
