@@ -54,7 +54,12 @@ public sealed class ApplicationCommandSeeder(
         var stopWatch = Stopwatch.StartNew();
 
         Result<AuthResult> defaultUserResult = await _mediator.Send(
-            new RegisterUserCommand("John Doe", "default_user@email.com", _options.SeedUserPassword)
+            new RegisterUserCommand(
+                "John Doe",
+                "john_doe",
+                "default_user@email.com",
+                _options.SeedUserPassword
+            )
         );
 
         userIds.Add(defaultUserResult.Value!.Id);
@@ -66,6 +71,7 @@ public sealed class ApplicationCommandSeeder(
             Result<AuthResult> result = await _mediator.Send(
                 new RegisterUserCommand(
                     faker.Name.FullName(),
+                    faker.Person.FullName,
                     faker.Internet.Email(),
                     _options.SeedUserPassword
                 )

@@ -39,7 +39,7 @@ public class AuthController : Controller
             return View(model);
         }
 
-        RegisterUserCommand command = new(model.Name, model.Email, model.Password);
+        RegisterUserCommand command = new(model.Name, model.Username, model.Email, model.Password);
 
         Result<AuthResult> result = await _mediator.Send(command);
 
@@ -48,9 +48,13 @@ public class AuthController : Controller
             if (result.Error == null || result.IsSuccess)
                 throw new InvalidOperationException();
 
-            if (result.Error == AuthErrors.AlreadyExists)
+            if (result.Error == AuthErrors.AlreadyExistsEmail)
             {
                 ModelState.AddModelError(nameof(model.Email), result.Error.Message.ToString());
+            }
+            if (result.Error == AuthErrors.AlreadyExistsUsername)
+            {
+                ModelState.AddModelError(nameof(model.Username), result.Error.Message.ToString());
             }
             // TODO: handle this better
             if (result is IValidationResult validationResult)

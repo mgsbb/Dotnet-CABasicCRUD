@@ -25,7 +25,12 @@ public sealed class AuthController(IMediator mediator) : ApiController
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<ActionResult> RegisterUser([FromBody] RegisterUserRequest request)
     {
-        RegisterUserCommand command = new(request.Name, request.Email, request.Password);
+        RegisterUserCommand command = new(
+            request.Name,
+            request.Username,
+            request.Email,
+            request.Password
+        );
         Result<AuthResult> result = await _mediator.Send(command);
 
         if (result.IsFailure || result.Value is null)
@@ -87,7 +92,11 @@ public sealed class AuthController(IMediator mediator) : ApiController
                 extensions: extensions
             );
         }
-        if (result.Error == AuthErrors.AlreadyExists)
+        if (result.Error == AuthErrors.AlreadyExistsEmail)
+        {
+            return HandleProblem(StatusCodes.Status409Conflict, detail: result.Error.Message);
+        }
+        if (result.Error == AuthErrors.AlreadyExistsUsername)
         {
             return HandleProblem(StatusCodes.Status409Conflict, detail: result.Error.Message);
         }
