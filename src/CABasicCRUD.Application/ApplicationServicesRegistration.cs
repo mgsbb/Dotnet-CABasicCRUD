@@ -1,7 +1,7 @@
 using CABasicCRUD.Application.Common;
 using CABasicCRUD.Application.Common.Behaviors;
 using CABasicCRUD.Application.Common.Interfaces;
-using CABasicCRUD.Application.Features.Auth;
+using CABasicCRUD.Application.Features.Identity.Auth.Events;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
