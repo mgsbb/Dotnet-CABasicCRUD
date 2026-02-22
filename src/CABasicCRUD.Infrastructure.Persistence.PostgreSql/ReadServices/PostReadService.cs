@@ -1,8 +1,8 @@
-using CABasicCRUD.Application.Features.Posts;
-using CABasicCRUD.Domain.Posts;
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Application.Features.Posts.Posts.Common;
+using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Domain.Posts.Posts;
 using Microsoft.EntityFrameworkCore;
-using SortDirection = CABasicCRUD.Application.Features.Posts.SortDirection;
+using SortDirection = CABasicCRUD.Application.Features.Posts.Posts.Common.SortDirection;
 
 namespace CABasicCRUD.Infrastructure.Persistence.PostgreSql.ReadServices;
 

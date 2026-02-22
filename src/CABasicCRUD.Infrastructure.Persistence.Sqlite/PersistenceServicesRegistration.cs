@@ -1,8 +1,8 @@
 using CABasicCRUD.Application.Common.Interfaces;
-using CABasicCRUD.Domain.Comments;
-using CABasicCRUD.Domain.Conversations;
-using CABasicCRUD.Domain.Posts;
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Domain.Conversations.Conversations;
+using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Domain.Posts.Comments;
+using CABasicCRUD.Domain.Posts.Posts;
 using CABasicCRUD.Infrastructure.Persistence.Sqlite.Outbox;
 using CABasicCRUD.Infrastructure.Persistence.Sqlite.Repositories;
 using CABasicCRUD.Infrastructure.Persistence.Sqlite.Seeding;

@@ -1,10 +1,10 @@
 using CABasicCRUD.Application.Common.Interfaces;
-using CABasicCRUD.Application.Features.Comments;
-using CABasicCRUD.Application.Features.Posts;
-using CABasicCRUD.Domain.Comments;
-using CABasicCRUD.Domain.Conversations;
-using CABasicCRUD.Domain.Posts;
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Application.Features.Posts.Comments.Common;
+using CABasicCRUD.Application.Features.Posts.Posts.Common;
+using CABasicCRUD.Domain.Conversations.Conversations;
+using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Domain.Posts.Comments;
+using CABasicCRUD.Domain.Posts.Posts;
 using CABasicCRUD.Infrastructure.Persistence.PostgreSql.Outbox;
 using CABasicCRUD.Infrastructure.Persistence.PostgreSql.ReadServices;
 using CABasicCRUD.Infrastructure.Persistence.PostgreSql.Repositories;

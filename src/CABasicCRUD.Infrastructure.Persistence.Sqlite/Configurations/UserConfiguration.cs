@@ -1,4 +1,4 @@
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Domain.Identity.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

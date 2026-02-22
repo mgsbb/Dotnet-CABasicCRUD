@@ -1,11 +1,10 @@
 ﻿using System.Text.Json;
 using CABasicCRUD.Application.Common.Interfaces;
-using CABasicCRUD.Domain.Services;
+using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Infrastructure.Authentication;
 using CABasicCRUD.Infrastructure.Caching;
 using CABasicCRUD.Infrastructure.EmailService;
 using CABasicCRUD.Infrastructure.Serialization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

@@ -1,9 +1,9 @@
 using System.Diagnostics;
 using Bogus;
-using CABasicCRUD.Domain.Comments;
-using CABasicCRUD.Domain.Posts;
-using CABasicCRUD.Domain.Services;
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Domain.Common;
+using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Domain.Posts.Comments;
+using CABasicCRUD.Domain.Posts.Posts;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

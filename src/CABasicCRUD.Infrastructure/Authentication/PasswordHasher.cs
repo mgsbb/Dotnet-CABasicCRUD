@@ -1,4 +1,4 @@
-using CABasicCRUD.Domain.Services;
+using CABasicCRUD.Domain.Common;
 
 namespace CABasicCRUD.Infrastructure.Authentication;
 

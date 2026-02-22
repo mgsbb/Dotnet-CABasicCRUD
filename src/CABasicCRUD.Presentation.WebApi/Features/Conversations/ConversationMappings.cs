@@ -1,4 +1,4 @@
-using CABasicCRUD.Application.Features.Conversations;
+using CABasicCRUD.Application.Features.Conversations.Conversations.Common;
 using CABasicCRUD.Presentation.WebApi.Features.Conversations.Contracts;
 
 namespace CABasicCRUD.Presentation.WebApi.Features.Conversations;

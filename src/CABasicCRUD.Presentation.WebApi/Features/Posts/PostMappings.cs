@@ -1,4 +1,4 @@
-using CABasicCRUD.Application.Features.Posts;
+using CABasicCRUD.Application.Features.Posts.Posts.Common;
 using CABasicCRUD.Presentation.WebApi.Features.Posts.Contracts;
 
 namespace CABasicCRUD.Presentation.WebApi.Features.Posts;

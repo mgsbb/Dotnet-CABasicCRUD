@@ -1,5 +1,5 @@
-using CABasicCRUD.Application.Features.Comments;
-using CABasicCRUD.Domain.Posts;
+using CABasicCRUD.Application.Features.Posts.Comments.Common;
+using CABasicCRUD.Domain.Posts.Posts;
 using Microsoft.EntityFrameworkCore;
 
 namespace CABasicCRUD.Infrastructure.Persistence.PostgreSql.ReadServices;

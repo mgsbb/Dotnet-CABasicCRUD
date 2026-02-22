@@ -1,11 +1,11 @@
 using CABasicCRUD.Application.Common.Interfaces;
-using CABasicCRUD.Application.Features.Auth;
-using CABasicCRUD.Application.Features.Comments;
-using CABasicCRUD.Application.Features.Comments.DeleteComment;
-using CABasicCRUD.Application.Features.Comments.GetCommentById;
-using CABasicCRUD.Domain.Comments;
+using CABasicCRUD.Application.Features.Identity.Auth.Common;
+using CABasicCRUD.Application.Features.Posts.Comments.Commands.DeleteComment;
+using CABasicCRUD.Application.Features.Posts.Comments.Common;
+using CABasicCRUD.Application.Features.Posts.Comments.Queries.GetCommentById;
 using CABasicCRUD.Domain.Common;
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Domain.Posts.Comments;
 using CABasicCRUD.Presentation.WebMvc.Models.Comments;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

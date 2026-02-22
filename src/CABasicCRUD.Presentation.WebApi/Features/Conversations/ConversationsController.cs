@@ -1,12 +1,13 @@
-using CABasicCRUD.Application.Features.Auth;
-using CABasicCRUD.Application.Features.Conversations;
-using CABasicCRUD.Application.Features.Conversations.CreateConversation;
-using CABasicCRUD.Application.Features.Conversations.GetConversationById;
-using CABasicCRUD.Application.Features.Conversations.GetConversationsOfUser;
-using CABasicCRUD.Application.Features.Conversations.SendMessage;
+using CABasicCRUD.Application.Features.Conversations.Conversations.Commands.CreateConversation;
+using CABasicCRUD.Application.Features.Conversations.Conversations.Common;
+using CABasicCRUD.Application.Features.Conversations.Conversations.Queries.GetConversationById;
+using CABasicCRUD.Application.Features.Conversations.Conversations.Queries.GetConversationsOfUser;
+using CABasicCRUD.Application.Features.Conversations.Messages.Commands.SendMessage;
+using CABasicCRUD.Application.Features.Conversations.Messages.Common;
+using CABasicCRUD.Application.Features.Identity.Auth.Common;
 using CABasicCRUD.Domain.Common;
-using CABasicCRUD.Domain.Conversations;
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Domain.Conversations.Conversations;
+using CABasicCRUD.Domain.Identity.Users;
 using CABasicCRUD.Presentation.WebApi.Common.Abstractions;
 using CABasicCRUD.Presentation.WebApi.Features.Conversations.Contracts;
 using CABasicCRUD.Presentation.WebApi.RateLimiter;
@@ -150,22 +151,31 @@ public class ConversationsController(IMediator mediator) : ApiController
         {
             return HandleProblem(StatusCodes.Status403Forbidden, detail: result.Error.Message);
         }
-        if (result.Error == Application.Features.Conversations.ConversationErrors.NotFound)
+        if (
+            result.Error
+            == Application.Features.Conversations.Conversations.Common.ConversationErrors.NotFound
+        )
         {
             return HandleProblem(StatusCodes.Status404NotFound, detail: result.Error.Message);
         }
-        if (result.Error == Application.Features.Users.UserErrors.NotFound)
+        if (result.Error == Application.Features.Identity.Users.Common.UserErrors.NotFound)
         {
             return HandleProblem(StatusCodes.Status404NotFound, detail: result.Error.Message);
         }
         if (
             result.Error
-            == Application.Features.Conversations.ConversationErrors.ConversationWithSelf
+            == Application
+                .Features
+                .Conversations
+                .Conversations
+                .Common
+                .ConversationErrors
+                .ConversationWithSelf
         )
         {
             return HandleProblem(StatusCodes.Status409Conflict, detail: result.Error.Message);
         }
-        if (result.Error == Domain.Conversations.ConversationErrors.NotAParticipant)
+        if (result.Error == Domain.Conversations.Conversations.ConversationErrors.NotAParticipant)
         {
             return HandleProblem(StatusCodes.Status403Forbidden, detail: result.Error.Message);
         }

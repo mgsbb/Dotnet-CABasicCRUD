@@ -1,6 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using CABasicCRUD.Domain.Posts;
+using CABasicCRUD.Domain.Posts.Posts;
 
 namespace CABasicCRUD.Infrastructure.Serialization;
 

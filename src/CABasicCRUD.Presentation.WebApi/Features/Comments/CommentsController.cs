@@ -1,12 +1,12 @@
 using CABasicCRUD.Application.Common.Interfaces;
-using CABasicCRUD.Application.Features.Auth;
-using CABasicCRUD.Application.Features.Comments;
-using CABasicCRUD.Application.Features.Comments.DeleteComment;
-using CABasicCRUD.Application.Features.Comments.GetCommentById;
-using CABasicCRUD.Application.Features.Comments.UpdateComment;
-using CABasicCRUD.Domain.Comments;
+using CABasicCRUD.Application.Features.Identity.Auth.Common;
+using CABasicCRUD.Application.Features.Posts.Comments.Commands.DeleteComment;
+using CABasicCRUD.Application.Features.Posts.Comments.Commands.UpdateComment;
+using CABasicCRUD.Application.Features.Posts.Comments.Common;
+using CABasicCRUD.Application.Features.Posts.Comments.Queries.GetCommentById;
 using CABasicCRUD.Domain.Common;
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Domain.Posts.Comments;
 using CABasicCRUD.Presentation.WebApi.Common.Abstractions;
 using CABasicCRUD.Presentation.WebApi.Features.Comments.Contracts;
 using CABasicCRUD.Presentation.WebApi.RateLimiter;
@@ -108,9 +108,9 @@ public class CommentsController(IMediator mediator, ICurrentUser currentUser) : 
             );
         }
         if (
-            result.Error == Application.Features.Users.UserErrors.NotFound
-            || result.Error == Application.Features.Posts.PostErrors.NotFound
-            || result.Error == Application.Features.Comments.CommentErrors.NotFound
+            result.Error == Application.Features.Identity.Users.Common.UserErrors.NotFound
+            || result.Error == Application.Features.Posts.Posts.Common.PostErrors.NotFound
+            || result.Error == Application.Features.Posts.Comments.Common.CommentErrors.NotFound
         )
         {
             return HandleProblem(StatusCodes.Status404NotFound, detail: result.Error.Message);

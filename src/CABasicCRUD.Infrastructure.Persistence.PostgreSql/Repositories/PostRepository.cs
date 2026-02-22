@@ -1,4 +1,4 @@
-using CABasicCRUD.Domain.Posts;
+using CABasicCRUD.Domain.Posts.Posts;
 
 namespace CABasicCRUD.Infrastructure.Persistence.PostgreSql.Repositories;
 

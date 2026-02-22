@@ -1,7 +1,7 @@
-using CABasicCRUD.Domain.Comments;
-using CABasicCRUD.Domain.Conversations;
-using CABasicCRUD.Domain.Posts;
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Domain.Conversations.Conversations;
+using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Domain.Posts.Comments;
+using CABasicCRUD.Domain.Posts.Posts;
 using Microsoft.EntityFrameworkCore;
 
 namespace CABasicCRUD.Infrastructure.Persistence.Sqlite;

@@ -1,10 +1,10 @@
-using CABasicCRUD.Application.Features.Auth;
-using CABasicCRUD.Application.Features.Users;
-using CABasicCRUD.Application.Features.Users.DeleteUser;
-using CABasicCRUD.Application.Features.Users.GetUserById;
-using CABasicCRUD.Application.Features.Users.UpdateUser;
+using CABasicCRUD.Application.Features.Identity.Auth.Common;
+using CABasicCRUD.Application.Features.Identity.Users.Commands.DeleteUser;
+using CABasicCRUD.Application.Features.Identity.Users.Commands.UpdateUser;
+using CABasicCRUD.Application.Features.Identity.Users.Common;
+using CABasicCRUD.Application.Features.Identity.Users.Queries.GetUserById;
 using CABasicCRUD.Domain.Common;
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Domain.Identity.Users;
 using CABasicCRUD.Presentation.WebApi.Common.Abstractions;
 using CABasicCRUD.Presentation.WebApi.Common.Security.Authorization;
 using CABasicCRUD.Presentation.WebApi.Features.Users.Contracts;
@@ -137,7 +137,7 @@ public sealed class UsersController(IMediator mediator) : ApiController
                 extensions: extensions
             );
         }
-        if (result.Error == Application.Features.Users.UserErrors.NotFound)
+        if (result.Error == Application.Features.Identity.Users.Common.UserErrors.NotFound)
         {
             return HandleProblem(StatusCodes.Status404NotFound, detail: result.Error.Message);
         }

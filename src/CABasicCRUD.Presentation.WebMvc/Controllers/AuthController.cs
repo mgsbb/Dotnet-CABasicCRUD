@@ -1,7 +1,7 @@
 using CABasicCRUD.Application.Common.Interfaces;
-using CABasicCRUD.Application.Features.Auth;
-using CABasicCRUD.Application.Features.Auth.LoginUser;
-using CABasicCRUD.Application.Features.Auth.RegisterUser;
+using CABasicCRUD.Application.Features.Identity.Auth.Commands.LoginUser;
+using CABasicCRUD.Application.Features.Identity.Auth.Commands.RegisterUser;
+using CABasicCRUD.Application.Features.Identity.Auth.Common;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Presentation.WebMvc.Models.Auth;
 using MediatR;

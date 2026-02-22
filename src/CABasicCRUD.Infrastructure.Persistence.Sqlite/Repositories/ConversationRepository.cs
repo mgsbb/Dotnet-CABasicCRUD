@@ -1,5 +1,5 @@
-using CABasicCRUD.Domain.Conversations;
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Domain.Conversations.Conversations;
+using CABasicCRUD.Domain.Identity.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace CABasicCRUD.Infrastructure.Persistence.Sqlite.Repositories;

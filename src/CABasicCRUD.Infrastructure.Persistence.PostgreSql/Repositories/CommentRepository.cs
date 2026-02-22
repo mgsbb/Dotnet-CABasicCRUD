@@ -1,5 +1,5 @@
-using CABasicCRUD.Domain.Comments;
-using CABasicCRUD.Domain.Posts;
+using CABasicCRUD.Domain.Posts.Comments;
+using CABasicCRUD.Domain.Posts.Posts;
 using Microsoft.EntityFrameworkCore;
 
 namespace CABasicCRUD.Infrastructure.Persistence.PostgreSql.Repositories;

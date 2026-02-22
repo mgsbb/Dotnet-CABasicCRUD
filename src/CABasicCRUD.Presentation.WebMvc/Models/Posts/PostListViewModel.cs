@@ -1,4 +1,4 @@
-using CABasicCRUD.Application.Features.Posts;
+using CABasicCRUD.Application.Features.Posts.Posts.Common;
 
 namespace CABasicCRUD.Presentation.WebMvc.Models.Posts;
 

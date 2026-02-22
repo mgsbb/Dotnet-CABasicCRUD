@@ -1,6 +1,6 @@
-using CABasicCRUD.Domain.Conversations;
-using CABasicCRUD.Domain.Messages;
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Domain.Conversations.Conversations;
+using CABasicCRUD.Domain.Conversations.Messages;
+using CABasicCRUD.Domain.Identity.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

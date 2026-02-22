@@ -1,14 +1,14 @@
 using CABasicCRUD.Application.Common.Interfaces;
-using CABasicCRUD.Application.Features.Auth;
-using CABasicCRUD.Application.Features.Posts;
-using CABasicCRUD.Application.Features.Posts.CreatePost;
-using CABasicCRUD.Application.Features.Posts.DeletePost;
-using CABasicCRUD.Application.Features.Posts.GetAllposts;
-using CABasicCRUD.Application.Features.Posts.GetPostById;
-using CABasicCRUD.Application.Features.Posts.UpdatePost;
+using CABasicCRUD.Application.Features.Identity.Auth.Common;
+using CABasicCRUD.Application.Features.Posts.Posts.Commands.CreatePost;
+using CABasicCRUD.Application.Features.Posts.Posts.Commands.DeletePost;
+using CABasicCRUD.Application.Features.Posts.Posts.Commands.UpdatePost;
+using CABasicCRUD.Application.Features.Posts.Posts.Common;
+using CABasicCRUD.Application.Features.Posts.Posts.Queries.GetAllPosts;
+using CABasicCRUD.Application.Features.Posts.Posts.Queries.GetPostById;
 using CABasicCRUD.Domain.Common;
-using CABasicCRUD.Domain.Posts;
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Domain.Posts.Posts;
 using CABasicCRUD.Presentation.WebApi.Common.Abstractions;
 using CABasicCRUD.Presentation.WebApi.Features.Posts.Contracts;
 using CABasicCRUD.Presentation.WebApi.RateLimiter;
@@ -158,7 +158,7 @@ public class PostsController(IMediator mediator, ICurrentUser currentUser) : Api
                 extensions: extensions
             );
         }
-        if (result.Error == Application.Features.Posts.PostErrors.NotFound)
+        if (result.Error == Application.Features.Posts.Posts.Common.PostErrors.NotFound)
         {
             return HandleProblem(StatusCodes.Status404NotFound, detail: result.Error.Message);
         }

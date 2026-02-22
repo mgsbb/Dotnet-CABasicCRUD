@@ -1,6 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Domain.Identity.Users;
 
 namespace CABasicCRUD.Infrastructure.Serialization;
 

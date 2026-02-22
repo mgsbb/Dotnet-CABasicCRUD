@@ -1,4 +1,4 @@
-using CABasicCRUD.Application.Features.Comments;
+using CABasicCRUD.Application.Features.Posts.Comments.Common;
 using CABasicCRUD.Presentation.WebApi.Features.Comments.Contracts;
 
 namespace CABasicCRUD.Presentation.WebApi.Features.Comments;

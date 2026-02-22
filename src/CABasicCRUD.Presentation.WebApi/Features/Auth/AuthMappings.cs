@@ -1,4 +1,4 @@
-using CABasicCRUD.Application.Features.Auth;
+using CABasicCRUD.Application.Features.Identity.Auth.Common;
 using CABasicCRUD.Presentation.WebApi.Features.Auth.Contracts;
 
 namespace CABasicCRUD.Presentation.WebApi.Features.Auth;
