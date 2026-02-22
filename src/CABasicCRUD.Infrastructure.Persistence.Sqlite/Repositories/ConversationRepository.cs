@@ -18,4 +18,13 @@ public class ConversationRepository(ApplicationDbContext dbContext)
 
         return conversations;
     }
+
+    public Task<Conversation?> GetPrivateConversationAsync(
+        UserId initiatorUserId,
+        UserId participantUserId,
+        CancellationToken cancellationToken
+    )
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -12,11 +12,13 @@ public sealed class Conversation : AggregateRoot<ConversationId>
     public IReadOnlyList<Message> Messages => _messages.AsReadOnly();
     public IReadOnlyList<ConversationParticipant> Participants => _participants.AsReadOnly();
     public UserId CreatedById { get; private set; }
+    public ConversationType ConversationType { get; private set; }
 
-    private Conversation(ConversationId id, UserId createdById)
+    private Conversation(ConversationId id, UserId createdById, ConversationType conversationType)
         : base(id)
     {
         CreatedById = createdById;
+        ConversationType = conversationType;
     }
 
     public static Result<Conversation> Create(
@@ -24,12 +26,27 @@ public sealed class Conversation : AggregateRoot<ConversationId>
         IReadOnlyList<UserId> participantsUserIds
     )
     {
-        Conversation conversation = new(ConversationId.New(), createdById);
+        Conversation conversation = new(ConversationId.New(), createdById, ConversationType.Group);
 
         foreach (UserId userId in participantsUserIds)
         {
             conversation._participants.Add(new ConversationParticipant(conversation.Id, userId));
         }
+
+        return conversation;
+    }
+
+    public static Result<Conversation> CreatePrivate(UserId creatorId, UserId participantId)
+    {
+        if (creatorId == participantId)
+        {
+            return Result<Conversation>.Failure(ConversationErrors.CreatorSameAsParticipant);
+        }
+
+        Conversation conversation = new(ConversationId.New(), creatorId, ConversationType.Private);
+
+        conversation._participants.Add(new ConversationParticipant(conversation.Id, creatorId));
+        conversation._participants.Add(new ConversationParticipant(conversation.Id, participantId));
 
         return conversation;
     }

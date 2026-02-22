@@ -18,4 +18,18 @@ public class ConversationRepository(ApplicationDbContext dbContext)
 
         return conversations;
     }
+
+    public async Task<Conversation?> GetPrivateConversationAsync(
+        UserId initiatorUserId,
+        UserId participantUserId,
+        CancellationToken cancellationToken
+    )
+    {
+        return await _dbSet
+            .Where(c => c.ConversationType == ConversationType.Private)
+            .Where(c => c.Participants.Count == 2)
+            .Where(c => c.Participants.Any(p => p.UserId == initiatorUserId))
+            .Where(c => c.Participants.Any(p => p.UserId == participantUserId))
+            .FirstOrDefaultAsync(cancellationToken);
+    }
 }
