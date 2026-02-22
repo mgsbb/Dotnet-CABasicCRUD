@@ -1,4 +1,4 @@
-namespace CABasicCRUD.Domain.Users;
+namespace CABasicCRUD.Domain.Identity.Users;
 
 public enum SortDirection
 {

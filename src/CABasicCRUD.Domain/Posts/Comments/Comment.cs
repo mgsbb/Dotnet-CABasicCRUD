@@ -1,8 +1,8 @@
 using CABasicCRUD.Domain.Common;
-using CABasicCRUD.Domain.Posts;
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Domain.Posts.Posts;
 
-namespace CABasicCRUD.Domain.Comments;
+namespace CABasicCRUD.Domain.Posts.Comments;
 
 public sealed class Comment : AggregateRoot<CommentId>
 {

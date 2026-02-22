@@ -1,6 +1,7 @@
 using CABasicCRUD.Domain.Common;
+using CABasicCRUD.Domain.Identity.Users;
 
-namespace CABasicCRUD.Domain.Users;
+namespace CABasicCRUD.Domain.Identity.UserProfiles;
 
 public sealed class UserProfile : EntityBase<UserId>
 {

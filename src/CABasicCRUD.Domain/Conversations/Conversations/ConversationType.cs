@@ -1,4 +1,4 @@
-namespace CABasicCRUD.Domain.Conversations;
+namespace CABasicCRUD.Domain.Conversations.Conversations;
 
 public enum ConversationType
 {

@@ -1,7 +1,7 @@
 using CABasicCRUD.Domain.Common;
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Domain.Identity.Users;
 
-namespace CABasicCRUD.Domain.Posts;
+namespace CABasicCRUD.Domain.Posts.Posts;
 
 public class Post : AggregateRoot<PostId>
 {

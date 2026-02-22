@@ -1,7 +1,7 @@
 using CABasicCRUD.Domain.Common;
-using CABasicCRUD.Domain.Posts;
+using CABasicCRUD.Domain.Posts.Posts;
 
-namespace CABasicCRUD.Domain.Comments;
+namespace CABasicCRUD.Domain.Posts.Comments;
 
 public interface ICommentRepository : IRepository<Comment, CommentId>
 {

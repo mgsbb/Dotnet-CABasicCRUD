@@ -1,7 +1,7 @@
 using CABasicCRUD.Domain.Common;
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Domain.Identity.Users;
 
-namespace CABasicCRUD.Domain.Messages;
+namespace CABasicCRUD.Domain.Conversations.Messages;
 
 public sealed class Message : EntityBase<MessageId>
 {

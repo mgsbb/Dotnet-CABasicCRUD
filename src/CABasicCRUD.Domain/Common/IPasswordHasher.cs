@@ -1,4 +1,4 @@
-namespace CABasicCRUD.Domain.Services;
+namespace CABasicCRUD.Domain.Common;
 
 public interface IPasswordHasher
 {

@@ -1,6 +1,6 @@
 using CABasicCRUD.Domain.Common;
 
-namespace CABasicCRUD.Domain.Conversations;
+namespace CABasicCRUD.Domain.Conversations.Conversations;
 
 public static class ConversationErrors
 {

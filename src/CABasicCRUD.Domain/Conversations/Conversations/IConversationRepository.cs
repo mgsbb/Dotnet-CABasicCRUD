@@ -1,7 +1,7 @@
 using CABasicCRUD.Domain.Common;
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Domain.Identity.Users;
 
-namespace CABasicCRUD.Domain.Conversations;
+namespace CABasicCRUD.Domain.Conversations.Conversations;
 
 public interface IConversationRepository : IRepository<Conversation, ConversationId>
 {

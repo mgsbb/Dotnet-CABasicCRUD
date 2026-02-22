@@ -1,7 +1,7 @@
 using CABasicCRUD.Domain.Common;
-using CABasicCRUD.Domain.Services;
+using CABasicCRUD.Domain.Identity.UserProfiles;
 
-namespace CABasicCRUD.Domain.Users;
+namespace CABasicCRUD.Domain.Identity.Users;
 
 public class User : AggregateRoot<UserId>
 {

@@ -1,6 +1,6 @@
 using CABasicCRUD.Domain.Common;
 
-namespace CABasicCRUD.Domain.Comments;
+namespace CABasicCRUD.Domain.Posts.Comments;
 
 public static class CommentErrors
 {

@@ -1,6 +1,6 @@
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Domain.Identity.Users;
 
-namespace CABasicCRUD.Domain.Conversations;
+namespace CABasicCRUD.Domain.Conversations.Conversations;
 
 public sealed class ConversationParticipant
 {

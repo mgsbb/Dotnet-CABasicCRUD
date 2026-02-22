@@ -1,8 +1,8 @@
 using CABasicCRUD.Domain.Common;
-using CABasicCRUD.Domain.Messages;
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Domain.Conversations.Messages;
+using CABasicCRUD.Domain.Identity.Users;
 
-namespace CABasicCRUD.Domain.Conversations;
+namespace CABasicCRUD.Domain.Conversations.Conversations;
 
 public sealed class Conversation : AggregateRoot<ConversationId>
 {
