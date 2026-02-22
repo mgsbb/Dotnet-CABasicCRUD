@@ -1,6 +1,6 @@
-using CABasicCRUD.Application.Features.Posts;
-using CABasicCRUD.Application.Features.Posts.CreatePost;
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Application.Features.Posts.Posts.Commands.CreatePost;
+using CABasicCRUD.Application.Features.Posts.Posts.Common;
+using CABasicCRUD.Domain.Identity.Users;
 using FluentValidation.TestHelper;
 
 namespace CABasicCRUD.UnitTests.Application.Features.Posts.CreatePost;

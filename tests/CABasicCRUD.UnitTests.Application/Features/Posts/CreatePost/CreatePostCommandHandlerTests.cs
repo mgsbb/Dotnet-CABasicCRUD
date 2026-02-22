@@ -1,10 +1,9 @@
 using CABasicCRUD.Application.Common.Interfaces;
-using CABasicCRUD.Application.Features.Auth;
-using CABasicCRUD.Application.Features.Posts;
-using CABasicCRUD.Application.Features.Posts.CreatePost;
+using CABasicCRUD.Application.Features.Posts.Posts.Commands.CreatePost;
+using CABasicCRUD.Application.Features.Posts.Posts.Common;
 using CABasicCRUD.Domain.Common;
-using CABasicCRUD.Domain.Posts;
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Domain.Posts.Posts;
 using NSubstitute;
 
 namespace CABasicCRUD.UnitTests.Application.Features.Posts.CreatePost;
@@ -75,7 +74,7 @@ public sealed class CreatePostCommandHandlerTests
         Assert.True(result.IsFailure);
         Assert.Null(result.Value);
         Assert.NotNull(result.Error);
-        Assert.Equal(result.Error, Domain.Posts.PostErrors.TitleEmpty);
+        Assert.Equal(result.Error, Domain.Posts.Posts.PostErrors.TitleEmpty);
 
         await _postRepository.DidNotReceive().AddAsync(Arg.Any<Post>());
         await _unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
@@ -100,7 +99,7 @@ public sealed class CreatePostCommandHandlerTests
         Assert.True(result.IsFailure);
         Assert.Null(result.Value);
         Assert.NotNull(result.Error);
-        Assert.Equal(result.Error, Domain.Posts.PostErrors.ContentEmpty);
+        Assert.Equal(result.Error, Domain.Posts.Posts.PostErrors.ContentEmpty);
 
         await _postRepository.DidNotReceive().AddAsync(Arg.Any<Post>());
         await _unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());

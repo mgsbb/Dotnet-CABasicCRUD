@@ -1,11 +1,11 @@
 using CABasicCRUD.Application.Common.Interfaces;
-using CABasicCRUD.Application.Features.Auth;
-using CABasicCRUD.Application.Features.Posts.DeletePost;
+using CABasicCRUD.Application.Features.Identity.Auth.Common;
+using CABasicCRUD.Application.Features.Posts.Posts.Commands.DeletePost;
 using CABasicCRUD.Domain.Common;
-using CABasicCRUD.Domain.Posts;
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Domain.Posts.Posts;
 using NSubstitute;
-using PostErrors = CABasicCRUD.Application.Features.Posts.PostErrors;
+using PostErrors = CABasicCRUD.Application.Features.Posts.Posts.Common.PostErrors;
 
 namespace CABasicCRUD.UnitTests.Application.Features.Posts.DeletePost;
 

@@ -1,6 +1,6 @@
-using CABasicCRUD.Application.Features.Posts.UpdatePost;
-using CABasicCRUD.Domain.Posts;
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Application.Features.Posts.Posts.Commands.UpdatePost;
+using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Domain.Posts.Posts;
 
 namespace CABasicCRUD.UnitTests.Application.Features.Posts.UpdatePost;
 

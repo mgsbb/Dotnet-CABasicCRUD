@@ -1,7 +1,7 @@
-using CABasicCRUD.Application.Features.Posts;
-using CABasicCRUD.Application.Features.Posts.DeletePost;
-using CABasicCRUD.Domain.Posts;
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Application.Features.Posts.Posts.Commands.DeletePost;
+using CABasicCRUD.Application.Features.Posts.Posts.Common;
+using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Domain.Posts.Posts;
 
 namespace CABasicCRUD.UnitTests.Application.Features.Posts.DeletePost;
 

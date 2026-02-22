@@ -1,9 +1,9 @@
 using CABasicCRUD.Application.Common.Interfaces;
-using CABasicCRUD.Application.Features.Posts;
-using CABasicCRUD.Application.Features.Posts.GetAllposts;
+using CABasicCRUD.Application.Features.Posts.Posts.Common;
+using CABasicCRUD.Application.Features.Posts.Posts.Queries.GetAllPosts;
 using CABasicCRUD.Domain.Common;
-using CABasicCRUD.Domain.Posts;
-using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Domain.Posts.Posts;
 using NSubstitute;
 
 namespace CABasicCRUD.UnitTests.Application.Features.Posts.GetAllPosts;

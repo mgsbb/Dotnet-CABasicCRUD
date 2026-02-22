@@ -1,6 +1,6 @@
-using CABasicCRUD.Application.Features.Posts;
-using CABasicCRUD.Application.Features.Posts.GetPostById;
-using CABasicCRUD.Domain.Posts;
+using CABasicCRUD.Application.Features.Posts.Posts.Common;
+using CABasicCRUD.Application.Features.Posts.Posts.Queries.GetPostById;
+using CABasicCRUD.Domain.Posts.Posts;
 
 namespace CABasicCRUD.UnitTests.Application.Features.Posts.GetPostById;
 
