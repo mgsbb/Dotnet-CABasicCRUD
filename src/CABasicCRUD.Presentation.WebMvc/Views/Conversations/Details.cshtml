@@ -1,1 +1,52 @@
-chat page
+@using CABasicCRUD.Application.Common.Interfaces
+@model CABasicCRUD.Presentation.WebMvc.Models.Conversations.ConversationDetailsViewModel
+@inject ICurrentUser CurrentUser
+
+<div class="mx-auto bg-white w-2/3 py-16 border-x border-gray-300 min-h-screen flex flex-col gap-2 relative">
+
+    @* header - display target username *@
+    <section class="w-full border-b border-gray-300 h-16">
+        <p>@Model.ParticipantsId.Single(id => id != CurrentUser.UserId )</p>
+    </section>
+
+    @* messages *@
+    <section class="px-20">
+        @if (!Model.Messages.Any())
+        {
+            <p class="text-gray-600 text-center ">Send your first message</p>
+        }
+        else
+        {
+            <div class="flex flex-col gap-6">
+                @foreach (var message in Model.Messages)
+                {
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="mb-1">@message.Content</p>
+                            <a href="/users/@message.SenderUserId" class="text-sm text-gray-600 font-medium">by
+                                @message.SenderUserId</a>
+                                <small class="text-gray-500 font-medium">
+                                    at @message.CreatedAt.ToString("g")
+                                </small>
+                            </div>
+
+                        </div>
+                    }
+                </div>
+            }
+        </section>
+
+
+        @* send message form *@
+        <form method="post" asp-action="SendMessage" asp-controller="Conversations" asp-route-id="@Model.Id"
+              class="border-t border-gray-300 absolute bottom-0 left-0 min-h-10 w-full flex py-4 px-6 justify-between gap-6 items-center">
+            <div class="flex flex-col gap-1 w-full">
+                <textarea asp-for="NewMessage.Content" class=" border border-gray-300 rounded-sm p-2 w-full"
+                          rows="1"></textarea>
+                <span asp-validation-for="NewMessage.Content" class="text-sm font-semibold text-red-600"></span>
+            </div>
+            <button type="submit" class="px-4 py-2 bg-gray-900 text-white rounded-sm cursor-pointer text-sm">Send</button>
+        </form>
+
+
+    </div>

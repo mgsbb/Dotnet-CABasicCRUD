@@ -1,8 +1,12 @@
 using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Features.Conversations;
+using CABasicCRUD.Application.Features.Conversations.GetConversationById;
+using CABasicCRUD.Application.Features.Conversations.SendMessage;
 using CABasicCRUD.Application.Features.Conversations.StartPrivateConversation;
 using CABasicCRUD.Domain.Common;
+using CABasicCRUD.Domain.Conversations;
 using CABasicCRUD.Domain.Users;
+using CABasicCRUD.Presentation.WebMvc.Models.Conversations;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,8 +24,36 @@ public sealed class ConversationsController(ICurrentUser currentUser, IMediator 
     [HttpGet("{id}")]
     public async Task<IActionResult> Details(Guid id)
     {
-        Console.WriteLine(id);
-        return View();
+        GetConversationByIdQuery query = new((ConversationId)id);
+
+        Result<ConversationResult> result = await _mediator.Send(query);
+
+        if (result.IsFailure || result.Value is null)
+        {
+            return NotFound();
+        }
+
+        IReadOnlyList<MessageViewModel> messageViewModels = result
+            .Value.Messages.Select(message => new MessageViewModel
+            {
+                Id = message.Id,
+                Content = message.Content,
+                SenderUserId = message.SenderUserId,
+                CreatedAt = message.CreatedAt,
+                UpdatedAt = message.UpdatedAt,
+            })
+            .ToList();
+
+        ConversationDetailsViewModel model = new()
+        {
+            Id = result.Value.Id,
+            CreatedAt = result.Value.CreatedAt,
+            UpdatedAt = result.Value.UpdatedAt,
+            Messages = messageViewModels,
+            ParticipantsId = result.Value.ParticipantsId,
+        };
+
+        return View(model);
     }
 
     [HttpPost]
@@ -43,5 +75,27 @@ public sealed class ConversationsController(ICurrentUser currentUser, IMediator 
         // can instead just return ConversationId instead of a ConversationResult
 
         return RedirectToAction(nameof(Details), new { id = result.Value.Id.Value });
+    }
+
+    [HttpPost("{id}/messages")]
+    public async Task<IActionResult> SendMessage(
+        [Bind(Prefix = "NewMessage")] MessageCreateViewModel model,
+        Guid id
+    )
+    {
+        if (!ModelState.IsValid)
+        {
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        SendMessageCommand command = new((ConversationId)id, model.Content);
+
+        Result<MessageResult> result = await _mediator.Send(command);
+
+        if (result.IsFailure || result.Value is null)
+        {
+            return NotFound();
+        }
+        return RedirectToAction(nameof(Details), new { id });
     }
 }
