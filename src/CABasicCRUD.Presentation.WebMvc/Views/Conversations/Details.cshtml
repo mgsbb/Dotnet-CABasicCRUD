@@ -1,16 +1,30 @@
 @using CABasicCRUD.Application.Common.Interfaces
+@using CABasicCRUD.Presentation.WebMvc.Common.Security
 @model CABasicCRUD.Presentation.WebMvc.Models.Conversations.ConversationDetailsViewModel
 @inject ICurrentUser CurrentUser
+@{
+    var otherParticipant = Model
+    .Participants
+    .First(p => p.ParticipantUserId != CurrentUser.UserId);
 
-<div class="mx-auto bg-white w-2/3 py-16 border-x border-gray-300 min-h-screen flex flex-col gap-2 relative">
+    var otherParticipantName = otherParticipant.ParticipantFullName;
+}
+
+<div class="mx-auto bg-white w-2/3 pt-16 border-x border-gray-300 h-screen flex flex-col gap-2">
 
     @* header - display target username *@
-    <section class="w-full border-b border-gray-300 h-16">
-        <p>@Model.ParticipantsId.Single(id => id != CurrentUser.UserId )</p>
+    <section class="w-full border-b border-gray-300 px-20 flex gap-6 items-center py-2">
+        <div class="flex gap-6 items-end">
+            @* replace with user image *@
+            <div class="w-12 h-12 border border-gray-400 rounded-xs"></div>
+            <a href="/users/@otherParticipant.ParticipantUserId">
+                <p class="text-gray-700 font-medium text-xl">@otherParticipantName</p>
+            </a>
+        </div>
     </section>
 
     @* messages *@
-    <section class="px-20">
+    <section class="px-20 overflow-y-auto flex-1">
         @if (!Model.Messages.Any())
         {
             <p class="text-gray-600 text-center ">Send your first message</p>
@@ -18,35 +32,39 @@
         else
         {
             <div class="flex flex-col gap-6">
-                @foreach (var message in Model.Messages)
+                @foreach (var message in Model.Messages.Reverse())
                 {
-                    <div class="flex items-start justify-between">
-                        <div>
-                            <p class="mb-1">@message.Content</p>
-                            <a href="/users/@message.SenderUserId" class="text-sm text-gray-600 font-medium">by
-                                @message.SenderUserId</a>
-                                <small class="text-gray-500 font-medium">
+                    var isCurrentUser = message.SenderUserId == CurrentUser.UserId;
+
+                    <div class="flex @(isCurrentUser ? "justify-end" : "justify-start")">
+                        <div class="@(isCurrentUser ? "bg-purple-200" : "bg-gray-200") flex gap-2 w-fit max-w-xs wrap-break-word flex-col py-2 px-6 rounded-sm ">
+                            <p class="@(isCurrentUser ? "text-purple-600" : "text-gray-600") font-medium">@message.Content</p>
+                            <div class="flex gap-2 items-center @(isCurrentUser ? "justify-end" : "justify-start")">
+                                <p class="text-sm font-semibold  @(isCurrentUser ? "text-purple-900" : "text-gray-900")">
+                                    @message.SenderFullName
+                                </p>
+                                <small class="@(isCurrentUser ? "text-purple-500" : "text-gray-500") text-xs font-medium">
                                     at @message.CreatedAt.ToString("g")
                                 </small>
                             </div>
 
                         </div>
-                    }
-                </div>
-            }
-        </section>
+                    </div>
 
-
-        @* send message form *@
-        <form method="post" asp-action="SendMessage" asp-controller="Conversations" asp-route-id="@Model.Id"
-              class="border-t border-gray-300 absolute bottom-0 left-0 min-h-10 w-full flex py-4 px-6 justify-between gap-6 items-center">
-            <div class="flex flex-col gap-1 w-full">
-                <textarea asp-for="NewMessage.Content" class=" border border-gray-300 rounded-sm p-2 w-full"
-                          rows="1"></textarea>
-                <span asp-validation-for="NewMessage.Content" class="text-sm font-semibold text-red-600"></span>
+                }
             </div>
-            <button type="submit" class="px-4 py-2 bg-gray-900 text-white rounded-sm cursor-pointer text-sm">Send</button>
-        </form>
+        }
+    </section>
 
 
-    </div>
+    @* send message form *@
+    <form method="post" asp-action="SendMessage" asp-controller="Conversations" asp-route-id="@Model.Id"
+          class="border-t border-gray-300 w-full flex py-4 px-6 justify-between gap-6 items-center">
+        <div class="flex flex-col gap-1 w-full">
+            <textarea asp-for="NewMessage.Content" class=" border border-gray-300 rounded-sm p-2 w-full"
+                      rows="1"></textarea>
+            <span asp-validation-for="NewMessage.Content" class="text-sm font-semibold text-red-600"></span>
+        </div>
+        <button type="submit" class="px-4 py-2 bg-gray-900 text-white rounded-sm cursor-pointer text-sm">Send</button>
+    </form>
+</div>

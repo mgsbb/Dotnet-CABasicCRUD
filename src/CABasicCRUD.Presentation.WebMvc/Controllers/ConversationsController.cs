@@ -1,13 +1,14 @@
 using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Features.Conversations.Conversations.Commands.StartPrivateConversation;
 using CABasicCRUD.Application.Features.Conversations.Conversations.Common;
-using CABasicCRUD.Application.Features.Conversations.Conversations.Queries.GetConversationById;
+using CABasicCRUD.Application.Features.Conversations.Conversations.Queries;
 using CABasicCRUD.Application.Features.Conversations.Messages.Commands.SendMessage;
 using CABasicCRUD.Application.Features.Conversations.Messages.Common;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Conversations.Conversations;
 using CABasicCRUD.Domain.Identity.Users;
 using CABasicCRUD.Presentation.WebMvc.Models.Conversations;
+using CABasicCRUD.Presentation.WebMvc.Models.Users;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,9 +27,9 @@ public sealed class ConversationsController(ICurrentUser currentUser, IMediator 
     [HttpGet("{id}")]
     public async Task<IActionResult> Details(Guid id)
     {
-        GetConversationByIdQuery query = new((ConversationId)id);
+        GetConversationByIdWithDetailsQuery query = new((ConversationId)id);
 
-        Result<ConversationResult> result = await _mediator.Send(query);
+        Result<ConversationDetailsResult> result = await _mediator.Send(query);
 
         if (result.IsFailure || result.Value is null)
         {
@@ -43,16 +44,28 @@ public sealed class ConversationsController(ICurrentUser currentUser, IMediator 
                 SenderUserId = message.SenderUserId,
                 CreatedAt = message.CreatedAt,
                 UpdatedAt = message.UpdatedAt,
+                SenderFullName = message.SenderFullName,
+                SenderUsername = message.SenderUsername,
+            })
+            .ToList();
+
+        IReadOnlyList<ConversationParticipantViewModel> participantViewModels = result
+            .Value.Participants.Select(cp => new ConversationParticipantViewModel
+            {
+                ParticipantUserId = cp.ParticipantUserId,
+                ParticipantFullName = cp.ParticipantFullName,
+                ParticipantUsername = cp.ParticipantUsername,
             })
             .ToList();
 
         ConversationDetailsViewModel model = new()
         {
             Id = result.Value.Id,
+            ConversationType = result.Value.ConversationType,
             CreatedAt = result.Value.CreatedAt,
             UpdatedAt = result.Value.UpdatedAt,
             Messages = messageViewModels,
-            ParticipantsId = result.Value.ParticipantsId,
+            Participants = participantViewModels,
         };
 
         return View(model);
