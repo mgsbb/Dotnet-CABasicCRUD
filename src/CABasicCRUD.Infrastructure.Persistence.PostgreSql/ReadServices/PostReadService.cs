@@ -8,6 +8,7 @@ namespace CABasicCRUD.Infrastructure.Persistence.PostgreSql.ReadServices;
 
 public class PostReadService(ApplicationDbContext dbContext) : IPostReadService
 {
+    private readonly DbSet<Post> _dbSet = dbContext.Set<Post>();
     protected readonly ApplicationDbContext _dbContext = dbContext;
 
     public async Task<IReadOnlyList<PostWithAuthorResult>> SearchPostsAsync(
@@ -101,5 +102,15 @@ public class PostReadService(ApplicationDbContext dbContext) : IPostReadService
         )
             .AsNoTracking()
             .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<Post>> GetAllAsync()
+    {
+        return await _dbSet.AsNoTracking().ToListAsync();
+    }
+
+    public async Task<Post?> GetByIdAsync(PostId id)
+    {
+        return await _dbSet.AsNoTracking().FirstOrDefaultAsync(post => post.Id == id);
     }
 }

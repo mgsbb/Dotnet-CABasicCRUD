@@ -8,11 +8,11 @@ namespace CABasicCRUD.Application.Features.Posts.Comments.Queries.GetAllComments
 
 internal sealed class GetAllCommentsOfPostQueryHandler(
     IPostRepository postRepository,
-    ICommentRepository commentRepository
+    ICommentReadService commentReadService
 ) : IQueryHander<GetAllCommentsOfPostQuery, IReadOnlyList<CommentResult>>
 {
     private readonly IPostRepository _postRepository = postRepository;
-    private readonly ICommentRepository _commentRepository = commentRepository;
+    private readonly ICommentReadService _commentReadService = commentReadService;
 
     public async Task<Result<IReadOnlyList<CommentResult>>> Handle(
         GetAllCommentsOfPostQuery request,
@@ -26,7 +26,7 @@ internal sealed class GetAllCommentsOfPostQueryHandler(
             return Result<IReadOnlyList<CommentResult>>.Failure(Posts.Common.PostErrors.NotFound);
         }
 
-        IReadOnlyList<Comment> comments = await _commentRepository.GetAllCommentsOfPost(
+        IReadOnlyList<Comment> comments = await _commentReadService.GetAllCommentsOfPost(
             request.PostId
         );
 

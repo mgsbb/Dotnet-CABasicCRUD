@@ -5,7 +5,7 @@ using CABasicCRUD.Domain.Posts.Posts;
 
 namespace CABasicCRUD.Application.Features.Posts.Comments.Queries.GetCommentsWithAuthorOfPost;
 
-internal sealed class GetAllCommentsOfPostQueryHandler(
+internal sealed class GetCommentsWithAuthorOfPostQueryHandler(
     IPostRepository postRepository,
     ICommentReadService commentReadService
 ) : IQueryHander<GetCommentsWithAuthorOfPostQuery, IReadOnlyList<CommentWithAuthorResult>>

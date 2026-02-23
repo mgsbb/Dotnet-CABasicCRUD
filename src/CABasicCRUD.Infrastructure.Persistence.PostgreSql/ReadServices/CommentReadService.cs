@@ -1,4 +1,5 @@
 using CABasicCRUD.Application.Features.Posts.Comments.Common;
+using CABasicCRUD.Domain.Posts.Comments;
 using CABasicCRUD.Domain.Posts.Posts;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +8,17 @@ namespace CABasicCRUD.Infrastructure.Persistence.PostgreSql.ReadServices;
 public class CommentReadService(ApplicationDbContext dbContext) : ICommentReadService
 {
     private readonly ApplicationDbContext _dbContext = dbContext;
+    private readonly DbSet<Comment> _dbSet = dbContext.Set<Comment>();
+
+    public async Task<IReadOnlyList<Comment>> GetAllCommentsOfPost(PostId postId)
+    {
+        return await _dbSet.AsNoTracking().Where(comment => comment.PostId == postId).ToListAsync();
+    }
+
+    public async Task<Comment?> GetByIdAsync(CommentId commentId)
+    {
+        return await _dbSet.AsNoTracking().FirstOrDefaultAsync(comment => comment.Id == commentId);
+    }
 
     public async Task<IReadOnlyList<CommentWithAuthorResult>> GetCommentsWithAuthorOfPostAsync(
         PostId postId,

@@ -5,17 +5,17 @@ using CABasicCRUD.Domain.Posts.Comments;
 
 namespace CABasicCRUD.Application.Features.Posts.Comments.Queries.GetCommentById;
 
-internal sealed class GetCommentByIdQueryHandler(ICommentRepository commentRepository)
+internal sealed class GetCommentByIdQueryHandler(ICommentReadService commentReadService)
     : IQueryHander<GetCommentByIdQuery, CommentResult>
 {
-    private readonly ICommentRepository _commentRepository = commentRepository;
+    private readonly ICommentReadService _commentReadService = commentReadService;
 
     public async Task<Result<CommentResult>> Handle(
         GetCommentByIdQuery request,
         CancellationToken cancellationToken
     )
     {
-        Comment? comment = await _commentRepository.GetByIdAsync(request.Id);
+        Comment? comment = await _commentReadService.GetByIdAsync(request.Id);
 
         if (comment is null)
         {

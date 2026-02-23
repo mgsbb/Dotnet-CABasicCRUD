@@ -19,4 +19,8 @@ public interface IPostReadService
         PostId postId,
         CancellationToken cancellationToken
     );
+
+    Task<IReadOnlyList<Post>> GetAllAsync();
+
+    Task<Post?> GetByIdAsync(PostId id);
 }

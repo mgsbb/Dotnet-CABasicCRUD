@@ -7,11 +7,11 @@ using CABasicCRUD.Domain.Posts.Posts;
 namespace CABasicCRUD.Application.Features.Posts.Posts.Queries.GetAllPosts;
 
 internal sealed class GetAllPostsQueryHandler(
-    IPostRepository postRepository,
+    IPostReadService postReadService,
     ICacheService cacheService
 ) : IQueryHander<GetAllPostsQuery, IReadOnlyList<PostResult>>
 {
-    private readonly IPostRepository _postRepository = postRepository;
+    private readonly IPostReadService _postReadService = postReadService;
     private readonly ICacheService _cacheService = cacheService;
 
     public async Task<Result<IReadOnlyList<PostResult>>> Handle(
@@ -31,7 +31,7 @@ internal sealed class GetAllPostsQueryHandler(
             return Result<IReadOnlyList<PostResult>>.Success(cached);
         }
 
-        IReadOnlyList<Post> posts = await _postRepository.GetAllAsync();
+        IReadOnlyList<Post> posts = await _postReadService.GetAllAsync();
 
         IReadOnlyList<PostResult> postsList = posts.ToListPostResult();
 
