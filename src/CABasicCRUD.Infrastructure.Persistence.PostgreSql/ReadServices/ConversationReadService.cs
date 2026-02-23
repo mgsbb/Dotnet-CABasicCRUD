@@ -1,4 +1,5 @@
 using CABasicCRUD.Application.Features.Conversations.Conversations.Common;
+using CABasicCRUD.Application.Features.Conversations.Conversations.Queries;
 using CABasicCRUD.Domain.Conversations.Conversations;
 using CABasicCRUD.Domain.Identity.Users;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,51 @@ public sealed class ConversationReadService(ApplicationDbContext dbContext)
         return await _dbSet
             .AsNoTracking()
             .FirstOrDefaultAsync(conversation => conversation.Id == conversationId);
+    }
+
+    public async Task<ConversationDetailsResult?> GetConversationByIdWithDetails(
+        ConversationId conversationId
+    )
+    {
+        return await _dbSet
+            .AsNoTracking()
+            .Where(c => c.Id == conversationId)
+            .Select(c => new ConversationDetailsResult(
+                c.Id,
+                c.ConversationType,
+                c.Participants.Join(
+                        dbContext.Users,
+                        cp => cp.UserId,
+                        u => u.Id,
+                        (cp, u) =>
+                            new ConversationParticipantDetail(
+                                u.Id,
+                                u.Username,
+                                u.UserProfile.FullName
+                            )
+                    )
+                    .ToList(),
+                c.Messages.OrderByDescending(m => m.CreatedAt)
+                    .Join(
+                        dbContext.Users,
+                        m => m.SenderUserId,
+                        u => u.Id,
+                        (m, u) =>
+                            new MessageDetail(
+                                m.Id,
+                                m.Content,
+                                u.Id,
+                                u.Username,
+                                u.UserProfile.FullName,
+                                m.CreatedAt,
+                                m.UpdatedAt
+                            )
+                    )
+                    .ToList(),
+                c.CreatedAt,
+                c.UpdatedAt
+            ))
+            .FirstOrDefaultAsync();
     }
 
     public async Task<IReadOnlyList<Conversation>> GetConversationsOfUser(UserId userId)

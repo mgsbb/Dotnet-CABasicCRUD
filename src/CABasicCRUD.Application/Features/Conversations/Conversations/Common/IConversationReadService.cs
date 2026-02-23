@@ -1,3 +1,4 @@
+using CABasicCRUD.Application.Features.Conversations.Conversations.Queries;
 using CABasicCRUD.Domain.Conversations.Conversations;
 using CABasicCRUD.Domain.Identity.Users;
 
@@ -14,4 +15,6 @@ public interface IConversationReadService
     );
 
     Task<Conversation?> GetByIdAsync(ConversationId conversationId);
+
+    Task<ConversationDetailsResult?> GetConversationByIdWithDetails(ConversationId conversationId);
 }
