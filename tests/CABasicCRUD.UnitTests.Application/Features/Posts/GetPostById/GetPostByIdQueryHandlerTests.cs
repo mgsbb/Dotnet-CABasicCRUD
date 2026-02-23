@@ -11,15 +11,15 @@ namespace CABasicCRUD.UnitTests.Application.Features.Posts.GetPostById;
 
 public sealed class GetPostByIdQueryHandlerTests
 {
-    private readonly IPostRepository _postRepository;
+    private readonly IPostReadService _postReadService;
     private readonly GetPostByIdQueryHandler _handler;
     private readonly ICacheService _cacheService;
 
     public GetPostByIdQueryHandlerTests()
     {
-        _postRepository = Substitute.For<IPostRepository>();
+        _postReadService = Substitute.For<IPostReadService>();
         _cacheService = Substitute.For<ICacheService>();
-        _handler = new GetPostByIdQueryHandler(_postRepository, _cacheService);
+        _handler = new GetPostByIdQueryHandler(_postReadService, _cacheService);
     }
 
     [Fact]
@@ -47,7 +47,7 @@ public sealed class GetPostByIdQueryHandlerTests
 
         await _cacheService.Received(1).GetAsync<PostResult>(Arg.Any<string>());
 
-        await _postRepository.DidNotReceive().GetByIdAsync(Arg.Any<PostId>());
+        await _postReadService.DidNotReceive().GetByIdAsync(Arg.Any<PostId>());
         await _cacheService
             .DidNotReceive()
             .SetAsync(Arg.Any<string>(), Arg.Any<PostResult>(), Arg.Any<CancellationToken>());
@@ -63,7 +63,7 @@ public sealed class GetPostByIdQueryHandlerTests
         CancellationToken token = default;
 
         _cacheService.GetAsync<PostResult>(Arg.Any<string>()).Returns(null as PostResult);
-        _postRepository.GetByIdAsync(Arg.Any<PostId>()).Returns(post);
+        _postReadService.GetByIdAsync(Arg.Any<PostId>()).Returns(post);
 
         // Act
         Result<PostResult> result = await _handler.Handle(query, token);
@@ -78,7 +78,7 @@ public sealed class GetPostByIdQueryHandlerTests
         Assert.IsType<PostResult>(result.Value);
 
         await _cacheService.Received(1).GetAsync<PostResult>(Arg.Any<string>());
-        await _postRepository.Received(1).GetByIdAsync(Arg.Any<PostId>());
+        await _postReadService.Received(1).GetByIdAsync(Arg.Any<PostId>());
         await _cacheService
             .Received(1)
             .SetAsync(Arg.Any<string>(), Arg.Any<PostResult>(), Arg.Any<CancellationToken>());
@@ -92,7 +92,7 @@ public sealed class GetPostByIdQueryHandlerTests
         CancellationToken token = default;
 
         _cacheService.GetAsync<PostResult>(Arg.Any<string>()).Returns(null as PostResult);
-        _postRepository.GetByIdAsync(Arg.Any<PostId>()).Returns(null as Post);
+        _postReadService.GetByIdAsync(Arg.Any<PostId>()).Returns(null as Post);
 
         // Act
         Result<PostResult> result = await _handler.Handle(query, token);
@@ -106,7 +106,7 @@ public sealed class GetPostByIdQueryHandlerTests
 
         await _cacheService.Received(1).GetAsync<PostResult>(Arg.Any<string>());
 
-        await _postRepository.Received(1).GetByIdAsync(Arg.Any<PostId>());
+        await _postReadService.Received(1).GetByIdAsync(Arg.Any<PostId>());
         await _cacheService
             .DidNotReceive()
             .SetAsync(Arg.Any<string>(), Arg.Any<PostResult>(), Arg.Any<CancellationToken>());

@@ -10,15 +10,15 @@ namespace CABasicCRUD.UnitTests.Application.Features.Posts.GetAllPosts;
 
 public sealed class GetAllPostsQueryHandlerTests
 {
-    private readonly IPostRepository _postRepository;
+    private readonly IPostReadService _postReadService;
     private readonly GetAllPostsQueryHandler _handler;
     private readonly ICacheService _cacheService;
 
     public GetAllPostsQueryHandlerTests()
     {
-        _postRepository = Substitute.For<IPostRepository>();
+        _postReadService = Substitute.For<IPostReadService>();
         _cacheService = Substitute.For<ICacheService>();
-        _handler = new GetAllPostsQueryHandler(_postRepository, _cacheService);
+        _handler = new GetAllPostsQueryHandler(_postReadService, _cacheService);
     }
 
     [Fact]
@@ -46,7 +46,7 @@ public sealed class GetAllPostsQueryHandlerTests
         Assert.IsAssignableFrom<IReadOnlyList<PostResult>>(result.Value);
         Assert.NotEqual(result.Value, []);
 
-        await _postRepository.DidNotReceive().GetAllAsync();
+        await _postReadService.DidNotReceive().GetAllAsync();
         await _cacheService
             .DidNotReceive()
             .SetAsync(
@@ -66,7 +66,7 @@ public sealed class GetAllPostsQueryHandlerTests
         GetAllPostsQuery query = new();
         CancellationToken token = default;
 
-        _postRepository.GetAllAsync().Returns([post]);
+        _postReadService.GetAllAsync().Returns([post]);
         _cacheService
             .GetAsync<IReadOnlyList<PostResult>>(Arg.Any<string>(), token)
             .Returns(null as IReadOnlyList<PostResult>);
@@ -82,7 +82,7 @@ public sealed class GetAllPostsQueryHandlerTests
         Assert.IsAssignableFrom<IReadOnlyList<PostResult>>(result.Value);
         Assert.NotEqual(result.Value, []);
 
-        await _postRepository.Received(1).GetAllAsync();
+        await _postReadService.Received(1).GetAllAsync();
         await _cacheService
             .Received(1)
             .SetAsync(
@@ -101,7 +101,7 @@ public sealed class GetAllPostsQueryHandlerTests
         CancellationToken token = default;
 
         // is this necessary?
-        _postRepository.GetAllAsync().Returns([]);
+        _postReadService.GetAllAsync().Returns([]);
         _cacheService
             .GetAsync<IReadOnlyList<PostResult>>(Arg.Any<string>(), token)
             .Returns(null as IReadOnlyList<PostResult>);
@@ -117,7 +117,7 @@ public sealed class GetAllPostsQueryHandlerTests
         Assert.IsAssignableFrom<IReadOnlyList<PostResult>>(result.Value);
         Assert.Equal(result.Value, []);
 
-        await _postRepository.Received(1).GetAllAsync();
+        await _postReadService.Received(1).GetAllAsync();
         await _cacheService
             .Received(1)
             .SetAsync(
