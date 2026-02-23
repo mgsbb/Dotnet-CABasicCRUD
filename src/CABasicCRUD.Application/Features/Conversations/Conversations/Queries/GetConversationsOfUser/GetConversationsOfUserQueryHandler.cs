@@ -2,6 +2,7 @@ using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Common.Interfaces.Messaging;
 using CABasicCRUD.Application.Features.Conversations.Conversations.Common;
 using CABasicCRUD.Application.Features.Identity.Auth.Common;
+using CABasicCRUD.Application.Features.Identity.Users.Common;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Conversations.Conversations;
 using CABasicCRUD.Domain.Identity.Users;
@@ -11,12 +12,12 @@ namespace CABasicCRUD.Application.Features.Conversations.Conversations.Queries.G
 internal sealed class GetConversationsOfUserQueryHandler(
     ICurrentUser currentUser,
     IConversationReadService conversationReadService,
-    IUserRepository userRepository
+    IUserReadService userReadService
 ) : IQueryHander<GetConversationsOfUserQuery, IReadOnlyList<ConversationResultWithoutMessages>>
 {
     private readonly ICurrentUser _currentUser = currentUser;
     private readonly IConversationReadService _conversationReadService = conversationReadService;
-    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IUserReadService _userReadService = userReadService;
 
     public async Task<Result<IReadOnlyList<ConversationResultWithoutMessages>>> Handle(
         GetConversationsOfUserQuery request,
@@ -32,7 +33,7 @@ internal sealed class GetConversationsOfUserQueryHandler(
 
         UserId userId = (UserId)_currentUser.UserId;
 
-        User? user = await _userRepository.GetByIdAsync(userId);
+        User? user = await _userReadService.GetByIdAsync(userId);
 
         if (user is null)
         {

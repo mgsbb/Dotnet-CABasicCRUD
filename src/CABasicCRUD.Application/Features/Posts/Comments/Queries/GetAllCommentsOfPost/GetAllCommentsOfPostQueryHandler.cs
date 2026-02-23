@@ -1,5 +1,6 @@
 using CABasicCRUD.Application.Common.Interfaces.Messaging;
 using CABasicCRUD.Application.Features.Posts.Comments.Common;
+using CABasicCRUD.Application.Features.Posts.Posts.Common;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts.Comments;
 using CABasicCRUD.Domain.Posts.Posts;
@@ -7,11 +8,11 @@ using CABasicCRUD.Domain.Posts.Posts;
 namespace CABasicCRUD.Application.Features.Posts.Comments.Queries.GetAllCommentsOfPost;
 
 internal sealed class GetAllCommentsOfPostQueryHandler(
-    IPostRepository postRepository,
+    IPostReadService postReadService,
     ICommentReadService commentReadService
 ) : IQueryHander<GetAllCommentsOfPostQuery, IReadOnlyList<CommentResult>>
 {
-    private readonly IPostRepository _postRepository = postRepository;
+    private readonly IPostReadService _postReadService = postReadService;
     private readonly ICommentReadService _commentReadService = commentReadService;
 
     public async Task<Result<IReadOnlyList<CommentResult>>> Handle(
@@ -19,7 +20,7 @@ internal sealed class GetAllCommentsOfPostQueryHandler(
         CancellationToken cancellationToken
     )
     {
-        Post? post = await _postRepository.GetByIdAsync(request.PostId);
+        Post? post = await _postReadService.GetByIdAsync(request.PostId);
 
         if (post is null)
         {

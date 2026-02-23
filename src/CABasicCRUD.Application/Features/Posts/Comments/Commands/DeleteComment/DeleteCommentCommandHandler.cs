@@ -1,6 +1,7 @@
 using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Common.Interfaces.Messaging;
 using CABasicCRUD.Application.Features.Identity.Auth.Common;
+using CABasicCRUD.Application.Features.Identity.Users.Common;
 using CABasicCRUD.Application.Features.Posts.Comments.Common;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Identity.Users;
@@ -10,12 +11,12 @@ namespace CABasicCRUD.Application.Features.Posts.Comments.Commands.DeleteComment
 
 internal sealed class DeleteCommentCommandHandler(
     ICommentRepository commentRepository,
-    IUserRepository userRepository,
+    IUserReadService userReadService,
     IUnitOfWork unitOfWork
 ) : ICommandHandler<DeleteCommentCommand>
 {
     private readonly ICommentRepository _commentRepository = commentRepository;
-    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IUserReadService _userReadService = userReadService;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
     public async Task<Result> Handle(
@@ -23,7 +24,7 @@ internal sealed class DeleteCommentCommandHandler(
         CancellationToken cancellationToken
     )
     {
-        User? user = await _userRepository.GetByIdAsync(request.UserId);
+        User? user = await _userReadService.GetByIdAsync(request.UserId);
 
         if (user is null)
         {

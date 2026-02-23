@@ -1,6 +1,8 @@
 using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Common.Interfaces.Messaging;
+using CABasicCRUD.Application.Features.Identity.Users.Common;
 using CABasicCRUD.Application.Features.Posts.Comments.Common;
+using CABasicCRUD.Application.Features.Posts.Posts.Common;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Identity.Users;
 using CABasicCRUD.Domain.Posts.Comments;
@@ -10,14 +12,14 @@ namespace CABasicCRUD.Application.Features.Posts.Comments.Commands.CreateComment
 
 internal sealed class CreateCommentCommandHandler(
     ICommentRepository commentRepository,
-    IPostRepository postRepository,
-    IUserRepository userRepository,
+    IPostReadService postReadService,
+    IUserReadService userReadService,
     IUnitOfWork unitOfWork
 ) : ICommandHandler<CreateCommentCommand, CommentResult>
 {
     private readonly ICommentRepository _commentRepository = commentRepository;
-    private readonly IPostRepository _postRepository = postRepository;
-    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IPostReadService _postReadService = postReadService;
+    private readonly IUserReadService _userReadService = userReadService;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
     public async Task<Result<CommentResult>> Handle(
@@ -25,14 +27,14 @@ internal sealed class CreateCommentCommandHandler(
         CancellationToken cancellationToken
     )
     {
-        User? user = await _userRepository.GetByIdAsync(request.UserId);
+        User? user = await _userReadService.GetByIdAsync(request.UserId);
 
         if (user is null)
         {
             return Result<CommentResult>.Failure(Identity.Users.Common.UserErrors.NotFound);
         }
 
-        Post? post = await _postRepository.GetByIdAsync(request.PostId);
+        Post? post = await _postReadService.GetByIdAsync(request.PostId);
 
         if (post is null)
         {

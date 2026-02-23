@@ -1,16 +1,17 @@
 using CABasicCRUD.Application.Common.Interfaces.Messaging;
 using CABasicCRUD.Application.Features.Posts.Comments.Common;
+using CABasicCRUD.Application.Features.Posts.Posts.Common;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Posts.Posts;
 
 namespace CABasicCRUD.Application.Features.Posts.Comments.Queries.GetCommentsWithAuthorOfPost;
 
 internal sealed class GetCommentsWithAuthorOfPostQueryHandler(
-    IPostRepository postRepository,
+    IPostReadService postReadService,
     ICommentReadService commentReadService
 ) : IQueryHander<GetCommentsWithAuthorOfPostQuery, IReadOnlyList<CommentWithAuthorResult>>
 {
-    private readonly IPostRepository _postRepository = postRepository;
+    private readonly IPostReadService _postReadService = postReadService;
     private readonly ICommentReadService _commentReadService = commentReadService;
 
     public async Task<Result<IReadOnlyList<CommentWithAuthorResult>>> Handle(
@@ -18,7 +19,7 @@ internal sealed class GetCommentsWithAuthorOfPostQueryHandler(
         CancellationToken cancellationToken
     )
     {
-        Post? post = await _postRepository.GetByIdAsync(request.PostId);
+        Post? post = await _postReadService.GetByIdAsync(request.PostId);
 
         if (post is null)
         {

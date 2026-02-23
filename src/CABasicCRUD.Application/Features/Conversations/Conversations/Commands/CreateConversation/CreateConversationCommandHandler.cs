@@ -2,6 +2,7 @@ using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Common.Interfaces.Messaging;
 using CABasicCRUD.Application.Features.Conversations.Conversations.Common;
 using CABasicCRUD.Application.Features.Identity.Auth.Common;
+using CABasicCRUD.Application.Features.Identity.Users.Common;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Conversations.Conversations;
 using CABasicCRUD.Domain.Identity.Users;
@@ -13,13 +14,13 @@ internal sealed class CreateConversationCommandHandler(
     IConversationRepository conversationRepository,
     IUnitOfWork unitOfWork,
     ICurrentUser currentUser,
-    IUserRepository userRepository
+    IUserReadService userReadService
 ) : ICommandHandler<CreateConversationCommand, ConversationResult>
 {
     private readonly IConversationRepository _conversationRepository = conversationRepository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly ICurrentUser _currentUser = currentUser;
-    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IUserReadService _userReadService = userReadService;
 
     public async Task<Result<ConversationResult>> Handle(
         CreateConversationCommand request,
@@ -36,7 +37,7 @@ internal sealed class CreateConversationCommandHandler(
             return Result<ConversationResult>.Failure(ConversationErrors.ConversationWithSelf);
         }
 
-        User? user = await _userRepository.GetByIdAsync(request.UserId);
+        User? user = await _userReadService.GetByIdAsync(request.UserId);
 
         if (user is null)
         {
