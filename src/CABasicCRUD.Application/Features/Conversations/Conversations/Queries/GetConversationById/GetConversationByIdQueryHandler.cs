@@ -8,11 +8,11 @@ using CABasicCRUD.Domain.Conversations.Conversations;
 namespace CABasicCRUD.Application.Features.Conversations.Conversations.Queries.GetConversationById;
 
 internal sealed class GetConversationByIdQueryHandler(
-    IConversationRepository conversationRepository,
+    IConversationReadService conversationReadService,
     ICurrentUser currentUser
 ) : IQueryHander<GetConversationByIdQuery, ConversationResult>
 {
-    private readonly IConversationRepository _conversationRepository = conversationRepository;
+    private readonly IConversationReadService _conversationReadService = conversationReadService;
     private readonly ICurrentUser _currentUser = currentUser;
 
     public async Task<Result<ConversationResult>> Handle(
@@ -25,7 +25,7 @@ internal sealed class GetConversationByIdQueryHandler(
             return Result<ConversationResult>.Failure(AuthErrors.Unauthenticated);
         }
 
-        Conversation? conversation = await _conversationRepository.GetByIdAsync(request.Id);
+        Conversation? conversation = await _conversationReadService.GetByIdAsync(request.Id);
 
         if (conversation is null)
         {

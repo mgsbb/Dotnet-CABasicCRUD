@@ -8,10 +8,12 @@ namespace CABasicCRUD.Application.Features.Conversations.Conversations.Commands.
 
 internal sealed class StartPrivateConversationCommandHandler(
     IConversationRepository conversationRepository,
+    IConversationReadService conversationReadService,
     IUnitOfWork unitOfWork
 ) : ICommandHandler<StartPrivateConversationCommand, ConversationResult>
 {
     private readonly IConversationRepository _conversationRepository = conversationRepository;
+    private readonly IConversationReadService _conversationReadService = conversationReadService;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
     public async Task<Result<ConversationResult>> Handle(
@@ -27,7 +29,7 @@ internal sealed class StartPrivateConversationCommandHandler(
         }
 
         Conversation? exisitingConversation =
-            await _conversationRepository.GetPrivateConversationAsync(
+            await _conversationReadService.GetPrivateConversationAsync(
                 request.InitiatorUserId,
                 request.ParticipantUserId,
                 cancellationToken

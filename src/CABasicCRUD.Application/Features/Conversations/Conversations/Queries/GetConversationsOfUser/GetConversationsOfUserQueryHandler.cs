@@ -10,12 +10,12 @@ namespace CABasicCRUD.Application.Features.Conversations.Conversations.Queries.G
 
 internal sealed class GetConversationsOfUserQueryHandler(
     ICurrentUser currentUser,
-    IConversationRepository conversationRepository,
+    IConversationReadService conversationReadService,
     IUserRepository userRepository
 ) : IQueryHander<GetConversationsOfUserQuery, IReadOnlyList<ConversationResultWithoutMessages>>
 {
     private readonly ICurrentUser _currentUser = currentUser;
-    private readonly IConversationRepository _conversationsRepository = conversationRepository;
+    private readonly IConversationReadService _conversationReadService = conversationReadService;
     private readonly IUserRepository _userRepository = userRepository;
 
     public async Task<Result<IReadOnlyList<ConversationResultWithoutMessages>>> Handle(
@@ -42,7 +42,7 @@ internal sealed class GetConversationsOfUserQueryHandler(
         }
 
         IReadOnlyList<Conversation> conversations =
-            await _conversationsRepository.GetConversationsOfUser(userId);
+            await _conversationReadService.GetConversationsOfUser(userId);
 
         return Result<IReadOnlyList<ConversationResultWithoutMessages>>.Success(
             conversations.ToListConversationResultWithoutMessages()
