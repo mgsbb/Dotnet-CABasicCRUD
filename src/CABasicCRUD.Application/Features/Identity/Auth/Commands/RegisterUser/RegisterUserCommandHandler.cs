@@ -1,6 +1,7 @@
 using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Common.Interfaces.Messaging;
 using CABasicCRUD.Application.Features.Identity.Auth.Common;
+using CABasicCRUD.Application.Features.Identity.Users.Common;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Identity.Users;
 
@@ -12,18 +13,21 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserC
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtProvider _jwtProvider;
+    private readonly IUserReadService _userReadService;
 
     public RegisterUserCommandHandler(
         IUserRepository userRepository,
         IUnitOfWork unitOfWork,
         IPasswordHasher passwordHasher,
-        IJwtProvider jwtProvider
+        IJwtProvider jwtProvider,
+        IUserReadService userReadService
     )
     {
         _userRepository = userRepository;
         _unitOfWork = unitOfWork;
         _passwordHasher = passwordHasher;
         _jwtProvider = jwtProvider;
+        _userReadService = userReadService;
     }
 
     public async Task<Result<AuthResult>> Handle(
@@ -31,14 +35,14 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserC
         CancellationToken cancellationToken
     )
     {
-        User? user = await _userRepository.GetByEmailAsync(request.Email);
+        User? user = await _userReadService.GetByEmailAsync(request.Email);
 
         if (user is not null)
         {
             return Result<AuthResult>.Failure(AuthErrors.AlreadyExistsEmail);
         }
 
-        User? userByUsername = await _userRepository.GetByUsernameAsync(request.Username);
+        User? userByUsername = await _userReadService.GetByUsernameAsync(request.Username);
 
         if (userByUsername is not null)
         {

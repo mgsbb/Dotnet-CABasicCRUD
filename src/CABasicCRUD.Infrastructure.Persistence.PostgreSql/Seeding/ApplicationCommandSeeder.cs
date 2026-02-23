@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Bogus;
 using CABasicCRUD.Application.Features.Identity.Auth.Commands.RegisterUser;
 using CABasicCRUD.Application.Features.Identity.Auth.Common;
+using CABasicCRUD.Application.Features.Identity.Users.Common;
 using CABasicCRUD.Application.Features.Posts.Comments.Commands.CreateComment;
 using CABasicCRUD.Application.Features.Posts.Comments.Common;
 using CABasicCRUD.Application.Features.Posts.Posts.Commands.CreatePost;
@@ -19,13 +20,15 @@ public sealed class ApplicationCommandSeeder(
     IMediator mediator,
     IOptions<DatabaseSeedOptions> options,
     ILogger<ApplicationCommandSeeder> logger,
-    IUserRepository userRepository
+    IUserRepository userRepository,
+    IUserReadService userReadService
 )
 {
     private readonly IMediator _mediator = mediator;
     private readonly DatabaseSeedOptions _options = options.Value;
     private readonly ILogger<ApplicationCommandSeeder> _logger = logger;
     private readonly IUserRepository _userRepository = userRepository;
+    private readonly IUserReadService _userReadService = userReadService;
 
     public async Task SeedAsync()
     {
@@ -36,7 +39,7 @@ public sealed class ApplicationCommandSeeder(
 
         _logger.LogInformation("Running database seeder.");
 
-        User? defaultSeededUser = await _userRepository.GetByEmailAsync("default_user@email.com");
+        User? defaultSeededUser = await _userReadService.GetByEmailAsync("default_user@email.com");
 
         if (defaultSeededUser is not null)
         {

@@ -1,6 +1,7 @@
 using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Common.Interfaces.Messaging;
 using CABasicCRUD.Application.Features.Identity.Auth.Common;
+using CABasicCRUD.Application.Features.Identity.Users.Common;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Identity.Users;
 
@@ -8,17 +9,17 @@ namespace CABasicCRUD.Application.Features.Identity.Auth.Commands.LoginUser;
 
 internal sealed class LoginUserCommandHandler : ICommandHandler<LoginUserCommand, AuthResult>
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IUserReadService _userReadService;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtProvider _jwtProvider;
 
     public LoginUserCommandHandler(
-        IUserRepository userRepository,
+        IUserReadService userReadService,
         IPasswordHasher passwordHasher,
         IJwtProvider jwtProvider
     )
     {
-        _userRepository = userRepository;
+        _userReadService = userReadService;
         _passwordHasher = passwordHasher;
         _jwtProvider = jwtProvider;
     }
@@ -28,7 +29,7 @@ internal sealed class LoginUserCommandHandler : ICommandHandler<LoginUserCommand
         CancellationToken cancellationToken
     )
     {
-        User? user = await _userRepository.GetByEmailAsync(request.Email);
+        User? user = await _userReadService.GetByEmailAsync(request.Email);
 
         if (user is null)
         {

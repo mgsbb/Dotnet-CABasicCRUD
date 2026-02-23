@@ -1,4 +1,4 @@
-using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Application.Features.Identity.Users.Common;
 
 namespace CABasicCRUD.Presentation.WebMvc.Models.Users;
 

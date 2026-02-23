@@ -1,4 +1,5 @@
 using CABasicCRUD.Application.Common.Interfaces;
+using CABasicCRUD.Application.Features.Identity.Users.Common;
 using CABasicCRUD.Application.Features.Posts.Comments.Common;
 using CABasicCRUD.Application.Features.Posts.Posts.Common;
 using CABasicCRUD.Domain.Conversations.Conversations;
@@ -44,6 +45,7 @@ public static class PersistenceServicesRegistration
 
         services.AddScoped<IPostReadService, PostReadService>();
         services.AddScoped<ICommentReadService, CommentReadService>();
+        services.AddScoped<IUserReadService, UserReadService>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 

@@ -6,17 +6,17 @@ using UserErrors = CABasicCRUD.Application.Features.Identity.Users.Common.UserEr
 
 namespace CABasicCRUD.Application.Features.Identity.Users.Queries.GetUserById;
 
-internal sealed class GetUserByIdQueryHandler(IUserRepository userRepository)
+internal sealed class GetUserByIdQueryHandler(IUserReadService userReadService)
     : IQueryHander<GetUserByIdQuery, UserResult>
 {
-    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IUserReadService _userReadService = userReadService;
 
     public async Task<Result<UserResult>> Handle(
         GetUserByIdQuery request,
         CancellationToken cancellationToken
     )
     {
-        User? user = await _userRepository.GetByIdAsync(request.UserId);
+        User? user = await _userReadService.GetByIdAsync(request.UserId);
 
         if (user is null)
         {

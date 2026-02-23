@@ -5,17 +5,17 @@ using CABasicCRUD.Domain.Identity.Users;
 
 namespace CABasicCRUD.Application.Features.Identity.Users.Queries.SearchUsers;
 
-internal sealed class SearchUsersQueryHandler(IUserRepository userRepository)
+internal sealed class SearchUsersQueryHandler(IUserReadService userReadService)
     : IQueryHander<SearchUsersQuery, IReadOnlyList<UserResult>>
 {
-    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IUserReadService _userReadService = userReadService;
 
     public async Task<Result<IReadOnlyList<UserResult>>> Handle(
         SearchUsersQuery request,
         CancellationToken cancellationToken
     )
     {
-        IReadOnlyList<User> users = await _userRepository.SearchUsersAsync(
+        IReadOnlyList<User> users = await _userReadService.SearchUsersAsync(
             request.SearchTerm,
             request.Page,
             request.PageSize,
