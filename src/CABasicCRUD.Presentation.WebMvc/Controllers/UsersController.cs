@@ -67,6 +67,8 @@ public sealed class UsersController : Controller
     [HttpGet("{id}")]
     public async Task<IActionResult> Details(Guid id, UserDetailsViewModel model)
     {
+        ViewBag.Error = TempData["Error"];
+
         GetUserByIdQuery query = new((UserId)id);
         Result<UserResult> result = await _mediator.Send(query);
 

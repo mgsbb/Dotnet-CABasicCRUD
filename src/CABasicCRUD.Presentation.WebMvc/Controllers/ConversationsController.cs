@@ -11,6 +11,7 @@ using CABasicCRUD.Presentation.WebMvc.Models.Conversations;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ConversationErrors = CABasicCRUD.Application.Features.Conversations.Conversations.Common.ConversationErrors;
 
 namespace CABasicCRUD.Presentation.WebMvc.Controllers;
 
@@ -69,7 +70,15 @@ public sealed class ConversationsController(ICurrentUser currentUser, IMediator 
 
         if (result.IsFailure || result.Value is null)
         {
-            return NotFound();
+            if (result.Error is null)
+                throw new InvalidOperationException();
+
+            if (result.Error == ConversationErrors.ConversationWithSelf)
+            {
+                TempData["Error"] = "Cannot message self.";
+            }
+
+            return RedirectToAction("Details", "Users", new { id = targetUserId });
         }
 
         // result.Value contains messages, participant ids, etc, but only the id is being used
