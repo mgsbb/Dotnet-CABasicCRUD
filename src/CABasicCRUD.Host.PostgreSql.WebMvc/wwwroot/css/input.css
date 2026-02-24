@@ -1,6 +1,63 @@
 @import "tailwindcss";
 
 /* Watch changes for these files */
-@source "../../../**/*.cshtml"
+@source "../../../**/*.cshtml";
 
 
+/* ===== DESKTOP ===== */
+
+@media (min-width: 768px) {
+
+    .sidebar-expanded #sidebar {
+        width: 24rem; 
+        transform: translateX(0);
+    }
+
+    .sidebar-expanded #main {
+        margin-left: 24rem;
+    }
+
+    .sidebar-expanded #header {
+        margin-left: 24rem;
+    }
+
+    .sidebar-collapsed #sidebar {
+        width: 4rem;
+        transform: translateX(0);
+    }
+
+    .sidebar-collapsed #main {
+        margin-left: 4rem;
+    }
+
+    .sidebar-collapsed #header {
+        margin-left: 4rem;
+    }
+
+
+    .sidebar-collapsed .sidebar-label {
+        display: none;
+    }
+
+    .sidebar-collapsed .sidebar-user-details {
+        display: none;
+    }
+}
+
+/* ===== MOBILE ===== */
+
+@media (max-width: 767px) {
+
+    #sidebar {
+        width: 16rem; /* drawer width */
+        transform: translateX(-100%);
+    }
+
+    .sidebar-open #sidebar {
+        transform: translateX(0);
+    }
+
+    .sidebar-open #backdrop {
+        display: block;
+    }
+}
