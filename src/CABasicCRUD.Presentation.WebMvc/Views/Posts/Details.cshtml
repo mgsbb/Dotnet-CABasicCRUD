@@ -6,7 +6,7 @@
     ViewData["Title"] = "Post";
 }
 
-<article class="mx-auto bg-white w-2/3 py-28 px-20 border-x border-gray-300 min-h-screen">
+<article class="pb-10 sm:px-10">
 
     @* Post *@
     <h1 class="font-bold text-3xl text-gray-700">@Model.Title</h1>
@@ -56,7 +56,7 @@
             </div>
 
             <button type="submit"
-                    class="bg-gray-900 text-white py-2 px-4 rounded-sm cursor-pointer font-semibold text-sm w-1/6">
+                    class="bg-gray-900 text-white py-2 px-4 rounded-sm cursor-pointer font-semibold text-sm w-fit">
                 Submit
             </button>
         </form>
@@ -75,30 +75,31 @@
             <div class="flex flex-col gap-6">
                 @foreach (var comment in Model.Comments)
                 {
-                    <div class="flex items-start justify-between">
+                    <div class="flex flex-col md:flex-row gap-2 items-start md:justify-between">
                         <div>
                             <p class="mb-1">@comment.Body</p>
                             <a href="/users/@comment.UserId" class="text-sm text-gray-600 font-medium">by
-                                @comment.AuthorName</a>
-                                <small class="text-gray-500 font-medium">
-                                    at @comment.CreatedAt.ToString("g")
-                                </small>
-                            </div>
-                            @if (comment.UserId == CurrentUser.UserId)
-                            {
-                                <nav>
-                                    <a href="/comments/@comment.Id/delete">
-                                        <button
-                                            class="bg-red-100 px-2 py-1 text-red-700 text-sm font-semibold rounded-sm cursor-pointer">
-                                            Delete
-                                        </button>
-                                    </a>
-                                </nav>
-                            }
+                                @comment.AuthorName
+                            </a>
+                            <small class="text-gray-500 font-medium">
+                                at @comment.CreatedAt.ToString("g")
+                            </small>
                         </div>
-                    }
-                </div>
-            }
-        </section>
+                        @if (comment.UserId == CurrentUser.UserId)
+                        {
+                            <nav>
+                                <a href="/comments/@comment.Id/delete">
+                                    <button
+                                        class="bg-red-100 px-2 py-1 text-red-700 text-sm font-semibold rounded-sm cursor-pointer">
+                                        Delete
+                                    </button>
+                                </a>
+                            </nav>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </section>
 
-    </article>
+</article>

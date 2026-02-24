@@ -9,7 +9,7 @@
 }
 
 
-<section class="mx-auto bg-white w-2/3 px-20 py-24 border-x border-gray-300 min-h-screen flex flex-col gap-20">
+<section class="flex flex-col gap-20 px-2 sm:px-10">
 
     @if (ViewBag.Error != null)
     {
@@ -18,8 +18,8 @@
         </div>
     }
 
-    <div class="flex gap-10 items-end justify-between">
-        <div class="flex gap-10 items-end">
+    <div class="flex flex-col gap-10 items-center justify-between ">
+        <div class="flex flex-col gap-10 items-end">
             @* replace with profile photo *@
             <div class="border border-gray-400 rounded-sm p-4 w-64 h-64"></div>
 
@@ -52,13 +52,13 @@
         }
     </div>
 
-    <div class="flex flex-col gap 6">
+    <div class="flex flex-col gap-10">
         <h2 class="font-bold text-gray-600 text-2xl">Recent posts</h2>
 
         @* filter form *@
-        <form method="get" class="mt-10 flex items-center gap-2 text-sm w-full">
+        <form method="get" class="flex flex-col lg:flex-row gap-2 text-sm w-full ">
             <input asp-for="PostsList.SearchTerm" placeholder="Search posts..."
-                   class="border border-gray-300 rounded-sm p-2 w-1/2" />
+                   class="border border-gray-300 rounded-sm p-2 flex-1" />
 
             <select asp-for="PostsList.OrderBy" asp-items="Html.GetEnumSelectList<PostOrderBy>()"
                     class="border border-gray-300 rounded-sm p-2" onchange="this.form.submit()"></select>
@@ -78,17 +78,18 @@
 
                 <input asp-for="PostsList.PageSize" type="hidden" />
 
-                <button type="submit" class="bg-gray-800 text-white py-2 px-4 rounded-sm cursor-pointer">Filter</button>
+                <button type="submit"
+                        class="bg-gray-800 text-white py-2 px-4 rounded-sm cursor-pointer w-fit">Filter</button>
             </div>
         </form>
 
 
         @* list of posts *@
-        <ul class="mt-10 w-3/4 flex flex-col gap-6">
+        <ul class="mt-10 flex flex-col gap-10 pb-10">
             @foreach (var post in Model.PostsList.Posts)
             {
                 <li class="">
-                    <div class="flex items-start justify-between">
+                    <div class="flex flex-col lg:flex-row gap-2 items-start justify-between">
                         <div class="flex flex-col">
                             <div class="flex items-center gap-4">
                                 <a href="/posts/@post.Id" class="flex flex-col">
@@ -99,7 +100,7 @@
                                 </a>
                             </div>
                             <a href="/posts/@post.Id" class="flex flex-col">
-                                <p class="w-3/4">@post.ContentPreview</p>
+                                <p class="">@post.ContentPreview</p>
                             </a>
                         </div>
                         @if (CurrentUser.UserId == post.UserId)

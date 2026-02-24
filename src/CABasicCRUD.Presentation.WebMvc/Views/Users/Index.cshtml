@@ -5,15 +5,16 @@
     ViewData["Title"] = "Posts";
 }
 
-<section class="mx-auto bg-white w-2/3 p-10 border-x border-gray-300">
+<section class="px-2 sm:px-10 pb-10 w-full flex flex-col gap-10">
     @* title *@
-    <div class="flex gap-10 items-center pt-20">
+    <div class="flex gap-10 items-center">
         <h1 class="font-bold text-3xl">Users</h1>
     </div>
 
     @* filter form *@
-    <form method="get" class="mt-10 flex items-center gap-2 text-sm w-full">
-        <input asp-for="SearchTerm" placeholder="Search users..." class="border border-gray-300 rounded-sm p-2 w-1/2" />
+    <form method="get" class="flex flex-col lg:flex-row gap-2 text-sm w-full">
+        <input asp-for="SearchTerm" placeholder="Search users..."
+               class="border border-gray-300 rounded-sm p-2 flex-1" />
 
         <select asp-for="OrderBy" asp-items="Html.GetEnumSelectList<UserOrderBy>()"
                 class="border border-gray-300 rounded-sm p-2" onchange="this.form.submit()"></select>
@@ -37,7 +38,7 @@
     </form>
 
     @* list of users *@
-    <ul class="mt-10 w-3/4 flex flex-col gap-6">
+    <ul class="w-3/4 flex flex-col gap-6">
         @foreach (var user in Model.Users)
         {
             <li class="">

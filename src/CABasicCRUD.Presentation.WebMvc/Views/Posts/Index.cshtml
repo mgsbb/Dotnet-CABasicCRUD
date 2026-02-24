@@ -7,9 +7,9 @@
     ViewData["Title"] = "Posts";
 }
 
-<section class="mx-auto bg-white w-2/3 p-10 border-x border-gray-300">
+<section class="px-4 sm:px-10 flex flex-col gap-10">
     @* title and button *@
-    <div class="flex gap-10 items-center pt-20">
+    <div class="flex gap-10 items-center">
         <h1 class="font-bold text-3xl">Posts</h1>
 
         <nav class="">
@@ -22,8 +22,9 @@
     </div>
 
     @* filter form *@
-    <form method="get" class="mt-10 flex items-center gap-2 text-sm w-full">
-        <input asp-for="SearchTerm" placeholder="Search posts..." class="border border-gray-300 rounded-sm p-2 w-1/2" />
+    <form method="get" class="flex flex-col lg:flex-row gap-2 text-sm w-full ">
+        <input asp-for="SearchTerm" placeholder="Search posts..."
+               class="border border-gray-300 rounded-sm p-2 flex-1" />
 
         <select asp-for="OrderBy" asp-items="Html.GetEnumSelectList<PostOrderBy>()"
                 class="border border-gray-300 rounded-sm p-2" onchange="this.form.submit()"></select>
@@ -42,16 +43,17 @@
 
             <input asp-for="PageSize" type="hidden" />
 
-            <button type="submit" class="bg-gray-800 text-white py-2 px-4 rounded-sm cursor-pointer">Filter</button>
+            <button type="submit"
+                    class="bg-gray-800 text-white py-2 px-4 rounded-sm cursor-pointer w-fit">Filter</button>
         </div>
     </form>
 
     @* list of posts *@
-    <ul class="mt-10 w-3/4 flex flex-col gap-6">
+    <ul class="mt-10 flex flex-col gap-10 pb-10">
         @foreach (var post in Model.Posts)
         {
             <li class="">
-                <div class="flex items-start justify-between">
+                <div class="flex flex-col lg:flex-row gap-2 items-start justify-between">
                     <div class="flex flex-col">
                         <div class="flex items-end gap-4">
                             <a href="/posts/@post.Id" class="flex flex-col">
@@ -62,7 +64,7 @@
                             </a>
                         </div>
                         <a href="/posts/@post.Id" class="flex flex-col">
-                            <p class="w-3/4">@post.ContentPreview</p>
+                            <p class="">@post.ContentPreview</p>
                         </a>
                     </div>
                     @if (CurrentUser.UserId == post.UserId)

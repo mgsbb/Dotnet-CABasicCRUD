@@ -4,11 +4,11 @@
 }
 
 
-<section class="mx-auto bg-white w-2/3 py-20 border-x border-gray-300 min-h-screen">
+<section class="flex flex-col gap-16">
 
-    <h1 class="text-3xl font-medium text-gray-700 my-10 text-center">Create Post</h1>
+    <h1 class="text-3xl font-medium text-gray-700 text-center">Create Post</h1>
 
-    <form asp-controller="Posts" asp-action="Create" method="post" class="flex flex-col gap-10 w-3/4 mx-auto">
+    <form asp-controller="Posts" asp-action="Create" method="post" class="flex flex-col gap-10 w-5/6 lg:w-3/4 mx-auto">
         <div class="flex flex-col gap-1">
             <label for="Title" class="font-medium text-gray-500">Title</label>
             <input asp-for="Title" class="border border-gray-300 rounded-sm p-2" />
