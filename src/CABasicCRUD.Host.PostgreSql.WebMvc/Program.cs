@@ -1,5 +1,6 @@
 ﻿using CABasicCRUD.Application;
 using CABasicCRUD.Infrastructure;
+using CABasicCRUD.Infrastructure.Chats;
 using CABasicCRUD.Infrastructure.Persistence.PostgreSql;
 using CABasicCRUD.Infrastructure.Persistence.PostgreSql.Seeding;
 using CABasicCRUD.Presentation.WebMvc;
@@ -110,5 +111,7 @@ if (seedOptions?.IsSeedDatabase == true)
 
 app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
+app.MapHub<ChatHub>("/hubs/chat");
 
 app.Run();

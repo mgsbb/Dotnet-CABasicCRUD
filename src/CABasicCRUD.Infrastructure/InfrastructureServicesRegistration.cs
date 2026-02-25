@@ -3,6 +3,7 @@ using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Infrastructure.Authentication;
 using CABasicCRUD.Infrastructure.Caching;
+using CABasicCRUD.Infrastructure.Chats;
 using CABasicCRUD.Infrastructure.EmailService;
 using CABasicCRUD.Infrastructure.Serialization;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +23,7 @@ public static class InfrastructureServicesRegistration
         services.RegisterEmailSender();
         services.RegisterSerializer();
         services.RegisterCachingServices();
+        services.RegisterChatServices();
 
         return services;
     }
@@ -72,6 +74,15 @@ public static class InfrastructureServicesRegistration
         services.AddDistributedMemoryCache();
 
         services.AddSingleton<ICacheService, DistributedCacheService>();
+
+        return services;
+    }
+
+    public static IServiceCollection RegisterChatServices(this IServiceCollection services)
+    {
+        services.AddSignalR();
+
+        services.AddScoped<IChatNotificationService, ChatNotificationService>();
 
         return services;
     }
