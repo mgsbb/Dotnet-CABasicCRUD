@@ -31,7 +31,7 @@
         }
         else
         {
-            <div class="flex flex-col gap-6">
+            <div id="messages-container" class="flex flex-col gap-6">
                 @foreach (var message in Model.Messages.Reverse())
                 {
                     var isCurrentUser = message.SenderUserId == CurrentUser.UserId;
@@ -67,3 +67,71 @@
         <button type="submit" class="px-4 py-2 bg-gray-900 text-white rounded-sm cursor-pointer text-sm">Send</button>
     </form>
 </div>
+
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+
+<script>
+    const conversationId = "@Model.Id";
+    const currentUserId = "@CurrentUser.UserId";
+
+    const dateFormatter = new Intl.DateTimeFormat('en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    });
+
+    const connection = new signalR.HubConnectionBuilder().withUrl("/hubs/chat").build();
+
+    connection.on("MessageReceived", function (message) {
+        const container = document.getElementById("messages-container");
+
+        const isCurrentUser = message.senderUserId === currentUserId;
+
+        const wrapper = document.createElement("div");
+        wrapper.className = `flex ${isCurrentUser ? "justify-end" : "justify-start"}`;
+
+        const bubble = document.createElement("div");
+        bubble.className =
+            `${isCurrentUser ? "bg-purple-200" : "bg-gray-200"} ` +
+            "flex gap-2 w-fit max-w-xs break-words flex-col py-2 px-6 rounded-sm";
+
+        bubble.innerHTML = `
+            <p class="${isCurrentUser ? "text-purple-600" : "text-gray-600"} font-medium">
+                ${message.content}
+            </p>
+            <div class="flex gap-2 items-center ${isCurrentUser ? "justify-end" : "justify-start"}">
+                <p class="text-sm font-semibold ${isCurrentUser ? "text-purple-900" : "text-gray-900"}">
+                    ${message.senderFullName}
+                </p>
+                <small class="${isCurrentUser ? "text-purple-500" : "text-gray-500"} text-xs font-medium">
+                    at ${dateFormatter
+                            .format(new Date(message.sentAt))
+                            .replace(',', '')
+                            .replace(/\//g, '-')}
+                </small >
+            </div >
+        `;
+
+        wrapper.appendChild(bubble);
+        container.appendChild(wrapper);
+    })
+
+    @* connection.start()
+        .then(() => console.log("Connected"))
+        .catch(err => console.error(err)); *@
+
+    connection.start()
+        .then(() => {
+            console.log("Connected");
+            return connection.invoke("JoinConversation", conversationId);
+        })
+        .then(() => console.log("Joined group"))
+        .catch(err => console.error(err));
+
+
+
+
+</script>

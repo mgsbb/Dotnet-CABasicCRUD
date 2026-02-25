@@ -2,6 +2,7 @@ using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Common.Interfaces.Messaging;
 using CABasicCRUD.Application.Features.Conversations.Messages.Common;
 using CABasicCRUD.Application.Features.Identity.Auth.Common;
+using CABasicCRUD.Application.Features.Identity.Users.Common;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Conversations.Conversations;
 using CABasicCRUD.Domain.Conversations.Messages;
@@ -12,12 +13,16 @@ namespace CABasicCRUD.Application.Features.Conversations.Messages.Commands.SendM
 internal sealed class SendMessageCommandHandler(
     IConversationRepository conversationRepository,
     ICurrentUser currentUser,
-    IUnitOfWork unitOfWork
+    IUnitOfWork unitOfWork,
+    IChatNotificationService chatNotificationService,
+    IUserReadService userReadService
 ) : ICommandHandler<SendMessageCommand, MessageResult>
 {
     private readonly IConversationRepository _conversationRepository = conversationRepository;
     private readonly ICurrentUser _currentUser = currentUser;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IChatNotificationService _chatNotificationService = chatNotificationService;
+    private readonly IUserReadService _userReadService = userReadService;
 
     public async Task<Result<MessageResult>> Handle(
         SendMessageCommand request,
@@ -49,6 +54,19 @@ internal sealed class SendMessageCommandHandler(
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        User? user = await _userReadService.GetByIdAsync(result.Value.SenderUserId);
+
+        await _chatNotificationService.NotifyNewMessage(
+            conversation.Id,
+            result.Value.Id,
+            result.Value.SenderUserId,
+            user!.Username,
+            user!.UserProfile.FullName,
+            result.Value.Content,
+            result.Value.CreatedAt,
+            cancellationToken
+        );
 
         return Result<MessageResult>.Success(result.Value.ToMessageResult());
     }
