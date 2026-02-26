@@ -163,3 +163,75 @@ To stop the app:
 ```cmd
 docker compose -f .\src\CABasicCRUD.Host.PostgreSql.WebApi\docker-compose.yml down
 ```
+
+## 3. Host.PostgreSql.WebMvc
+
+Projects:
+- Infrastructure.Persistence.PostgreSql
+- Presentation.WebMvc
+
+### Load environment variables:
+
+```cmd 
+load-env.cmd .\src\CABasicCRUD.Host.PostgreSql.WebMvc\.env  
+```
+
+### Run locally
+
+Apply migrations:
+
+```cmd
+dotnet ef database update --project .\src\CABasicCRUD.Infrastructure.Persistence.PostgreSql --startup-project .\src\CABasicCRUD.Host.PostgreSql.WebMvc
+```
+
+Run project:
+
+```cmd
+dotnet run --project src\CABasicCRUD.Host.PostgreSql.WebMvc
+```
+### Publish and run locally
+
+Create migrations bundle:
+
+```cmd
+dotnet ef migrations bundle --project .\src\CABasicCRUD.Host.PostgreSql.WebMvc
+```
+
+Run migrations bundle:
+
+```cmd
+efbundle.exe
+```
+
+Publish and run publish artifact locally:
+
+```cmd
+dotnet publish .\src\CABasicCRUD.Host.PostgreSql.WebMvc -c Release -o .\publish
+```
+
+When running from the root path, set DOTNET_CONTENTROOT environment variable to the absolute path of the folder containing the required appsettings.json configuration, which in our case is the publish directory.
+
+```cmd
+dotnet .\publish\CABasicCRUD.Host.PostgreSql.WebMvc.dll
+```
+
+Otherwise
+
+```cmd
+cd publish
+dotnet CABasicCRUD.Host.PostgreSql.WebMvc.dll
+```
+
+### Run using docker
+
+After loading environment variables, run the following command from the root of the project:
+
+```cmd
+docker compose -f .\src\CABasicCRUD.Host.PostgreSql.WebMvc\docker-compose.yml up --build -d
+```
+
+To stop the app:
+
+```cmd
+docker compose -f .\src\CABasicCRUD.Host.PostgreSql.WebMvc\docker-compose.yml down
+```
