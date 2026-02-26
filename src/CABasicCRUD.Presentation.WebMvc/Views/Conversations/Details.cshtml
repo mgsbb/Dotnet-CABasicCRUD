@@ -8,6 +8,8 @@
     .First(p => p.ParticipantUserId != CurrentUser.UserId);
 
     var otherParticipantName = otherParticipant.ParticipantFullName;
+
+    ViewData["Title"] = $"Chat with {otherParticipant.ParticipantFullName}";
 }
 
 <div class="mx-auto bg-white 2xl:w-2/3 pt-16 h-screen flex flex-col gap-2">
