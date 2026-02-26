@@ -1,3 +1,4 @@
+using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Common.Interfaces.Messaging;
 using CABasicCRUD.Application.Features.Conversations.Conversations.Common;
 using CABasicCRUD.Domain.Common;
@@ -36,7 +37,8 @@ public sealed record ConversationParticipantDetail(
 );
 
 internal sealed class GetConversationByIdWithDetailsQueryHandler(
-    IConversationReadService conversationReadService
+    IConversationReadService conversationReadService,
+    ICurrentUser currentUser
 ) : IQueryHander<GetConversationByIdWithDetailsQuery, ConversationDetailsResult>
 {
     public async Task<Result<ConversationDetailsResult>> Handle(
@@ -50,6 +52,17 @@ internal sealed class GetConversationByIdWithDetailsQueryHandler(
         if (conversation is null)
         {
             return Result<ConversationDetailsResult>.Failure(Common.ConversationErrors.NotFound);
+        }
+
+        if (
+            !conversation.Participants.Any(participant =>
+                participant.ParticipantUserId == currentUser.UserId
+            )
+        )
+        {
+            return Result<ConversationDetailsResult>.Failure(
+                Domain.Conversations.Conversations.ConversationErrors.NotAParticipant
+            );
         }
 
         return conversation;
