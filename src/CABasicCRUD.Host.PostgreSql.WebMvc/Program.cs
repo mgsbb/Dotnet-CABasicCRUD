@@ -114,4 +114,8 @@ app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Inde
 
 app.MapHub<ChatHub>("/hubs/chat");
 
+app.UseStatusCodePagesWithReExecute("/Home/StatusCode", "?code={0}");
+
+app.UseExceptionHandler("/Home/Error");
+
 app.Run();
