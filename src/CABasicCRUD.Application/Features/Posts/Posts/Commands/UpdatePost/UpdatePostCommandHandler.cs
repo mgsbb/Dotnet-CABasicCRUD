@@ -36,8 +36,6 @@ internal sealed class UpdatePostCommandHandler(
         if (result.IsFailure || result.Value == null)
             return Result.Failure(result.Error);
 
-        await _postRepository.UpdateAsync(entity: result.Value);
-
         await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken);
 
         string cacheKey = $"posts:{post.Id}";

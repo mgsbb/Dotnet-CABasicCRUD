@@ -32,13 +32,6 @@ public class RepositoryBase<TEntity, TId>(ApplicationDbContext dbContext)
         return entity;
     }
 
-    public Task UpdateAsync(TEntity entity)
-    {
-        _dbSet.Update(entity);
-
-        return Task.CompletedTask;
-    }
-
     public Task DeleteAsync(TEntity entity)
     {
         _dbSet.Remove(entity);

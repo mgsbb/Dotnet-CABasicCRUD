@@ -36,8 +36,6 @@ internal sealed class UpdateCommentCommandHandler(
         if (result.IsFailure || result.Value is null)
             return Result.Failure(result.Error);
 
-        await _commentRepository.UpdateAsync(result.Value);
-
         await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken);
 
         return Result.Success();

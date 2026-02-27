@@ -50,7 +50,6 @@ internal sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserComma
             return Result.Failure(result.Error);
         }
 
-        await _userRepository.UpdateAsync(user);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
