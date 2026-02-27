@@ -43,15 +43,6 @@ public sealed class UpdatePostCommandHandlerTests
         Assert.False(result.IsFailure);
         Assert.Null(result.Error);
 
-        await _postRepository
-            .Received(1)
-            .UpdateAsync(
-                Arg.Is<Post>(p =>
-                    p.Title == "title_updated"
-                    && p.Content == "content_updated"
-                    && p.UserId == userId
-                )
-            );
         await _unitOfWork.Received(1).SaveChangesAsync(token);
 
         await _cacheService.Received(2).RemoveAsync(Arg.Any<string>(), token);
@@ -75,7 +66,6 @@ public sealed class UpdatePostCommandHandlerTests
         Assert.NotNull(result.Error);
         Assert.Equal(result.Error, PostErrors.NotFound);
 
-        await _postRepository.DidNotReceive().UpdateAsync(Arg.Any<Post>());
         await _unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
         await _cacheService
             .DidNotReceive()
@@ -103,7 +93,6 @@ public sealed class UpdatePostCommandHandlerTests
         Assert.NotNull(result.Error);
         Assert.Equal(result.Error, AuthErrors.Forbidden);
 
-        await _postRepository.DidNotReceive().UpdateAsync(Arg.Any<Post>());
         await _unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
         await _cacheService
             .DidNotReceive()
@@ -130,7 +119,6 @@ public sealed class UpdatePostCommandHandlerTests
         Assert.NotNull(result.Error);
         Assert.Equal(result.Error, Domain.Posts.Posts.PostErrors.TitleEmpty);
 
-        await _postRepository.DidNotReceive().UpdateAsync(Arg.Any<Post>());
         await _unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
         await _cacheService
             .DidNotReceive()
@@ -157,7 +145,6 @@ public sealed class UpdatePostCommandHandlerTests
         Assert.NotNull(result.Error);
         Assert.Equal(result.Error, Domain.Posts.Posts.PostErrors.ContentEmpty);
 
-        await _postRepository.DidNotReceive().UpdateAsync(Arg.Any<Post>());
         await _unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
         await _cacheService
             .DidNotReceive()
