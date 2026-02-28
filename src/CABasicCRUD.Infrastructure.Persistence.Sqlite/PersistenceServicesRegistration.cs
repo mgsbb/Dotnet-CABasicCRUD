@@ -1,9 +1,14 @@
 using CABasicCRUD.Application.Common.Interfaces;
+using CABasicCRUD.Application.Features.Conversations.Conversations.Common;
+using CABasicCRUD.Application.Features.Identity.Users.Common;
+using CABasicCRUD.Application.Features.Posts.Comments.Common;
+using CABasicCRUD.Application.Features.Posts.Posts.Common;
 using CABasicCRUD.Domain.Conversations.Conversations;
 using CABasicCRUD.Domain.Identity.Users;
 using CABasicCRUD.Domain.Posts.Comments;
 using CABasicCRUD.Domain.Posts.Posts;
 using CABasicCRUD.Infrastructure.Persistence.Sqlite.Outbox;
+using CABasicCRUD.Infrastructure.Persistence.Sqlite.ReadServices;
 using CABasicCRUD.Infrastructure.Persistence.Sqlite.Repositories;
 using CABasicCRUD.Infrastructure.Persistence.Sqlite.Seeding;
 using Microsoft.EntityFrameworkCore;
@@ -42,6 +47,11 @@ public static class PersistenceServicesRegistration
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ICommentRepository, CommentRepository>();
         services.AddScoped<IConversationRepository, ConversationRepository>();
+
+        services.AddScoped<IPostReadService, PostReadService>();
+        services.AddScoped<ICommentReadService, CommentReadService>();
+        services.AddScoped<IUserReadService, UserReadService>();
+        services.AddScoped<IConversationReadService, ConversationReadService>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
