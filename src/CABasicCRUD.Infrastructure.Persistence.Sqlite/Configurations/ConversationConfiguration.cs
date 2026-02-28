@@ -30,6 +30,11 @@ public class ConversationConfiguration : IEntityTypeConfiguration<Conversation>
         // builder.Ignore(conversation => conversation.Participants);
         // builder.Ignore(conversation => conversation.Messages);
 
+        builder
+            .Property(conversation => conversation.ConversationType)
+            .IsRequired()
+            .HasConversion<string>();
+
         builder.Metadata.FindNavigation(nameof(Conversation.Messages))!.SetField("_messages");
         builder
             .Metadata.FindNavigation(nameof(Conversation.Participants))!
