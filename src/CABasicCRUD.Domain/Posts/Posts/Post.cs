@@ -31,17 +31,23 @@ public class Post : AggregateRoot<PostId>
         return post;
     }
 
-    public Result<Post> Update(string? title, string? content)
+    public Result<Post> UpdateTitle(string title)
     {
         if (string.IsNullOrEmpty(title))
         {
             return Result<Post>.Failure(PostErrors.TitleEmpty);
         }
+        Title = title;
+        UpdatedAt = DateTime.UtcNow;
+        return this;
+    }
+
+    public Result<Post> UpdateContent(string content)
+    {
         if (string.IsNullOrEmpty(content))
         {
             return Result<Post>.Failure(PostErrors.ContentEmpty);
         }
-        Title = title;
         Content = content;
         UpdatedAt = DateTime.UtcNow;
         return this;

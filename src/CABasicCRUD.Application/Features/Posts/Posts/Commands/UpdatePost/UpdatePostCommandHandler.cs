@@ -31,10 +31,21 @@ internal sealed class UpdatePostCommandHandler(
             return Result.Failure(AuthErrors.Forbidden);
         }
 
-        Result<Post> result = post.Update(title: request.Title, content: request.Content);
+        Result<Post> result;
 
-        if (result.IsFailure || result.Value == null)
-            return Result.Failure(result.Error);
+        if (request.Title is not null)
+        {
+            result = post.UpdateTitle(request.Title);
+            if (result.IsFailure || result.Value == null)
+                return Result.Failure(result.Error);
+        }
+
+        if (request.Content is not null)
+        {
+            result = post.UpdateContent(request.Content);
+            if (result.IsFailure || result.Value == null)
+                return Result.Failure(result.Error);
+        }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken);
 
