@@ -60,13 +60,27 @@ public sealed class RawSqlSeeder(
 
         await _dbContext.Database.ExecuteSqlRawAsync(
             """
-                INSERT INTO Users (Id, Name, Email, PasswordHash, CreatedAt, UpdatedAt)
-                VALUES (@Id, @Name, @Email, @PasswordHash, @CreatedAt, NULL)
+                INSERT INTO Users (Id, Name, Email, PasswordHash, CreatedAt, UpdatedAt, Username)
+                VALUES (@Id, @Name, @Email, @PasswordHash, @CreatedAt, NULL, @Username)
             """,
             new SqliteParameter("@Id", defaultUserId.Value),
             new SqliteParameter("@Name", "John Doe"),
             new SqliteParameter("@Email", "default_user@email.com"),
             new SqliteParameter("@PasswordHash", passwordHash),
+            new SqliteParameter("@CreatedAt", DateTime.UtcNow),
+            new SqliteParameter(
+                "@Username",
+                $"johndoe_{defaultUserId.Value.ToString().Replace("-", "")[..12]}"
+            )
+        );
+
+        await _dbContext.Database.ExecuteSqlRawAsync(
+            """
+                INSERT INTO UserProfiles (Id, FullName, CreatedAt)
+                VALUES (@Id, @FullName, @CreatedAt)
+            """,
+            new SqliteParameter("@Id", defaultUserId.Value),
+            new SqliteParameter("@FullName", "John Doe"),
             new SqliteParameter("@CreatedAt", DateTime.UtcNow)
         );
 
@@ -76,16 +90,29 @@ public sealed class RawSqlSeeder(
         for (var i = 0; i < 49; i++)
         {
             var userId = UserId.New();
+            var fullName = faker.Name.FullName();
+            var username = $"{fullName}_{userId.Value.ToString().Replace("-", "")[..12]}";
 
             await _dbContext.Database.ExecuteSqlRawAsync(
                 """
-                    INSERT INTO Users (Id, Name, Email, PasswordHash, CreatedAt, UpdatedAt)
-                    VALUES (@Id, @Name, @Email, @PasswordHash, @CreatedAt, NULL)
+                    INSERT INTO Users (Id, Name, Email, PasswordHash, CreatedAt, UpdatedAt, Username)
+                    VALUES (@Id, @Name, @Email, @PasswordHash, @CreatedAt, NULL, @Username)
                 """,
                 new SqliteParameter("@Id", userId.Value),
-                new SqliteParameter("@Name", faker.Name.FullName()),
+                new SqliteParameter("@Name", fullName),
                 new SqliteParameter("@Email", faker.Internet.Email()),
                 new SqliteParameter("@PasswordHash", passwordHash),
+                new SqliteParameter("@CreatedAt", DateTime.UtcNow),
+                new SqliteParameter("@Username", username)
+            );
+
+            await _dbContext.Database.ExecuteSqlRawAsync(
+                """
+                    INSERT INTO UserProfiles (Id, FullName, CreatedAt)
+                    VALUES (@Id, @FullName, @CreatedAt)
+                """,
+                new SqliteParameter("@Id", userId.Value),
+                new SqliteParameter("@FullName", fullName),
                 new SqliteParameter("@CreatedAt", DateTime.UtcNow)
             );
 

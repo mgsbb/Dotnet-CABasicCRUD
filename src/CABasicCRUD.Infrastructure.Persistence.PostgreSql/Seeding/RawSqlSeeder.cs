@@ -60,13 +60,27 @@ public sealed class RawSqlSeeder(
 
         await _dbContext.Database.ExecuteSqlRawAsync(
             """
-                INSERT INTO "Users" ("Id", "Name", "Email", "PasswordHash", "CreatedAt", "UpdatedAt")
-                VALUES (@Id, @Name, @Email, @PasswordHash, @CreatedAt, NULL)
+                INSERT INTO "Users" ("Id", "Name", "Email", "PasswordHash", "CreatedAt", "UpdatedAt", "Username")
+                VALUES (@Id, @Name, @Email, @PasswordHash, @CreatedAt, NULL, @Username)
             """,
             new NpgsqlParameter("@Id", defaultUserId.Value),
             new NpgsqlParameter("@Name", "John Doe"),
             new NpgsqlParameter("@Email", "default_user@email.com"),
             new NpgsqlParameter("@PasswordHash", passwordHash),
+            new NpgsqlParameter("@CreatedAt", DateTime.UtcNow),
+            new NpgsqlParameter(
+                "@Username",
+                $"johndoe_{defaultUserId.Value.ToString().Replace("-", "")[..12]}"
+            )
+        );
+
+        await _dbContext.Database.ExecuteSqlRawAsync(
+            """
+                INSERT INTO "UserProfiles" ("Id", "FullName", "CreatedAt")
+                VALUES (@Id, @FullName, @CreatedAt)
+            """,
+            new NpgsqlParameter("@Id", defaultUserId.Value),
+            new NpgsqlParameter("@FullName", "John Doe"),
             new NpgsqlParameter("@CreatedAt", DateTime.UtcNow)
         );
 
@@ -76,16 +90,29 @@ public sealed class RawSqlSeeder(
         for (var i = 0; i < 49; i++)
         {
             var userId = UserId.New();
+            var fullName = faker.Name.FullName();
+            var username = $"{fullName}_{userId.Value.ToString().Replace("-", "")[..12]}";
 
             await _dbContext.Database.ExecuteSqlRawAsync(
                 """
-                   INSERT INTO "Users" ("Id", "Name", "Email", "PasswordHash", "CreatedAt", "UpdatedAt")
-                    VALUES (@Id, @Name, @Email, @PasswordHash, @CreatedAt, NULL)
+                   INSERT INTO "Users" ("Id", "Name", "Email", "PasswordHash", "CreatedAt", "UpdatedAt", "Username")
+                    VALUES (@Id, @Name, @Email, @PasswordHash, @CreatedAt, NULL, @Username)
                 """,
                 new NpgsqlParameter("@Id", userId.Value),
-                new NpgsqlParameter("@Name", faker.Name.FullName()),
+                new NpgsqlParameter("@Name", fullName),
                 new NpgsqlParameter("@Email", faker.Internet.Email()),
                 new NpgsqlParameter("@PasswordHash", passwordHash),
+                new NpgsqlParameter("@CreatedAt", DateTime.UtcNow),
+                new NpgsqlParameter("@Username", username)
+            );
+
+            await _dbContext.Database.ExecuteSqlRawAsync(
+                """
+                    INSERT INTO "UserProfiles" ("Id", "FullName", "CreatedAt")
+                    VALUES (@Id, @FullName, @CreatedAt)
+                """,
+                new NpgsqlParameter("@Id", userId.Value),
+                new NpgsqlParameter("@FullName", fullName),
                 new NpgsqlParameter("@CreatedAt", DateTime.UtcNow)
             );
 
