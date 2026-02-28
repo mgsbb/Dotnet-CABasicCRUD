@@ -199,6 +199,15 @@ public class PostsController : Controller
             {
                 ModelState.AddModelError(string.Empty, "Cannot edit post of another user");
             }
+            if (result is IValidationResult validationResult)
+            {
+                string errorMessage = "";
+                foreach (var e in validationResult.Errors)
+                {
+                    errorMessage += e.Message + " ";
+                }
+                ModelState.AddModelError(string.Empty, errorMessage);
+            }
 
             return View(model);
         }
