@@ -91,7 +91,8 @@ public sealed class RawSqlSeeder(
         {
             var userId = UserId.New();
             var fullName = faker.Name.FullName();
-            var username = $"{fullName}_{userId.Value.ToString().Replace("-", "")[..12]}";
+            var username =
+                $"{fullName.ToLower().Replace(" ", "")}_{userId.Value.ToString().Replace("-", "")[..12]}";
 
             await _dbContext.Database.ExecuteSqlRawAsync(
                 """
