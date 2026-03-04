@@ -10,4 +10,8 @@ public static class UserErrors
         "User.PasswordEmpty.Empty",
         "User password cannot be empty"
     );
+    public static readonly Error UsernameEmpty = new(
+        "User.Username.Empty",
+        "Username cannot be empty"
+    );
 }

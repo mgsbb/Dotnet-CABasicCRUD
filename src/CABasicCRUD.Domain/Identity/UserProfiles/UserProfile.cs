@@ -5,9 +5,9 @@ namespace CABasicCRUD.Domain.Identity.UserProfiles;
 
 public sealed class UserProfile : EntityBase<UserId>
 {
-    public string FullName { get; private set; }
-    public string? Bio { get; private set; }
-    public string? ProfileImageUrl { get; private set; }
+    public string FullName { get; set; }
+    public string? Bio { get; set; }
+    public string? ProfileImageUrl { get; set; }
 
     private UserProfile(UserId? id, string fullName, string? bio, string? profileImageUrl)
         : base(id)

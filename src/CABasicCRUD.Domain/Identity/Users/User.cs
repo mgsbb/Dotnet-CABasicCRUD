@@ -5,6 +5,7 @@ namespace CABasicCRUD.Domain.Identity.Users;
 
 public class User : AggregateRoot<UserId>
 {
+    // can remove name, drop name from db
     public string Name { get; private set; }
     public string Email { get; private set; }
     public string PasswordHash { get; private set; }
@@ -75,5 +76,40 @@ public class User : AggregateRoot<UserId>
         Email = email;
         UpdatedAt = DateTime.UtcNow;
         return this;
+    }
+
+    public void UpdateUserProfile(string? fullName, string? bio)
+    {
+        if (!string.IsNullOrEmpty(fullName))
+        {
+            UserProfile.FullName = fullName;
+        }
+        if (!string.IsNullOrEmpty(bio))
+        {
+            UserProfile.Bio = bio;
+        }
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    public Result UpdateUserEmail(string email)
+    {
+        if (string.IsNullOrEmpty(email))
+        {
+            return Result.Failure(UserErrors.EmailEmpty);
+        }
+        Email = email;
+        UpdatedAt = DateTime.UtcNow;
+        return Result.Success();
+    }
+
+    public Result UpdateUsername(string username)
+    {
+        if (string.IsNullOrEmpty(username))
+        {
+            return Result.Failure(UserErrors.UsernameEmpty);
+        }
+        Username = username;
+        UpdatedAt = DateTime.UtcNow;
+        return Result.Success();
     }
 }
