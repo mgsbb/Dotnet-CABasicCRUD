@@ -48,7 +48,7 @@ internal sealed class SendMessageCommandHandler(
             request.Content
         );
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             return Result<MessageResult>.Failure(result.Error);
         }

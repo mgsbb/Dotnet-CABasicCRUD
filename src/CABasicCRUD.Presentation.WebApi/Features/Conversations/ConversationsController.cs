@@ -41,7 +41,7 @@ public class ConversationsController(IMediator mediator) : ApiController
 
         Result<ConversationResult> result = await _mediator.Send(command);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             return HandleResultFailure(result);
         }
@@ -65,7 +65,7 @@ public class ConversationsController(IMediator mediator) : ApiController
 
         Result<ConversationResult> result = await _mediator.Send(query);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             return HandleResultFailure(result);
         }
@@ -90,7 +90,7 @@ public class ConversationsController(IMediator mediator) : ApiController
             query
         );
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             return HandleResultFailure(result);
         }
@@ -115,7 +115,7 @@ public class ConversationsController(IMediator mediator) : ApiController
 
         Result<MessageResult> result = await _mediator.Send(command);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             return HandleResultFailure(result);
         }

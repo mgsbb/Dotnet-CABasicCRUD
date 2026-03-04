@@ -26,7 +26,7 @@ public sealed class CommentsController(IMediator mediator, ICurrentUser currentU
         GetCommentByIdQuery query = new((CommentId)id);
         Result<CommentResult> result = await _mediator.Send(query);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             return NotFound();
         }

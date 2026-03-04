@@ -43,7 +43,7 @@ internal sealed class CreateCommentCommandHandler(
 
         Result<Comment> result = Comment.Create(request.Body, request.PostId, request.UserId);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             return Result<CommentResult>.Failure(result.Error);
         }

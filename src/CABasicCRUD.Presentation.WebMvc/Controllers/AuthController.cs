@@ -43,7 +43,7 @@ public class AuthController : Controller
 
         Result<AuthResult> result = await _mediator.Send(command);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             if (result.Error == null || result.IsSuccess)
                 throw new InvalidOperationException();
@@ -100,7 +100,7 @@ public class AuthController : Controller
 
         Result<AuthResult> result = await _mediator.Send(command);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             if (result.Error == null || result.IsSuccess)
                 throw new InvalidOperationException();

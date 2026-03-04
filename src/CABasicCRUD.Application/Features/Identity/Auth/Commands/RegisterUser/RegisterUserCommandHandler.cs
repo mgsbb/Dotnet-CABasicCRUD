@@ -57,7 +57,7 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserC
             passwordHasher: _passwordHasher
         );
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             return Result<AuthResult>.Failure(result.Error);
         }

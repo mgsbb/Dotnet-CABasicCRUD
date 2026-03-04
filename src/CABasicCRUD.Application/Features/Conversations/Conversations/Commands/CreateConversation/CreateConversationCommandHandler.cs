@@ -49,7 +49,7 @@ internal sealed class CreateConversationCommandHandler(
             [(UserId)_currentUser.UserId, request.UserId]
         );
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             return Result<ConversationResult>.Failure(result.Error);
         }

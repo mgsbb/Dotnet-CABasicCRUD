@@ -64,7 +64,7 @@ public sealed class Conversation : AggregateRoot<ConversationId>
 
         Result<Message> result = Message.Create(senderUserId, content);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             return result;
         }

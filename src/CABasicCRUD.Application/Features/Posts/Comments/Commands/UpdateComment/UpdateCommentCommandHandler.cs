@@ -33,7 +33,7 @@ internal sealed class UpdateCommentCommandHandler(
 
         Result<Comment> result = comment.Update(request.Body);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
             return Result.Failure(result.Error);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken: cancellationToken);

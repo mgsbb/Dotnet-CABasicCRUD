@@ -45,7 +45,7 @@ internal sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserComma
 
         Result<User> result = user.UpdateDetails(request.Name, request.Email);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             return Result.Failure(result.Error);
         }

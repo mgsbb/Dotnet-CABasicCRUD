@@ -50,7 +50,7 @@ public class PostsController : Controller
 
         Result<IReadOnlyList<PostWithAuthorResult>> result = await _mediator.Send(query);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             return View(new List<PostListItemViewModel>());
         }
@@ -80,7 +80,7 @@ public class PostsController : Controller
         GetPostByIdWithAuthorQuery query = new((PostId)id);
         Result<PostWithAuthorResult> result = await _mediator.Send(query);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             return NotFound();
         }
@@ -136,7 +136,7 @@ public class PostsController : Controller
         CreateCommentCommand command = new(model.Body, (PostId)id, (UserId)_currentUser.UserId);
         Result<CommentResult> result = await _mediator.Send(command);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             return NotFound();
         }
@@ -158,7 +158,7 @@ public class PostsController : Controller
         CreatePostCommand command = new(model.Title, model.Content, (UserId)_currentUser.UserId);
         Result<PostResult> result = await _mediator.Send(command);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             if (result.Error == null)
                 throw new InvalidOperationException();
@@ -222,7 +222,7 @@ public class PostsController : Controller
         GetPostByIdQuery query = new((PostId)id);
         Result<PostResult> result = await _mediator.Send(query);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             return NotFound();
         }

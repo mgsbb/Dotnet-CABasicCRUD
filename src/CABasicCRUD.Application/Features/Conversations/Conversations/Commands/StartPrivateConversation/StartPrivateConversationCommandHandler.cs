@@ -45,7 +45,7 @@ internal sealed class StartPrivateConversationCommandHandler(
             request.ParticipantUserId
         );
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             return Result<ConversationResult>.Failure(result.Error);
         }

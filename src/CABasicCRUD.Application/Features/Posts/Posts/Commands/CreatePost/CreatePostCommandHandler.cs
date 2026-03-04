@@ -32,7 +32,7 @@ internal sealed class CreatePostCommandHandler(
         //     content: request.CreatePostDTO.Content
         // );
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             // Error may be any of the domain errors - TitleEmpty, ContentEmpty, etc. How to handle this in the controller?
             return Result<PostResult>.Failure(result.Error);

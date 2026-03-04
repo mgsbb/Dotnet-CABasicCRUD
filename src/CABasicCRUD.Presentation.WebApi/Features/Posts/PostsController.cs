@@ -42,7 +42,7 @@ public class PostsController(IMediator mediator, ICurrentUser currentUser) : Api
 
         Result<PostResult> result = await _mediator.Send(request: command);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             return HandleResultFailure(result);
         }

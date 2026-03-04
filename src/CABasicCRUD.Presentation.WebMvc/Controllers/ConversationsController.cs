@@ -31,7 +31,7 @@ public sealed class ConversationsController(ICurrentUser currentUser, IMediator 
 
         Result<ConversationDetailsResult> result = await _mediator.Send(query);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             return NotFound();
         }
@@ -81,7 +81,7 @@ public sealed class ConversationsController(ICurrentUser currentUser, IMediator 
 
         Result<ConversationResult> result = await _mediator.Send(command);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             if (result.Error is null)
                 throw new InvalidOperationException();
@@ -115,7 +115,7 @@ public sealed class ConversationsController(ICurrentUser currentUser, IMediator 
 
         Result<MessageResult> result = await _mediator.Send(command);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             return NotFound();
         }

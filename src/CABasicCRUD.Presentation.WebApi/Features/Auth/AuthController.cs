@@ -33,7 +33,7 @@ public sealed class AuthController(IMediator mediator) : ApiController
         );
         Result<AuthResult> result = await _mediator.Send(command);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             return HandleResultFailure(result);
         }
@@ -59,7 +59,7 @@ public sealed class AuthController(IMediator mediator) : ApiController
         LoginUserCommand command = new(loginUserRequest.Email, loginUserRequest.Password);
         Result<AuthResult> result = await _mediator.Send(command);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             return HandleResultFailure(result);
         }

@@ -36,14 +36,14 @@ internal sealed class UpdatePostCommandHandler(
         if (request.Title is not null)
         {
             result = post.UpdateTitle(request.Title);
-            if (result.IsFailure || result.Value == null)
+            if (result.IsFailure)
                 return Result.Failure(result.Error);
         }
 
         if (request.Content is not null)
         {
             result = post.UpdateContent(request.Content);
-            if (result.IsFailure || result.Value == null)
+            if (result.IsFailure)
                 return Result.Failure(result.Error);
         }
 

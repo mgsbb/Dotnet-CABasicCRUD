@@ -42,7 +42,7 @@ public class PostCommentsController(IMediator mediator, ICurrentUser currentUser
 
         Result<CommentResult> result = await _mediator.Send(command);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             return HandleResultFailure(result);
         }

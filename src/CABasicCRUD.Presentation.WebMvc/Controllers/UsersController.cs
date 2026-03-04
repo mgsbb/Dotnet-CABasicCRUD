@@ -45,7 +45,7 @@ public sealed class UsersController : Controller
 
         Result<IReadOnlyList<UserResult>> result = await _mediator.Send(query);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             return View(new List<UserListItemViewModel>());
         }
@@ -72,7 +72,7 @@ public sealed class UsersController : Controller
         GetUserByIdQuery query = new((UserId)id);
         Result<UserResult> result = await _mediator.Send(query);
 
-        if (result.IsFailure || result.Value is null)
+        if (result.IsFailure)
         {
             return NotFound();
         }
