@@ -2,6 +2,7 @@ using CABasicCRUD.Application.Features.Identity.Auth.Commands.LoginUser;
 using CABasicCRUD.Application.Features.Identity.Auth.Commands.RegisterUser;
 using CABasicCRUD.Application.Features.Identity.Auth.Common;
 using CABasicCRUD.Domain.Common;
+using CABasicCRUD.Presentation.WebApi.Common;
 using CABasicCRUD.Presentation.WebApi.Common.Abstractions;
 using CABasicCRUD.Presentation.WebApi.Features.Auth.Contracts;
 using CABasicCRUD.Presentation.WebApi.Features.Users;
@@ -15,9 +16,10 @@ namespace CABasicCRUD.Presentation.WebApi.Features.Auth;
 [EnableRateLimiting(RateLimitPolicies.Anonymous)]
 [ApiController]
 [Route("/api/v1/[controller]")]
-public sealed class AuthController(IMediator mediator) : ApiController
+public sealed class AuthController(IMediator mediator, IConfiguration configuration) : ApiController
 {
     private readonly IMediator _mediator = mediator;
+    private readonly IConfiguration _configuration = configuration;
 
     [HttpPost("register")]
     [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status201Created)]
@@ -38,7 +40,11 @@ public sealed class AuthController(IMediator mediator) : ApiController
             return HandleResultFailure(result);
         }
 
-        Response.Cookies.Append("access_token", result.Value.Token);
+        Response.Cookies.Append(
+            "access_token",
+            result.Value.Token,
+            CookieOptionsFactory.CreateAccessTokenCookieOptions(_configuration)
+        );
 
         AuthResponse authResponse = result.Value.ToAuthResponse();
 
@@ -64,7 +70,11 @@ public sealed class AuthController(IMediator mediator) : ApiController
             return HandleResultFailure(result);
         }
 
-        Response.Cookies.Append("access_token", result.Value.Token);
+        Response.Cookies.Append(
+            "access_token",
+            result.Value.Token,
+            CookieOptionsFactory.CreateAccessTokenCookieOptions(_configuration)
+        );
 
         AuthResponse authResponse = result.Value.ToAuthResponse();
 

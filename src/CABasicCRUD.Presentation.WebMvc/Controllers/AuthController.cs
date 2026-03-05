@@ -3,6 +3,7 @@ using CABasicCRUD.Application.Features.Identity.Auth.Commands.LoginUser;
 using CABasicCRUD.Application.Features.Identity.Auth.Commands.RegisterUser;
 using CABasicCRUD.Application.Features.Identity.Auth.Common;
 using CABasicCRUD.Domain.Common;
+using CABasicCRUD.Presentation.WebMvc.Common;
 using CABasicCRUD.Presentation.WebMvc.Models.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +14,17 @@ public class AuthController : Controller
 {
     private readonly IMediator _mediator;
     private readonly ICurrentUser _currentUser;
+    private readonly IConfiguration _configuration;
 
-    public AuthController(IMediator mediator, ICurrentUser currentUser)
+    public AuthController(
+        IMediator mediator,
+        ICurrentUser currentUser,
+        IConfiguration configuration
+    )
     {
         _mediator = mediator;
         _currentUser = currentUser;
+        _configuration = configuration;
     }
 
     [HttpGet]
@@ -72,7 +79,11 @@ public class AuthController : Controller
             return View(model);
         }
 
-        Response.Cookies.Append("access_token", result.Value.Token);
+        Response.Cookies.Append(
+            "access_token",
+            result.Value.Token,
+            CookieOptionsFactory.CreateAccessTokenCookieOptions(_configuration)
+        );
 
         return RedirectToAction("Index", "Home");
     }
@@ -113,7 +124,11 @@ public class AuthController : Controller
             return View(model);
         }
 
-        Response.Cookies.Append("access_token", result.Value.Token);
+        Response.Cookies.Append(
+            "access_token",
+            result.Value.Token,
+            CookieOptionsFactory.CreateAccessTokenCookieOptions(_configuration)
+        );
 
         return RedirectToAction("Index", "Home");
     }
