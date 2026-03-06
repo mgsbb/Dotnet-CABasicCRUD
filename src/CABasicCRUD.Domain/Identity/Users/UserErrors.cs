@@ -14,4 +14,8 @@ public static class UserErrors
         "User.Username.Empty",
         "Username cannot be empty"
     );
+    public static readonly Error ProfileImageUrlEmpty = new(
+        "User.Username.Empty",
+        "Username cannot be empty"
+    );
 }

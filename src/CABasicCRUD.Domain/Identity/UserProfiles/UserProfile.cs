@@ -27,11 +27,26 @@ public sealed class UserProfile : EntityBase<UserId>
         return new UserProfile(userId, fullName, bio, profileImageUrl);
     }
 
-    internal UserProfile Update(string? fullName, string? bio, string? profileImageUrl)
+    internal UserProfile UpdateDetails(string? fullName, string? bio)
     {
         if (fullName is not null)
+        {
             FullName = fullName;
-        Bio = bio;
+            UpdatedAt = DateTime.UtcNow;
+        }
+        if (bio is not null)
+        {
+            Bio = bio;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+        return this;
+    }
+
+    internal Result<UserProfile> UpdateProfileImageUrl(string? profileImageUrl)
+    {
+        if (string.IsNullOrWhiteSpace(profileImageUrl))
+            return Result<UserProfile>.Failure(UserErrors.ProfileImageUrlEmpty);
         ProfileImageUrl = profileImageUrl;
         UpdatedAt = DateTime.UtcNow;
         return this;

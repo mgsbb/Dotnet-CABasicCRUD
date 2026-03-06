@@ -80,15 +80,13 @@ public class User : AggregateRoot<UserId>
 
     public void UpdateUserProfile(string? fullName, string? bio)
     {
-        if (!string.IsNullOrEmpty(fullName))
+        if (fullName is not null)
         {
-            UserProfile.FullName = fullName;
+            // this won't be necessary, if the Name field from Users table is dropped
+            Name = fullName;
+            UpdatedAt = DateTime.UtcNow;
         }
-        if (!string.IsNullOrEmpty(bio))
-        {
-            UserProfile.Bio = bio;
-        }
-        UpdatedAt = DateTime.UtcNow;
+        UserProfile.UpdateDetails(fullName, bio);
     }
 
     public Result UpdateUserEmail(string email)
