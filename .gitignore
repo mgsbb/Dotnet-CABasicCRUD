@@ -495,3 +495,5 @@ efbundle.exe
 # wwwroot
 **/wwwroot/lib
 **/wwwroot/css/site.css
+
+temp
