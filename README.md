@@ -235,3 +235,16 @@ To stop the app:
 ```cmd
 docker compose -f .\src\CABasicCRUD.Host.PostgreSql.WebMvc\docker-compose.yml down
 ```
+
+### Local development
+
+```cmd
+dotnet watch --project src\CABasicCRUD.Host.PostgreSql.WebMvc
+```
+
+In another terminal:
+
+```cmd
+cd src\CABasicCRUD.Host.PostgreSql.WebMvc
+npm run watch:css
+```
