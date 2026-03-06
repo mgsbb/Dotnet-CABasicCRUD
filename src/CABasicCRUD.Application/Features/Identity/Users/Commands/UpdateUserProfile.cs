@@ -61,7 +61,7 @@ public sealed class UpdateUserProfileCommandValidator : AbstractValidator<Update
         RuleFor(x => x.Bio)
             .NotEmpty()
             .WithMessage(UserValidationErrorMessages.BioEmpty)
-            .MaximumLength(300)
+            .MaximumLength(200)
             .WithMessage(UserValidationErrorMessages.BioExceedsMaxCharacters)
             .When(x => x.Bio is not null);
     }

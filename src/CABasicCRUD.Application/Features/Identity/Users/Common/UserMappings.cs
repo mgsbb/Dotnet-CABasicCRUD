@@ -8,11 +8,13 @@ internal static class UserMappings
     {
         return new(
             Id: user.Id,
-            Name: user.Name,
+            Name: user.UserProfile.FullName,
             Email: user.Email,
             CreatedAt: user.CreatedAt,
             UpdatedAt: user.UpdatedAt,
-            Username: user.Username
+            Username: user.Username,
+            Bio: user.UserProfile.Bio,
+            ProfileImageUrl: user.UserProfile.ProfileImageUrl
         );
     }
 

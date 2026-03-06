@@ -8,5 +8,7 @@ public sealed record UserResult(
     string Email,
     string Username,
     DateTime CreatedAt,
-    DateTime? UpdatedAt
+    DateTime? UpdatedAt,
+    string? Bio,
+    string? ProfileImageUrl
 );
