@@ -1,39 +1,60 @@
 @model CABasicCRUD.Presentation.WebMvc.Models.Users.UserEditViewModel
 
 
-<section class="mx-auto bg-white w-2/3 py-20 border-x border-gray-300 min-h-screen">
+<section class="px-2 sm:px-10 flex flex-col gap-20 pb-20">
+
+    <h1 class="text-3xl font-medium text-gray-700 text-center">Edit User</h1>
 
     @if (!ViewData.ModelState.IsValid)
     {
-        <div class="flex flex-col gap-2 items-center mt-20">
-            <div asp-validation-summary="ModelOnly"
-                 class="bg-red-100 text-red-700 font-semibold px-4 py-2 mb-10 rounded-sm">
+        <div class="flex flex-col gap-2 items-center">
+            <div asp-validation-summary="ModelOnly" class="bg-red-100 text-red-700 font-semibold px-4 py-2 rounded-sm">
             </div>
-            <a href="/users" class="text-gray-600 font-medium">Back to users</a>
         </div>
     }
-    else
+
+    @if (TempData["SuccessMessage"] != null)
     {
-
-        <h1 class="text-3xl font-medium text-gray-700 my-10 text-center">Edit User</h1>
-
-        <form asp-controller="Users" asp-action="Edit" method="post" class="flex flex-col gap-10 w-3/4 mx-auto">
-            <div class="flex flex-col gap-1">
-                <label for="Name" class="font-medium text-gray-500">Name</label>
-                <input asp-for="Name" class="border border-gray-300 rounded-sm p-2" />
-                <span asp-validation-for="Name" class="text-sm font-semibold text-red-600"></span>
+        <div class="flex flex-col gap-2 items-center">
+            <div class="bg-green-100 text-green-700 font-semibold px-4 py-2 rounded-sm">
+                @TempData["SuccessMessage"]
             </div>
-
-            <div class="flex flex-col gap-1">
-                <label for="Email" class="font-medium text-gray-500">Email</label>
-                <input asp-for="Email" class="border border-gray-300 rounded-sm p-2" />
-                <span asp-validation-for="Email" class="text-sm font-semibold text-red-600"></span>
-            </div>
-
-            <button type="submit" class="bg-gray-900 text-white py-3 rounded-sm cursor-pointer font-semibold text-sm">
-                Edit
-            </button>
-        </form>
+        </div>
     }
 
+    <form asp-controller="Users" asp-action="EditUserProfile" asp-route-id="@ViewContext.RouteData.Values["id"]"
+          method="post" class="flex flex-col gap-10 w-3/4 mx-auto">
+        <h2 class="font-semibold text-2xl">User Profile</h2>
+
+        <div class="flex flex-col gap-1">
+            <label for="FullName" class="font-medium text-gray-500">Name</label>
+            <input asp-for="FullName" class="border border-gray-300 rounded-sm p-2" />
+            <span asp-validation-for="FullName" class="text-sm font-semibold text-red-600"></span>
+        </div>
+
+        <div class="flex flex-col gap-1">
+            <label for="Bio" class="font-medium text-gray-500">Bio</label>
+            <textarea asp-for="Bio" class="border border-gray-300 rounded-sm p-2" rows="5"></textarea>
+            <span asp-validation-for="Bio" class="text-sm font-semibold text-red-600"></span>
+        </div>
+
+        <button type="submit" class="bg-gray-900 text-white py-3 rounded-sm cursor-pointer font-semibold text-sm">
+            Edit
+        </button>
+    </form>
+
+    <form asp-controller="Users" asp-action="EditUserEmail" method="post"
+          asp-route-id="@ViewContext.RouteData.Values["id"]" class="flex flex-col gap-10 w-3/4 mx-auto">
+        <h2 class="font-semibold text-2xl">User Email</h2>
+
+        <div class="flex flex-col gap-1">
+            <label for="Email" class="font-medium text-gray-500">Email</label>
+            <input asp-for="Email" class="border border-gray-300 rounded-sm p-2" />
+            <span asp-validation-for="Email" class="text-sm font-semibold text-red-600"></span>
+        </div>
+
+        <button type="submit" class="bg-gray-900 text-white py-3 rounded-sm cursor-pointer font-semibold text-sm">
+            Edit
+        </button>
+    </form>
 </section>

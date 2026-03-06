@@ -25,7 +25,7 @@
 
             @* name and id *@
             <div class="flex flex-col gap-2">
-                <div class="flex items-center gap-10">
+                <div class="flex items-end gap-10 justify-between">
                     <h1 class="font-bold text-3xl text-gray-700">@Model.Name</h1>
                     @if (CurrentUser.UserId == Model.Id)
                     {
@@ -51,6 +51,11 @@
                 </form>
             </div>
         }
+    </div>
+
+    <div>
+        <h2 class="text-sm font-bold text-gray-700 ">About</h2>
+        <p>@Model.Bio</p>
     </div>
 
     <div class="flex flex-col gap-10">

@@ -8,4 +8,6 @@ public sealed class UserDetailsViewModel
     public string Name { get; init; } = default!;
     public string Username { get; init; } = default!;
     public PostListViewModel PostsList { get; init; } = new();
+    public string? Bio { get; init; } = default!;
+    public string? ProfileImageUrl { get; init; } = default!;
 }

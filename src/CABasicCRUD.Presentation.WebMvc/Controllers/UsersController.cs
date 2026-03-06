@@ -1,6 +1,6 @@
 using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Features.Identity.Auth.Common;
-using CABasicCRUD.Application.Features.Identity.Users.Commands.UpdateUser;
+using CABasicCRUD.Application.Features.Identity.Users.Commands;
 using CABasicCRUD.Application.Features.Identity.Users.Common;
 using CABasicCRUD.Application.Features.Identity.Users.Queries.GetUserById;
 using CABasicCRUD.Application.Features.Identity.Users.Queries.SearchUsers;
@@ -117,6 +117,8 @@ public sealed class UsersController : Controller
             Name = result.Value.Name,
             Username = result.Value.Username,
             PostsList = postListViewModel,
+            Bio = result.Value.Bio,
+            ProfileImageUrl = result.Value.ProfileImageUrl,
         };
 
         return View(viewModel);
@@ -125,15 +127,15 @@ public sealed class UsersController : Controller
     [HttpGet("{id}/edit")]
     public IActionResult Edit() => View();
 
-    [HttpPost("{id}/edit")]
-    public async Task<IActionResult> Edit(UserEditViewModel model, Guid id)
+    [HttpPost("{id}/edit/profile")]
+    public async Task<IActionResult> EditUserProfile(UserEditViewModel model, Guid id)
     {
         if (!ModelState.IsValid)
         {
-            return View(model);
+            return View("Edit");
         }
 
-        UpdateUserCommand command = new((UserId)id, model.Name, model.Email);
+        UpdateUserProfileCommand command = new((UserId)id, model.FullName, model.Bio);
         Result result = await _mediator.Send(command);
 
         if (result.IsFailure)
@@ -145,11 +147,62 @@ public sealed class UsersController : Controller
             {
                 ModelState.AddModelError(string.Empty, "Cannot edit another user");
             }
+            if (result is IValidationResult validationResult)
+            {
+                string errorMessage = "";
+                foreach (var e in validationResult.Errors)
+                {
+                    errorMessage += e.Message + " ";
+                }
+                ModelState.AddModelError(string.Empty, errorMessage);
+            }
 
+            return View("Edit");
+        }
+
+        TempData["SuccessMessage"] = "User profile updated successfully!";
+
+        return View("Edit");
+        // return RedirectToAction(nameof(Details), new { id = result.Value.Id.Value });
+    }
+
+    [HttpPost("{id}/edit/email")]
+    public async Task<IActionResult> EditUserEmail(UserEditViewModel model, Guid id)
+    {
+        if (!ModelState.IsValid)
+        {
             return View(model);
         }
 
-        return RedirectToAction("Index");
+        if (model.Email is null)
+        {
+            ModelState.AddModelError(string.Empty, "Please enter a valid email.");
+            return View("Edit");
+        }
+
+        UpdateUserEmailCommand command = new((UserId)id, model.Email);
+        Result result = await _mediator.Send(command);
+
+        if (result.IsFailure)
+        {
+            if (result.Error is null)
+                throw new InvalidOperationException();
+
+            if (result.Error == AuthErrors.Forbidden)
+            {
+                ModelState.AddModelError(string.Empty, "Cannot edit another user");
+            }
+            if (result.Error == AuthErrors.AlreadyExistsEmail)
+            {
+                ModelState.AddModelError(string.Empty, "Email already in use.");
+            }
+
+            return View("Edit");
+        }
+
+        TempData["SuccessMessage"] = "User email updated successfully!";
+
+        return View("Edit");
         // return RedirectToAction(nameof(Details), new { id = result.Value.Id.Value });
     }
 }
