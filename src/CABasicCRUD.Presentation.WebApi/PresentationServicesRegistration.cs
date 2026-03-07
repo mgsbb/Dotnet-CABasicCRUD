@@ -35,6 +35,8 @@ public static class PresentationServicesRegistration
 
         services.AddRateLimiter(RateLimitPolicies.Add);
 
+        services.AddEndpointsApiExplorer();
+
         return services;
     }
 }

@@ -8,6 +8,7 @@ using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using Scalar.AspNetCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder();
@@ -47,6 +48,14 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    app.MapScalarApiReference(
+        "/scalar",
+        options =>
+        {
+            options.WithOpenApiRoutePattern("/swagger/v1/swagger.json");
+        }
+    );
 }
 
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
@@ -70,6 +79,9 @@ if (seedOptions?.IsSeedDatabase == true)
     await seeder.SeedAsync();
 }
 
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/", () => "Hello World!")
+    .WithTags("HelloWorld")
+    .WithSummary("Root endpoint")
+    .WithDescription("Returns hello world message");
 
 app.Run();
