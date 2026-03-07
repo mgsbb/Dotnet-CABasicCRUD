@@ -57,4 +57,31 @@
             Edit
         </button>
     </form>
+
+    <form asp-controller="Users" asp-action="EditUserPassword" method="post"
+          asp-route-id="@ViewContext.RouteData.Values["id"]" class="flex flex-col gap-10 w-3/4 mx-auto">
+        <h2 class="font-semibold text-2xl">User Password</h2>
+
+        <div class="flex flex-col gap-1">
+            <label for="OldPassword" class="font-medium text-gray-500">Old Password</label>
+            <input type="password" asp-for="OldPassword" class="border border-gray-300 rounded-sm p-2" />
+            <span asp-validation-for="OldPassword" class="text-sm font-semibold text-red-600"></span>
+        </div>
+
+        <div class="flex flex-col gap-1">
+            <label for="NewPassword" class="font-medium text-gray-500">New Password</label>
+            <input type="password" asp-for="NewPassword" class="border border-gray-300 rounded-sm p-2" />
+            <span asp-validation-for="NewPassword" class="text-sm font-semibold text-red-600"></span>
+        </div>
+
+        <div class="flex flex-col gap-1">
+            <label for="NewPasswordConfirmed" class="font-medium text-gray-500">Confirm New Password</label>
+            <input type="password" asp-for="NewPasswordConfirmed" class="border border-gray-300 rounded-sm p-2" />
+            <span asp-validation-for="NewPasswordConfirmed" class="text-sm font-semibold text-red-600"></span>
+        </div>
+
+        <button type="submit" class="bg-gray-900 text-white py-3 rounded-sm cursor-pointer font-semibold text-sm">
+            Edit
+        </button>
+    </form>
 </section>

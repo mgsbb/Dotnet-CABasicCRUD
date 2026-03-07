@@ -1,4 +1,5 @@
 using CABasicCRUD.Application.Common.Interfaces;
+using CABasicCRUD.Application.Features.Identity.Auth.Commands;
 using CABasicCRUD.Application.Features.Identity.Auth.Common;
 using CABasicCRUD.Application.Features.Identity.Users.Commands;
 using CABasicCRUD.Application.Features.Identity.Users.Common;
@@ -8,6 +9,7 @@ using CABasicCRUD.Application.Features.Posts.Posts.Common;
 using CABasicCRUD.Application.Features.Posts.Posts.Queries.SearchPosts;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Presentation.WebMvc.Common;
 using CABasicCRUD.Presentation.WebMvc.Models.Posts;
 using CABasicCRUD.Presentation.WebMvc.Models.Users;
 using MediatR;
@@ -22,11 +24,17 @@ public sealed class UsersController : Controller
 {
     private readonly IMediator _mediator;
     private readonly ICurrentUser _currentUser;
+    private readonly IConfiguration _configuration;
 
-    public UsersController(IMediator mediator, ICurrentUser currentUser)
+    public UsersController(
+        IMediator mediator,
+        ICurrentUser currentUser,
+        IConfiguration configuration
+    )
     {
         _mediator = mediator;
         _currentUser = currentUser;
+        _configuration = configuration;
     }
 
     [HttpGet("")]
@@ -201,6 +209,76 @@ public sealed class UsersController : Controller
         }
 
         TempData["SuccessMessage"] = "User email updated successfully!";
+
+        return View("Edit");
+        // return RedirectToAction(nameof(Details), new { id = result.Value.Id.Value });
+    }
+
+    [HttpPost("{id}/edit/password")]
+    public async Task<IActionResult> EditUserPassword(UserEditViewModel model, Guid id)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        if (
+            model.OldPassword is null
+            || model.NewPassword is null
+            || model.NewPasswordConfirmed is null
+        )
+        {
+            ModelState.AddModelError(string.Empty, "Please fill out all password fields.");
+            return View("Edit");
+        }
+
+        UpdateUserPasswordCommand command = new(
+            (UserId)id,
+            model.OldPassword,
+            model.NewPassword,
+            model.NewPasswordConfirmed
+        );
+        Result<TokenResult> result = await _mediator.Send(command);
+
+        if (result.IsFailure)
+        {
+            if (result.Error is null)
+                throw new InvalidOperationException();
+
+            if (result.Error == AuthErrors.Forbidden)
+            {
+                ModelState.AddModelError(string.Empty, "Cannot edit another user");
+            }
+            else if (
+                result.Error == AuthErrors.PasswordsMismatch
+                || result.Error == AuthErrors.InvalidPassword
+            )
+            {
+                ModelState.AddModelError(string.Empty, result.Error.Message.ToString());
+            }
+            else if (result is IValidationResult validationResult)
+            {
+                string passwordErrorMessage = "";
+
+                foreach (var e in validationResult.Errors)
+                {
+                    if (e.Code == "NewPassword")
+                        passwordErrorMessage += $" {e.Message}";
+                }
+                ModelState.AddModelError(nameof(model.NewPassword), passwordErrorMessage);
+            }
+
+            return View("Edit");
+        }
+
+        TempData["SuccessMessage"] = "User password updated successfully!";
+
+        // replaces the current access_token in the browser, but does not revoke it, meaning the old token can still be used
+        Response.Cookies.Append(
+            "access_token",
+            result.Value.Token,
+            CookieOptionsFactory.CreateAccessTokenCookieOptions(_configuration)
+        );
 
         return View("Edit");
         // return RedirectToAction(nameof(Details), new { id = result.Value.Id.Value });

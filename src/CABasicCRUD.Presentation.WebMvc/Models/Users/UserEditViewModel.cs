@@ -12,5 +12,9 @@ public class UserEditViewModel
     [EmailAddress]
     public string? Email { get; set; } = default!;
 
-    public string? Password { get; set; } = default!;
+    public string? OldPassword { get; set; } = default!;
+
+    public string? NewPassword { get; set; } = default!;
+
+    public string? NewPasswordConfirmed { get; set; } = default!;
 }
