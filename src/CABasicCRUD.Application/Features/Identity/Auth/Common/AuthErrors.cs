@@ -19,6 +19,11 @@ public static class AuthErrors
         "Given email or password found to be incorrect."
     );
 
+    public static readonly Error InvalidPassword = new(
+        "Auth.InvalidPassword",
+        "Given password found to be incorrect."
+    );
+
     public static readonly Error Forbidden = new(
         "Auth.Forbidden",
         "Requested action cannot be performed."
@@ -26,5 +31,9 @@ public static class AuthErrors
     public static readonly Error Unauthenticated = new(
         "Auth.Unauthenticated",
         "User unauthenticated."
+    );
+    public static readonly Error PasswordsMismatch = new(
+        "Auth.PasswordsMismatch",
+        "Passwords don't match."
     );
 }

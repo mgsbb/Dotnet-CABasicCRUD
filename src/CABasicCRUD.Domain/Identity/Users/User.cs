@@ -110,4 +110,15 @@ public class User : AggregateRoot<UserId>
         UpdatedAt = DateTime.UtcNow;
         return Result.Success();
     }
+
+    public Result UpdatePassword(string password, IPasswordHasher passwordHasher)
+    {
+        string passwordHash = HashPassword(password, passwordHasher);
+
+        PasswordHash = passwordHash;
+
+        UpdatedAt = DateTime.UtcNow;
+
+        return Result.Success();
+    }
 }
