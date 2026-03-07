@@ -132,4 +132,15 @@ public class AuthController : Controller
 
         return RedirectToAction("Index", "Home");
     }
+
+    [HttpPost]
+    public async Task<IActionResult> Logout()
+    {
+        Response.Cookies.Delete(
+            "access_token",
+            CookieOptionsFactory.CreateAccessTokenCookieOptions(_configuration)
+        );
+
+        return RedirectToAction("Login", "Auth");
+    }
 }
