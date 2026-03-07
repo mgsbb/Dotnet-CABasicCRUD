@@ -17,6 +17,9 @@ using Microsoft.AspNetCore.RateLimiting;
 
 namespace CABasicCRUD.Presentation.WebApi.Features.Comments;
 
+// ========================================================================================================================
+// ========================================================================================================================
+
 [EnableRateLimiting(RateLimitPolicies.Authenticated)]
 [ApiController]
 [Route("/api/v1/[controller]")]
@@ -24,6 +27,8 @@ public class CommentsController(IMediator mediator, ICurrentUser currentUser) : 
 {
     private readonly IMediator _mediator = mediator;
     private readonly ICurrentUser _currentUser = currentUser;
+
+    // ========================================================================================================================
 
     [HttpGet("{id}")]
     [ProducesResponseType(type: typeof(CommentResponse), statusCode: StatusCodes.Status200OK)]
@@ -43,6 +48,8 @@ public class CommentsController(IMediator mediator, ICurrentUser currentUser) : 
 
         return Ok(commentResponse);
     }
+
+    // ========================================================================================================================
 
     [Authorize]
     [HttpPatch("{id}")]
@@ -68,6 +75,8 @@ public class CommentsController(IMediator mediator, ICurrentUser currentUser) : 
         return NoContent();
     }
 
+    // ========================================================================================================================
+
     [Authorize]
     [HttpDelete("{id}")]
     [ProducesResponseType(statusCode: StatusCodes.Status204NoContent)]
@@ -86,6 +95,8 @@ public class CommentsController(IMediator mediator, ICurrentUser currentUser) : 
 
         return NoContent();
     }
+
+    // ========================================================================================================================
 
     private ObjectResult HandleResultFailure(Result result)
     {
@@ -127,3 +138,6 @@ public class CommentsController(IMediator mediator, ICurrentUser currentUser) : 
         return HandleProblem(StatusCodes.Status500InternalServerError);
     }
 }
+
+// ========================================================================================================================
+// ========================================================================================================================

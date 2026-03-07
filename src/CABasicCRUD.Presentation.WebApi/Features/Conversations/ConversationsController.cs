@@ -18,12 +18,17 @@ using Microsoft.AspNetCore.RateLimiting;
 
 namespace CABasicCRUD.Presentation.WebApi.Features.Conversations;
 
+// ========================================================================================================================
+// ========================================================================================================================
+
 [EnableRateLimiting(RateLimitPolicies.Authenticated)]
 [ApiController]
 [Route("/api/v1/[controller]")]
 public class ConversationsController(IMediator mediator) : ApiController
 {
     private readonly IMediator _mediator = mediator;
+
+    // ========================================================================================================================
 
     [Authorize]
     [HttpPost]
@@ -55,6 +60,8 @@ public class ConversationsController(IMediator mediator) : ApiController
         );
     }
 
+    // ========================================================================================================================
+
     [Authorize]
     [HttpGet("{id}")]
     [ProducesResponseType(type: typeof(ConversationResponse), statusCode: StatusCodes.Status200OK)]
@@ -72,6 +79,8 @@ public class ConversationsController(IMediator mediator) : ApiController
 
         return result.Value.ToConversationResponse();
     }
+
+    // ========================================================================================================================
 
     [Authorize]
     [HttpGet]
@@ -98,6 +107,8 @@ public class ConversationsController(IMediator mediator) : ApiController
         return Ok(result.Value.ToListConversationResponseWithoutMessages());
     }
 
+    // ========================================================================================================================
+
     [Authorize]
     [HttpPost("{id}/messages")]
     [ProducesResponseType(
@@ -122,6 +133,8 @@ public class ConversationsController(IMediator mediator) : ApiController
 
         return Ok(result.Value.ToMessageResponse());
     }
+
+    // ========================================================================================================================
 
     private ObjectResult HandleResultFailure(Result result)
     {
@@ -182,3 +195,6 @@ public class ConversationsController(IMediator mediator) : ApiController
         return HandleProblem(StatusCodes.Status500InternalServerError);
     }
 }
+
+// ========================================================================================================================
+// ========================================================================================================================

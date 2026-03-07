@@ -8,8 +8,12 @@ using CABasicCRUD.Domain.Identity.Users;
 
 namespace CABasicCRUD.Application.Features.Conversations.Conversations.Queries;
 
+// ========================================================================================================================
+
 public sealed record GetConversationByIdWithDetailsQuery(ConversationId ConversationId)
     : IQuery<ConversationDetailsResult>;
+
+// ========================================================================================================================
 
 public sealed record ConversationDetailsResult(
     ConversationId Id,
@@ -19,6 +23,8 @@ public sealed record ConversationDetailsResult(
     DateTime CreatedAt,
     DateTime? UpdatedAt
 );
+
+// ========================================================================================================================
 
 public sealed record MessageDetail(
     MessageId Id,
@@ -30,11 +36,15 @@ public sealed record MessageDetail(
     DateTime? UpdatedAt
 );
 
+// ========================================================================================================================
+
 public sealed record ConversationParticipantDetail(
     UserId ParticipantUserId,
     string ParticipantUsername,
     string ParticipantFullName
 );
+
+// ========================================================================================================================
 
 internal sealed class GetConversationByIdWithDetailsQueryHandler(
     IConversationReadService conversationReadService,
@@ -68,3 +78,5 @@ internal sealed class GetConversationByIdWithDetailsQueryHandler(
         return conversation;
     }
 }
+
+// ========================================================================================================================

@@ -7,6 +7,8 @@ using FluentValidation;
 
 namespace CABasicCRUD.Application.Features.Identity.Auth.Commands;
 
+// ========================================================================================================================
+
 public sealed record UpdateUserPasswordCommand(
     UserId UserId,
     string OldPassword,
@@ -14,7 +16,11 @@ public sealed record UpdateUserPasswordCommand(
     string NewPasswordConfirmed
 ) : ICommand<TokenResult>;
 
+// ========================================================================================================================
+
 public sealed record TokenResult(string Token);
+
+// ========================================================================================================================
 
 internal sealed class UpdateUserPasswordCommandHandler(
     ICurrentUser currentUser,
@@ -61,6 +67,8 @@ internal sealed class UpdateUserPasswordCommandHandler(
     }
 }
 
+// ========================================================================================================================
+
 public sealed class UpdateUserPasswordCommandValidator
     : AbstractValidator<UpdateUserPasswordCommand>
 {
@@ -85,3 +93,5 @@ public sealed class UpdateUserPasswordCommandValidator
             .WithMessage(AuthValidationErrorMessages.PasswordWhitespace);
     }
 }
+
+// ========================================================================================================================

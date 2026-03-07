@@ -4,14 +4,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CABasicCRUD.Infrastructure.Persistence.Sqlite.ReadServices;
 
+// ========================================================================================================================
+// ========================================================================================================================
+
 public sealed class UserReadService(ApplicationDbContext dbContext) : IUserReadService
 {
     private readonly DbSet<User> _dbSet = dbContext.Set<User>();
+
+    // ========================================================================================================================
 
     public async Task<User?> GetByEmailAsync(string email)
     {
         return await _dbSet.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email);
     }
+
+    // ========================================================================================================================
 
     public async Task<IReadOnlyList<User>> SearchUsersAsync(
         string searchTerm,
@@ -45,6 +52,8 @@ public sealed class UserReadService(ApplicationDbContext dbContext) : IUserReadS
         return users;
     }
 
+    // ========================================================================================================================
+
     private static IQueryable<User> ApplyOrdering(
         IQueryable<User> query,
         UserOrderBy orderBy,
@@ -63,13 +72,20 @@ public sealed class UserReadService(ApplicationDbContext dbContext) : IUserReadS
         };
     }
 
+    // ========================================================================================================================
+
     public async Task<User?> GetByUsernameAsync(string username)
     {
         return await _dbSet.AsNoTracking().FirstOrDefaultAsync(u => u.Username == username);
     }
+
+    // ========================================================================================================================
 
     public async Task<User?> GetByIdAsync(UserId userId)
     {
         return await _dbSet.AsNoTracking().FirstOrDefaultAsync(u => u.Id == userId);
     }
 }
+
+// ========================================================================================================================
+// ========================================================================================================================

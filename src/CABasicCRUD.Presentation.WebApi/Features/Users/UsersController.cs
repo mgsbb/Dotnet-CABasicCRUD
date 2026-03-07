@@ -16,12 +16,17 @@ using Microsoft.AspNetCore.RateLimiting;
 
 namespace CABasicCRUD.Presentation.WebApi.Features.Users;
 
+// ========================================================================================================================
+// ========================================================================================================================
+
 [EnableRateLimiting(RateLimitPolicies.Authenticated)]
 [ApiController]
 [Route("/api/v1/[controller]")]
 public sealed class UsersController(IMediator mediator) : ApiController
 {
     private readonly IMediator _mediator = mediator;
+
+    // ========================================================================================================================
 
     [HttpGet("{id}")]
     [ProducesResponseType(type: typeof(UserResponse), statusCode: StatusCodes.Status200OK)]
@@ -41,6 +46,8 @@ public sealed class UsersController(IMediator mediator) : ApiController
 
         return Ok(userResponse);
     }
+
+    // ========================================================================================================================
 
     [Authorize]
     [HttpPatch("{id}")]
@@ -80,6 +87,8 @@ public sealed class UsersController(IMediator mediator) : ApiController
         return NoContent();
     }
 
+    // ========================================================================================================================
+
     [Authorize]
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -117,6 +126,8 @@ public sealed class UsersController(IMediator mediator) : ApiController
         return NoContent();
     }
 
+    // ========================================================================================================================
+
     private ObjectResult HandleResultFailure(Result result)
     {
         if (result.IsSuccess)
@@ -148,3 +159,6 @@ public sealed class UsersController(IMediator mediator) : ApiController
         return HandleProblem(StatusCodes.Status500InternalServerError);
     }
 }
+
+// ========================================================================================================================
+// ========================================================================================================================

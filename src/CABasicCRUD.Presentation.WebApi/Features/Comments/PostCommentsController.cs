@@ -16,6 +16,9 @@ using Microsoft.AspNetCore.RateLimiting;
 
 namespace CABasicCRUD.Presentation.WebApi.Features.Comments;
 
+// ========================================================================================================================
+// ========================================================================================================================
+
 [EnableRateLimiting(RateLimitPolicies.Authenticated)]
 [ApiController]
 [Route("/api/v1/posts/{postId:guid}/comments")]
@@ -23,6 +26,8 @@ public class PostCommentsController(IMediator mediator, ICurrentUser currentUser
 {
     private readonly IMediator _mediator = mediator;
     private readonly ICurrentUser _currentUser = currentUser;
+
+    // ========================================================================================================================
 
     [Authorize]
     [HttpPost]
@@ -57,6 +62,8 @@ public class PostCommentsController(IMediator mediator, ICurrentUser currentUser
         );
     }
 
+    // ========================================================================================================================
+
     [HttpGet]
     [ProducesResponseType(
         type: typeof(IReadOnlyList<CommentResponse>),
@@ -77,6 +84,8 @@ public class PostCommentsController(IMediator mediator, ICurrentUser currentUser
 
         return Ok(commentResponses);
     }
+
+    // ========================================================================================================================
 
     private ObjectResult HandleResultFailure(Result result)
     {
@@ -118,3 +127,6 @@ public class PostCommentsController(IMediator mediator, ICurrentUser currentUser
         return HandleProblem(StatusCodes.Status500InternalServerError);
     }
 }
+
+// ========================================================================================================================
+// ========================================================================================================================

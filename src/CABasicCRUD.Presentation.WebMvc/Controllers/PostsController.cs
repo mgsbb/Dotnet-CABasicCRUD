@@ -20,6 +20,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CABasicCRUD.Presentation.WebMvc.Controllers;
 
+// ========================================================================================================================
+// ========================================================================================================================
+
 [Authorize]
 [Route("posts")]
 public class PostsController : Controller
@@ -32,6 +35,8 @@ public class PostsController : Controller
         _mediator = mediator;
         _currentUser = currentUser;
     }
+
+    // ========================================================================================================================
 
     [HttpGet("")]
     public async Task<IActionResult> Index(PostListViewModel model)
@@ -73,6 +78,8 @@ public class PostsController : Controller
 
         return View(viewModel);
     }
+
+    // ========================================================================================================================
 
     [HttpGet("{id}")]
     public async Task<IActionResult> Details(Guid id)
@@ -122,6 +129,8 @@ public class PostsController : Controller
         return View(viewModel);
     }
 
+    // ========================================================================================================================
+
     [HttpPost("/posts/{id}/comments")]
     public async Task<IActionResult> CreateComment(
         Guid id,
@@ -144,8 +153,12 @@ public class PostsController : Controller
         return RedirectToAction(nameof(Details), new { id });
     }
 
+    // ========================================================================================================================
+
     [HttpGet("create")]
     public IActionResult Create() => View();
+
+    // ========================================================================================================================
 
     [HttpPost("create")]
     public async Task<IActionResult> Create(PostCreateViewModel model)
@@ -171,8 +184,12 @@ public class PostsController : Controller
         // return RedirectToAction(nameof(Details), new { id = result.Value.Id.Value });
     }
 
+    // ========================================================================================================================
+
     [HttpGet("{id}/edit")]
     public IActionResult Edit() => View();
+
+    // ========================================================================================================================
 
     [HttpPost("{id}/edit")]
     public async Task<IActionResult> Edit(PostEditViewModel model, Guid id)
@@ -216,6 +233,8 @@ public class PostsController : Controller
         // return RedirectToAction(nameof(Details), new { id = result.Value.Id.Value });
     }
 
+    // ========================================================================================================================
+
     [HttpGet("{id}/delete")]
     public async Task<IActionResult> DeleteAsync(Guid id)
     {
@@ -235,6 +254,8 @@ public class PostsController : Controller
 
         return View(viewModel);
     }
+
+    // ========================================================================================================================
 
     [HttpPost("{id}/delete")]
     public async Task<IActionResult> DeleteAsync(PostDeleteViewModel model, Guid id)
@@ -258,3 +279,6 @@ public class PostsController : Controller
         return RedirectToAction(nameof(Index));
     }
 }
+
+// ========================================================================================================================
+// ========================================================================================================================

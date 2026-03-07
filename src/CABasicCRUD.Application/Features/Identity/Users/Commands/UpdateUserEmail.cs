@@ -8,7 +8,11 @@ using FluentValidation;
 
 namespace CABasicCRUD.Application.Features.Identity.Users.Commands;
 
+// ========================================================================================================================
+
 public sealed record UpdateUserEmailCommand(UserId UserId, string Email) : ICommand;
+
+// ========================================================================================================================
 
 internal sealed class UpdateUserEmailCommandHandler(
     IUserReadService userReadService,
@@ -49,6 +53,8 @@ internal sealed class UpdateUserEmailCommandHandler(
     }
 }
 
+// ========================================================================================================================
+
 public sealed class UpdateUserEmailCommandValidator : AbstractValidator<UpdateUserEmailCommand>
 {
     public UpdateUserEmailCommandValidator()
@@ -59,3 +65,5 @@ public sealed class UpdateUserEmailCommandValidator : AbstractValidator<UpdateUs
             .EmailAddress();
     }
 }
+
+// ========================================================================================================================

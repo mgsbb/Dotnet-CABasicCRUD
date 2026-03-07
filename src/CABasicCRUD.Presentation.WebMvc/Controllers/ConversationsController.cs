@@ -8,13 +8,15 @@ using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Conversations.Conversations;
 using CABasicCRUD.Domain.Identity.Users;
 using CABasicCRUD.Presentation.WebMvc.Models.Conversations;
-using CABasicCRUD.Presentation.WebMvc.Models.Users;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ConversationErrors = CABasicCRUD.Application.Features.Conversations.Conversations.Common.ConversationErrors;
 
 namespace CABasicCRUD.Presentation.WebMvc.Controllers;
+
+// ========================================================================================================================
+// ========================================================================================================================
 
 [Authorize]
 [Route("conversations")]
@@ -23,6 +25,8 @@ public sealed class ConversationsController(ICurrentUser currentUser, IMediator 
 {
     private readonly ICurrentUser _currentUser = currentUser;
     private readonly IMediator _mediator = mediator;
+
+    // ========================================================================================================================
 
     [HttpGet("{id}")]
     public async Task<IActionResult> Details(Guid id)
@@ -71,6 +75,8 @@ public sealed class ConversationsController(ICurrentUser currentUser, IMediator 
         return View(model);
     }
 
+    // ========================================================================================================================
+
     [HttpPost]
     public async Task<IActionResult> StartPrivateConversation(Guid targetUserId)
     {
@@ -100,6 +106,8 @@ public sealed class ConversationsController(ICurrentUser currentUser, IMediator 
         return RedirectToAction(nameof(Details), new { id = result.Value.Id.Value });
     }
 
+    // ========================================================================================================================
+
     [HttpPost("{id}/messages")]
     public async Task<IActionResult> SendMessage(
         [Bind(Prefix = "NewMessage")] MessageCreateViewModel model,
@@ -122,3 +130,6 @@ public sealed class ConversationsController(ICurrentUser currentUser, IMediator 
         return RedirectToAction(nameof(Details), new { id });
     }
 }
+
+// ========================================================================================================================
+// ========================================================================================================================

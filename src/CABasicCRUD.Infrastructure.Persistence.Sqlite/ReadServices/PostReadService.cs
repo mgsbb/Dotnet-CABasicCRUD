@@ -6,10 +6,15 @@ using SortDirection = CABasicCRUD.Application.Features.Posts.Posts.Common.SortDi
 
 namespace CABasicCRUD.Infrastructure.Persistence.Sqlite.ReadServices;
 
+// ========================================================================================================================
+// ========================================================================================================================
+
 public class PostReadService(ApplicationDbContext dbContext) : IPostReadService
 {
     private readonly DbSet<Post> _dbSet = dbContext.Set<Post>();
     protected readonly ApplicationDbContext _dbContext = dbContext;
+
+    // ========================================================================================================================
 
     public async Task<IReadOnlyList<PostWithAuthorResult>> SearchPostsAsync(
         string searchTerm,
@@ -63,6 +68,8 @@ public class PostReadService(ApplicationDbContext dbContext) : IPostReadService
         return posts;
     }
 
+    // ========================================================================================================================
+
     private static IQueryable<Post> ApplyOrdering(
         IQueryable<Post> query,
         PostOrderBy orderBy,
@@ -80,6 +87,8 @@ public class PostReadService(ApplicationDbContext dbContext) : IPostReadService
             _ => query.OrderByDescending(p => p.CreatedAt),
         };
     }
+
+    // ========================================================================================================================
 
     public async Task<PostWithAuthorResult?> GetPostByIdWithAuthor(
         PostId postId,
@@ -104,10 +113,14 @@ public class PostReadService(ApplicationDbContext dbContext) : IPostReadService
             .FirstOrDefaultAsync(cancellationToken);
     }
 
+    // ========================================================================================================================
+
     public async Task<IReadOnlyList<Post>> GetAllAsync()
     {
         return await _dbSet.AsNoTracking().ToListAsync();
     }
+
+    // ========================================================================================================================
 
     public async Task<Post?> GetByIdAsync(PostId id)
     {

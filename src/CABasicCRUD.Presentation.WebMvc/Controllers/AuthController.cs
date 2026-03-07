@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CABasicCRUD.Presentation.WebMvc.Controllers;
 
+// ========================================================================================================================
+// ========================================================================================================================
+
 public class AuthController : Controller
 {
     private readonly IMediator _mediator;
@@ -27,6 +30,8 @@ public class AuthController : Controller
         _configuration = configuration;
     }
 
+    // ========================================================================================================================
+
     [HttpGet]
     public IActionResult Register()
     {
@@ -37,6 +42,8 @@ public class AuthController : Controller
 
         return View();
     }
+
+    // ========================================================================================================================
 
     [HttpPost]
     public async Task<IActionResult> Register(RegisterViewModel model)
@@ -88,6 +95,8 @@ public class AuthController : Controller
         return RedirectToAction("Index", "Home");
     }
 
+    // ========================================================================================================================
+
     [HttpGet]
     public IActionResult Login()
     {
@@ -98,6 +107,8 @@ public class AuthController : Controller
 
         return View();
     }
+
+    // ========================================================================================================================
 
     [HttpPost]
     public async Task<IActionResult> Login(LoginViewModel model)
@@ -133,6 +144,8 @@ public class AuthController : Controller
         return RedirectToAction("Index", "Home");
     }
 
+    // ========================================================================================================================
+
     [HttpPost]
     public async Task<IActionResult> Logout()
     {
@@ -144,3 +157,6 @@ public class AuthController : Controller
         return RedirectToAction("Login", "Auth");
     }
 }
+
+// ========================================================================================================================
+// ========================================================================================================================

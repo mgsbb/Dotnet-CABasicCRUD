@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CABasicCRUD.Presentation.WebMvc.Controllers;
 
+// ========================================================================================================================
+// ========================================================================================================================
+
 public class HomeController : Controller
 {
     private readonly ICurrentUser _currentUser;
@@ -14,6 +17,8 @@ public class HomeController : Controller
         _logger = logger;
     }
 
+    // ========================================================================================================================
+
     public IActionResult Index()
     {
         if (_currentUser.IsAuthenticated)
@@ -24,11 +29,15 @@ public class HomeController : Controller
         return View("Landing");
     }
 
+    // ========================================================================================================================
+
     public new IActionResult NotFound()
     {
         Response.StatusCode = 404;
         return View();
     }
+
+    // ========================================================================================================================
 
     [Route("Home/Error")]
     public IActionResult Error()
@@ -36,6 +45,8 @@ public class HomeController : Controller
         Response.StatusCode = 500;
         return View();
     }
+
+    // ========================================================================================================================
 
     [Route("Home/StatusCode")]
     public new IActionResult StatusCode(int code)
@@ -45,3 +56,6 @@ public class HomeController : Controller
         return code == 404 ? View("NotFound") : View("Error");
     }
 }
+
+// ========================================================================================================================
+// ========================================================================================================================

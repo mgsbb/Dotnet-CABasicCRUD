@@ -6,10 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CABasicCRUD.Infrastructure.Persistence.PostgreSql.ReadServices;
 
+// ========================================================================================================================
+
 public sealed class ConversationReadService(ApplicationDbContext dbContext)
     : IConversationReadService
 {
     private readonly DbSet<Conversation> _dbSet = dbContext.Set<Conversation>();
+
+    // ========================================================================================================================
 
     public async Task<Conversation?> GetByIdAsync(ConversationId conversationId)
     {
@@ -17,6 +21,8 @@ public sealed class ConversationReadService(ApplicationDbContext dbContext)
             .AsNoTracking()
             .FirstOrDefaultAsync(conversation => conversation.Id == conversationId);
     }
+
+    // ========================================================================================================================
 
     public async Task<ConversationDetailsResult?> GetConversationByIdWithDetails(
         ConversationId conversationId
@@ -63,6 +69,8 @@ public sealed class ConversationReadService(ApplicationDbContext dbContext)
             .FirstOrDefaultAsync();
     }
 
+    // ========================================================================================================================
+
     public async Task<IReadOnlyList<Conversation>> GetConversationsOfUser(UserId userId)
     {
         // how to return conversations without loading the messages?
@@ -71,6 +79,8 @@ public sealed class ConversationReadService(ApplicationDbContext dbContext)
             .Where(conversation => conversation.Participants.Any(cp => cp.UserId == userId))
             .ToListAsync();
     }
+
+    // ========================================================================================================================
 
     public async Task<Conversation?> GetPrivateConversationAsync(
         UserId initiatorUserId,
@@ -87,3 +97,6 @@ public sealed class ConversationReadService(ApplicationDbContext dbContext)
             .FirstOrDefaultAsync(cancellationToken);
     }
 }
+
+// ========================================================================================================================
+// ========================================================================================================================

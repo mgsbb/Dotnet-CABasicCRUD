@@ -18,6 +18,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CABasicCRUD.Presentation.WebMvc.Controllers;
 
+// ========================================================================================================================
+// ========================================================================================================================
+
 [Authorize]
 [Route("users")]
 public sealed class UsersController : Controller
@@ -36,6 +39,8 @@ public sealed class UsersController : Controller
         _currentUser = currentUser;
         _configuration = configuration;
     }
+
+    // ========================================================================================================================
 
     [HttpGet("")]
     public async Task<IActionResult> Index(UserListViewModel model)
@@ -71,6 +76,8 @@ public sealed class UsersController : Controller
 
         return View(viewModel);
     }
+
+    // ========================================================================================================================
 
     [HttpGet("{id}")]
     public async Task<IActionResult> Details(Guid id, UserDetailsViewModel model)
@@ -132,8 +139,12 @@ public sealed class UsersController : Controller
         return View(viewModel);
     }
 
+    // ========================================================================================================================
+
     [HttpGet("{id}/edit")]
     public IActionResult Edit() => View();
+
+    // ========================================================================================================================
 
     [HttpPost("{id}/edit/profile")]
     public async Task<IActionResult> EditUserProfile(UserEditViewModel model, Guid id)
@@ -174,6 +185,8 @@ public sealed class UsersController : Controller
         // return RedirectToAction(nameof(Details), new { id = result.Value.Id.Value });
     }
 
+    // ========================================================================================================================
+
     [HttpPost("{id}/edit/email")]
     public async Task<IActionResult> EditUserEmail(UserEditViewModel model, Guid id)
     {
@@ -213,6 +226,8 @@ public sealed class UsersController : Controller
         return View("Edit");
         // return RedirectToAction(nameof(Details), new { id = result.Value.Id.Value });
     }
+
+    // ========================================================================================================================
 
     [HttpPost("{id}/edit/password")]
     public async Task<IActionResult> EditUserPassword(UserEditViewModel model, Guid id)
@@ -284,3 +299,6 @@ public sealed class UsersController : Controller
         // return RedirectToAction(nameof(Details), new { id = result.Value.Id.Value });
     }
 }
+
+// ========================================================================================================================
+// ========================================================================================================================

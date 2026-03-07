@@ -8,8 +8,12 @@ using FluentValidation;
 
 namespace CABasicCRUD.Application.Features.Identity.Users.Commands;
 
+// ========================================================================================================================
+
 public sealed record UpdateUserProfileCommand(UserId UserId, string? FullName, string? Bio)
     : ICommand;
+
+// ========================================================================================================================
 
 internal sealed class UpdateUserProfileCommandHandler(
     IUserRepository userRepository,
@@ -42,6 +46,8 @@ internal sealed class UpdateUserProfileCommandHandler(
     }
 }
 
+// ========================================================================================================================
+
 public sealed class UpdateUserProfileCommandValidator : AbstractValidator<UpdateUserProfileCommand>
 {
     public UpdateUserProfileCommandValidator()
@@ -66,3 +72,5 @@ public sealed class UpdateUserProfileCommandValidator : AbstractValidator<Update
             .When(x => x.Bio is not null);
     }
 }
+
+// ========================================================================================================================

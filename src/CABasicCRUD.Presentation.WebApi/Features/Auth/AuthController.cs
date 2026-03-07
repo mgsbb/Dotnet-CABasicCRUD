@@ -13,6 +13,9 @@ using Microsoft.AspNetCore.RateLimiting;
 
 namespace CABasicCRUD.Presentation.WebApi.Features.Auth;
 
+// ========================================================================================================================
+// ========================================================================================================================
+
 [EnableRateLimiting(RateLimitPolicies.Anonymous)]
 [ApiController]
 [Route("/api/v1/[controller]")]
@@ -20,6 +23,8 @@ public sealed class AuthController(IMediator mediator, IConfiguration configurat
 {
     private readonly IMediator _mediator = mediator;
     private readonly IConfiguration _configuration = configuration;
+
+    // ========================================================================================================================
 
     [HttpPost("register")]
     [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status201Created)]
@@ -56,6 +61,8 @@ public sealed class AuthController(IMediator mediator, IConfiguration configurat
         );
     }
 
+    // ========================================================================================================================
+
     [HttpPost("login")]
     [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -80,6 +87,8 @@ public sealed class AuthController(IMediator mediator, IConfiguration configurat
 
         return Ok(authResponse);
     }
+
+    // ========================================================================================================================
 
     private ObjectResult HandleResultFailure(Result result)
     {
@@ -117,3 +126,6 @@ public sealed class AuthController(IMediator mediator, IConfiguration configurat
         return HandleProblem(StatusCodes.Status500InternalServerError);
     }
 }
+
+// ========================================================================================================================
+// ========================================================================================================================

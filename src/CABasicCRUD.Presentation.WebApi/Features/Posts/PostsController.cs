@@ -19,6 +19,9 @@ using Microsoft.AspNetCore.RateLimiting;
 
 namespace CABasicCRUD.Presentation.WebApi.Features.Posts;
 
+// ========================================================================================================================
+// ========================================================================================================================
+
 [EnableRateLimiting(RateLimitPolicies.Authenticated)]
 [ApiController]
 [Route("/api/v1/[controller]")]
@@ -26,6 +29,8 @@ public class PostsController(IMediator mediator, ICurrentUser currentUser) : Api
 {
     private readonly IMediator _mediator = mediator;
     private readonly ICurrentUser _currentUser = currentUser;
+
+    // ========================================================================================================================
 
     [Authorize]
     [HttpPost]
@@ -56,6 +61,8 @@ public class PostsController(IMediator mediator, ICurrentUser currentUser) : Api
         );
     }
 
+    // ========================================================================================================================
+
     [HttpGet("{id}")]
     [ProducesResponseType(type: typeof(PostResponse), statusCode: StatusCodes.Status200OK)]
     [ProducesResponseType(statusCode: StatusCodes.Status404NotFound)]
@@ -75,6 +82,8 @@ public class PostsController(IMediator mediator, ICurrentUser currentUser) : Api
         return Ok(postResponse);
     }
 
+    // ========================================================================================================================
+
     [HttpGet]
     [ProducesResponseType(
         type: typeof(IReadOnlyList<PostResponse>),
@@ -93,6 +102,8 @@ public class PostsController(IMediator mediator, ICurrentUser currentUser) : Api
 
         return Ok(postResponses);
     }
+
+    // ========================================================================================================================
 
     [Authorize]
     [HttpPatch("{id}")]
@@ -119,6 +130,8 @@ public class PostsController(IMediator mediator, ICurrentUser currentUser) : Api
         return NoContent();
     }
 
+    // ========================================================================================================================
+
     [Authorize]
     [HttpDelete("{id}")]
     [ProducesResponseType(statusCode: StatusCodes.Status204NoContent)]
@@ -137,6 +150,8 @@ public class PostsController(IMediator mediator, ICurrentUser currentUser) : Api
 
         return NoContent();
     }
+
+    // ========================================================================================================================
 
     private ObjectResult HandleResultFailure(Result result)
     {
@@ -169,3 +184,6 @@ public class PostsController(IMediator mediator, ICurrentUser currentUser) : Api
         return HandleProblem(StatusCodes.Status500InternalServerError);
     }
 }
+
+// ========================================================================================================================
+// ========================================================================================================================

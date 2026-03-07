@@ -13,12 +13,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CABasicCRUD.Presentation.WebMvc.Controllers;
 
+// ========================================================================================================================
+// ========================================================================================================================
+
 [Authorize]
 [Route("comments")]
 public sealed class CommentsController(IMediator mediator, ICurrentUser currentUser) : Controller
 {
     private readonly IMediator _mediator = mediator;
     private readonly ICurrentUser _currentUser = currentUser;
+
+    // ========================================================================================================================
 
     [HttpGet("{id}/delete")]
     public async Task<IActionResult> DeleteAsync(Guid id)
@@ -40,6 +45,8 @@ public sealed class CommentsController(IMediator mediator, ICurrentUser currentU
 
         return View(viewModel);
     }
+
+    // ========================================================================================================================
 
     [HttpPost("{id}/delete")]
     public async Task<IActionResult> DeleteAsync(CommentDeleteViewModel model, Guid id)
@@ -77,3 +84,6 @@ public sealed class CommentsController(IMediator mediator, ICurrentUser currentU
         );
     }
 }
+
+// ========================================================================================================================
+// ========================================================================================================================
