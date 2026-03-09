@@ -17,7 +17,7 @@ public class PostReadService(ApplicationDbContext dbContext) : IPostReadService
     // ========================================================================================================================
 
     public async Task<IReadOnlyList<PostWithAuthorResult>> SearchPostsAsync(
-        string searchTerm,
+        string? searchTerm,
         int page,
         int pageSize,
         PostOrderBy orderBy,

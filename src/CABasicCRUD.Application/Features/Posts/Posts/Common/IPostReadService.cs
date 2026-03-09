@@ -6,7 +6,7 @@ namespace CABasicCRUD.Application.Features.Posts.Posts.Common;
 public interface IPostReadService
 {
     Task<IReadOnlyList<PostWithAuthorResult>> SearchPostsAsync(
-        string searchTerm,
+        string? searchTerm,
         int page,
         int pageSize,
         PostOrderBy orderBy,

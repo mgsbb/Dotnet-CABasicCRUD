@@ -6,7 +6,7 @@ using SortDirection = CABasicCRUD.Application.Features.Posts.Posts.Common.SortDi
 namespace CABasicCRUD.Application.Features.Posts.Posts.Queries.SearchPosts;
 
 public sealed record SearchPostsQuery(
-    string SearchTerm,
+    string? SearchTerm,
     int Page,
     int PageSize,
     PostOrderBy OrderBy,
