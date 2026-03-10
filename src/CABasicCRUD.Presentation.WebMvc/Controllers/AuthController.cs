@@ -154,6 +154,8 @@ public class AuthController : Controller
             CookieOptionsFactory.CreateAccessTokenCookieOptions(_configuration)
         );
 
+        await Task.CompletedTask;
+
         return RedirectToAction("Login", "Auth");
     }
 }
