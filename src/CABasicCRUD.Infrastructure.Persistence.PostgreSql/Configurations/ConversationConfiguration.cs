@@ -35,6 +35,11 @@ public class ConversationConfiguration : IEntityTypeConfiguration<Conversation>
             .IsRequired()
             .HasConversion<string>();
 
+        builder
+            .Property(conversation => conversation.GroupTitle)
+            .IsRequired(false)
+            .HasMaxLength(100);
+
         builder.Metadata.FindNavigation(nameof(Conversation.Messages))!.SetField("_messages");
         builder
             .Metadata.FindNavigation(nameof(Conversation.Participants))!
