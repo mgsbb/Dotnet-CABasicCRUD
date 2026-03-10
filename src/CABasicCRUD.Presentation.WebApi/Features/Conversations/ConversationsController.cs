@@ -1,6 +1,7 @@
+using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Features.Conversations.Conversations.Commands.CreateConversation;
 using CABasicCRUD.Application.Features.Conversations.Conversations.Common;
-using CABasicCRUD.Application.Features.Conversations.Conversations.Queries.GetConversationById;
+using CABasicCRUD.Application.Features.Conversations.Conversations.Queries;
 using CABasicCRUD.Application.Features.Conversations.Conversations.Queries.GetConversationsOfUser;
 using CABasicCRUD.Application.Features.Conversations.Messages.Commands.SendMessage;
 using CABasicCRUD.Application.Features.Conversations.Messages.Common;
@@ -15,6 +16,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using ConversationErrorsApp = CABasicCRUD.Application.Features.Conversations.Conversations.Common.ConversationErrors;
+using ConversationErrorsDomain = CABasicCRUD.Domain.Conversations.Conversations.ConversationErrors;
 
 namespace CABasicCRUD.Presentation.WebApi.Features.Conversations;
 
@@ -24,9 +27,10 @@ namespace CABasicCRUD.Presentation.WebApi.Features.Conversations;
 [EnableRateLimiting(RateLimitPolicies.Authenticated)]
 [ApiController]
 [Route("/api/v1/[controller]")]
-public class ConversationsController(IMediator mediator) : ApiController
+public class ConversationsController(IMediator mediator, ICurrentUser currentUser) : ApiController
 {
     private readonly IMediator _mediator = mediator;
+    private readonly ICurrentUser _currentUser = currentUser;
 
     // ========================================================================================================================
 
@@ -42,7 +46,18 @@ public class ConversationsController(IMediator mediator) : ApiController
         [FromBody] CreateConversationRequest request
     )
     {
-        CreateConversationCommand command = new((UserId)request.UserId);
+        IReadOnlyList<UserId> participantUserIds = request
+            .ParticipantUserIds.Select(userGuid => (UserId)userGuid)
+            .ToList();
+
+        Enum.TryParse<ConversationType>(request.ConversationType, true, out var conversationType);
+
+        CreateConversationCommand command = new(
+            (UserId)_currentUser.UserId,
+            participantUserIds,
+            conversationType,
+            request.GroupTitle
+        );
 
         Result<ConversationResult> result = await _mediator.Send(command);
 
@@ -64,20 +79,23 @@ public class ConversationsController(IMediator mediator) : ApiController
 
     [Authorize]
     [HttpGet("{id}")]
-    [ProducesResponseType(type: typeof(ConversationResponse), statusCode: StatusCodes.Status200OK)]
+    [ProducesResponseType(
+        type: typeof(ConversationDetailsResponse),
+        statusCode: StatusCodes.Status200OK
+    )]
     [ProducesResponseType(statusCode: StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ConversationResponse?>> GetConversationById(Guid id)
+    public async Task<ActionResult<ConversationDetailsResponse?>> GetConversationById(Guid id)
     {
-        GetConversationByIdQuery query = new((ConversationId)id);
+        GetConversationByIdWithDetailsQuery query = new((ConversationId)id);
 
-        Result<ConversationResult> result = await _mediator.Send(query);
+        Result<ConversationDetailsResult> result = await _mediator.Send(query);
 
         if (result.IsFailure)
         {
             return HandleResultFailure(result);
         }
 
-        return result.Value.ToConversationResponse();
+        return result.Value.ToConversationDetailsResponse();
     }
 
     // ========================================================================================================================
@@ -164,10 +182,7 @@ public class ConversationsController(IMediator mediator) : ApiController
         {
             return HandleProblem(StatusCodes.Status403Forbidden, detail: result.Error.Message);
         }
-        if (
-            result.Error
-            == Application.Features.Conversations.Conversations.Common.ConversationErrors.NotFound
-        )
+        if (result.Error == ConversationErrorsApp.NotFound)
         {
             return HandleProblem(StatusCodes.Status404NotFound, detail: result.Error.Message);
         }
@@ -175,22 +190,20 @@ public class ConversationsController(IMediator mediator) : ApiController
         {
             return HandleProblem(StatusCodes.Status404NotFound, detail: result.Error.Message);
         }
-        if (
-            result.Error
-            == Application
-                .Features
-                .Conversations
-                .Conversations
-                .Common
-                .ConversationErrors
-                .ConversationWithSelf
-        )
+        if (result.Error == ConversationErrorsApp.ConversationWithSelf)
         {
             return HandleProblem(StatusCodes.Status409Conflict, detail: result.Error.Message);
         }
-        if (result.Error == Domain.Conversations.Conversations.ConversationErrors.NotAParticipant)
+        if (result.Error == ConversationErrorsDomain.NotAParticipant)
         {
             return HandleProblem(StatusCodes.Status403Forbidden, detail: result.Error.Message);
+        }
+        if (
+            result.Error == ConversationErrorsApp.InvalidParticipantCount
+            || result.Error == ConversationErrorsDomain.CreatorMustBeParticipant
+        )
+        {
+            return HandleProblem(StatusCodes.Status400BadRequest, detail: result.Error.Message);
         }
         return HandleProblem(StatusCodes.Status500InternalServerError);
     }

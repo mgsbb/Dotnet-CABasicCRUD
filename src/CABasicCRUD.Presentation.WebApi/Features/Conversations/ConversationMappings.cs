@@ -1,4 +1,5 @@
 using CABasicCRUD.Application.Features.Conversations.Conversations.Common;
+using CABasicCRUD.Application.Features.Conversations.Conversations.Queries;
 using CABasicCRUD.Presentation.WebApi.Features.Conversations.Contracts;
 
 namespace CABasicCRUD.Presentation.WebApi.Features.Conversations;
@@ -51,6 +52,40 @@ internal static class ConversationMappings
 
         return conversationResults
             .Select(conversation => conversation.ToConversationResponseWithoutMessages())
+            .ToList();
+    }
+
+    internal static ConversationDetailsResponse ToConversationDetailsResponse(
+        this ConversationDetailsResult result
+    )
+    {
+        return new(
+            result.Id.Value,
+            result.ConversationType,
+            result.Participants.ToListConversationParticipantDetailResponse(),
+            result.Messages.ToListMessageDetailResponse(),
+            result.CreatedAt,
+            result.UpdatedAt
+        );
+    }
+
+    internal static ConversationParticipantDetailResponse ToConversationParticipantDetailResponse(
+        this ConversationParticipantDetail conversationParticipantDetail
+    )
+    {
+        return new(
+            conversationParticipantDetail.ParticipantUserId.Value,
+            conversationParticipantDetail.ParticipantUsername,
+            conversationParticipantDetail.ParticipantFullName
+        );
+    }
+
+    internal static IReadOnlyList<ConversationParticipantDetailResponse> ToListConversationParticipantDetailResponse(
+        this IReadOnlyList<ConversationParticipantDetail> conversationParticipantDetails
+    )
+    {
+        return conversationParticipantDetails
+            .Select(cp => cp.ToConversationParticipantDetailResponse())
             .ToList();
     }
 }
