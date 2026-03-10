@@ -4,8 +4,8 @@ using CABasicCRUD.Application.Features.Posts.Posts.Commands.CreatePost;
 using CABasicCRUD.Application.Features.Posts.Posts.Commands.DeletePost;
 using CABasicCRUD.Application.Features.Posts.Posts.Commands.UpdatePost;
 using CABasicCRUD.Application.Features.Posts.Posts.Common;
-using CABasicCRUD.Application.Features.Posts.Posts.Queries.GetAllPosts;
-using CABasicCRUD.Application.Features.Posts.Posts.Queries.GetPostById;
+using CABasicCRUD.Application.Features.Posts.Posts.Queries.GetPostByIdWithAuthor;
+using CABasicCRUD.Application.Features.Posts.Posts.Queries.SearchPosts;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Identity.Users;
 using CABasicCRUD.Domain.Posts.Posts;
@@ -64,20 +64,23 @@ public class PostsController(IMediator mediator, ICurrentUser currentUser) : Api
     // ========================================================================================================================
 
     [HttpGet("{id}")]
-    [ProducesResponseType(type: typeof(PostResponse), statusCode: StatusCodes.Status200OK)]
+    [ProducesResponseType(
+        type: typeof(PostWithAuthorResponse),
+        statusCode: StatusCodes.Status200OK
+    )]
     [ProducesResponseType(statusCode: StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<PostResponse?>> GetPostById(Guid id)
+    public async Task<ActionResult<PostWithAuthorResponse?>> GetPostById(Guid id)
     {
-        GetPostByIdQuery query = new(PostId: (PostId)id);
+        GetPostByIdWithAuthorQuery query = new(PostId: (PostId)id);
 
-        Result<PostResult> result = await _mediator.Send(request: query);
+        Result<PostWithAuthorResult> result = await _mediator.Send(request: query);
 
         if (result.IsFailure || result.Value == null)
         {
             return HandleResultFailure(result);
         }
 
-        PostResponse postResponse = result.Value.ToPostResponse();
+        PostWithAuthorResponse postResponse = result.Value.ToPostWithAuthorResponse();
 
         return Ok(postResponse);
     }
@@ -86,19 +89,29 @@ public class PostsController(IMediator mediator, ICurrentUser currentUser) : Api
 
     [HttpGet]
     [ProducesResponseType(
-        type: typeof(IReadOnlyList<PostResponse>),
+        type: typeof(IReadOnlyList<PostWithAuthorResponse>),
         statusCode: StatusCodes.Status200OK
     )]
-    public async Task<ActionResult<IReadOnlyList<PostResponse>>> GetAllPosts()
+    public async Task<ActionResult<IReadOnlyList<PostWithAuthorResponse>>> SearchPosts(
+        [FromQuery] SearchPostsRequestQueryParams queryParams
+    )
     {
-        GetAllPostsQuery query = new();
+        SearchPostsQuery query = new(
+            queryParams.SearchTerm,
+            queryParams.Page,
+            queryParams.PageSize,
+            queryParams.PostOrderBy,
+            queryParams.SortDirection,
+            (UserId)queryParams.UserId! ?? null
+        );
 
-        Result<IReadOnlyList<PostResult>> result = await _mediator.Send(request: query);
+        Result<IReadOnlyList<PostWithAuthorResult>> result = await _mediator.Send(query);
 
         if (result.IsFailure || result.Value == null)
             return Ok();
 
-        IReadOnlyList<PostResponse> postResponses = result.Value.ToListPostResponse();
+        IReadOnlyList<PostWithAuthorResponse> postResponses =
+            result.Value.ToListPostWithAuthorResponse();
 
         return Ok(postResponses);
     }

@@ -26,4 +26,29 @@ internal static class PostMappings
 
         return posts.Select(post => post.ToPostResponse()).ToList();
     }
+
+    internal static PostWithAuthorResponse ToPostWithAuthorResponse(
+        this PostWithAuthorResult postWithAuthorResult
+    )
+    {
+        return new(
+            postWithAuthorResult.Id,
+            postWithAuthorResult.Title,
+            postWithAuthorResult.Content,
+            postWithAuthorResult.UserId,
+            postWithAuthorResult.AuthorName,
+            postWithAuthorResult.CreatedAt,
+            postWithAuthorResult.UpdatedAt
+        );
+    }
+
+    internal static IReadOnlyList<PostWithAuthorResponse> ToListPostWithAuthorResponse(
+        this IReadOnlyList<PostWithAuthorResult> posts
+    )
+    {
+        if (posts == null)
+            return new List<PostWithAuthorResponse>();
+
+        return posts.Select(post => post.ToPostWithAuthorResponse()).ToList();
+    }
 }
