@@ -13,4 +13,9 @@ public static class ConversationErrors
         "Conversation.NotFound",
         "Conversation with the given Id not found."
     );
+
+    public static readonly Error InvalidParticipantCount = new(
+        "Conversation.InvalidParticipantCount",
+        "Private conversation must have exactly 2 participants."
+    );
 }

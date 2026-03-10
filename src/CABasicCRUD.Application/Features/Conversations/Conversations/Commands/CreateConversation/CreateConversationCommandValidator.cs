@@ -8,6 +8,17 @@ public sealed class CreateConversationCommandValidator
 {
     public CreateConversationCommandValidator()
     {
-        RuleFor(x => x.UserId).NotEmpty().WithMessage(ConversationValidationErrorMessages.IdEmpty);
+        RuleFor(x => x.CreatorUserId)
+            .NotEmpty()
+            .WithMessage(ConversationValidationErrorMessages.IdEmpty);
+
+        RuleFor(x => x.GroupTitle)
+            .NotEmpty()
+            .WithMessage(ConversationValidationErrorMessages.IdEmpty)
+            .When(x => x.GroupTitle is not null);
+
+        RuleFor(x => x.ConversationType)
+            .IsInEnum()
+            .WithMessage(ConversationValidationErrorMessages.ConversationTypeInvalid);
     }
 }

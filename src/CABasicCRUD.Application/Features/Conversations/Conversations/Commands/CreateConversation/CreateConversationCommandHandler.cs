@@ -14,39 +14,53 @@ internal sealed class CreateConversationCommandHandler(
     IConversationRepository conversationRepository,
     IUnitOfWork unitOfWork,
     ICurrentUser currentUser,
-    IUserReadService userReadService
+    IUserReadService userReadService,
+    IConversationReadService conversationReadService
 ) : ICommandHandler<CreateConversationCommand, ConversationResult>
 {
     private readonly IConversationRepository _conversationRepository = conversationRepository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly ICurrentUser _currentUser = currentUser;
     private readonly IUserReadService _userReadService = userReadService;
+    private readonly IConversationReadService _conversationReadService = conversationReadService;
 
     public async Task<Result<ConversationResult>> Handle(
         CreateConversationCommand request,
         CancellationToken cancellationToken
     )
     {
-        if (!_currentUser.IsAuthenticated)
+        if (_currentUser.UserId != request.CreatorUserId)
         {
-            return Result<ConversationResult>.Failure(AuthErrors.Unauthenticated);
+            return Result<ConversationResult>.Failure(AuthErrors.Forbidden);
         }
 
-        if (_currentUser.UserId == request.UserId)
+        if (request.ConversationType == ConversationType.Private)
         {
-            return Result<ConversationResult>.Failure(ConversationErrors.ConversationWithSelf);
-        }
+            if (request.ParticipantIds.Count != 2)
+            {
+                return Result<ConversationResult>.Failure(
+                    ConversationErrors.InvalidParticipantCount
+                );
+            }
 
-        User? user = await _userReadService.GetByIdAsync(request.UserId);
+            Conversation? exisitingConversation =
+                await _conversationReadService.GetPrivateConversationAsync(
+                    request.ParticipantIds[0],
+                    request.ParticipantIds[1],
+                    cancellationToken
+                );
 
-        if (user is null)
-        {
-            return Result<ConversationResult>.Failure(ConversationErrors.NotFound);
+            if (exisitingConversation is not null)
+            {
+                return exisitingConversation.ToConversationResult();
+            }
         }
 
         Result<Conversation> result = Conversation.Create(
             (UserId)_currentUser.UserId,
-            [(UserId)_currentUser.UserId, request.UserId]
+            request.ParticipantIds,
+            request.ConversationType,
+            request.GroupTitle
         );
 
         if (result.IsFailure)
