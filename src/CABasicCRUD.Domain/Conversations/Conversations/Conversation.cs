@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Conversations.Messages;
 using CABasicCRUD.Domain.Identity.Users;
@@ -14,19 +15,51 @@ public sealed class Conversation : AggregateRoot<ConversationId>
     public UserId CreatedById { get; private set; }
     public ConversationType ConversationType { get; private set; }
 
-    private Conversation(ConversationId id, UserId createdById, ConversationType conversationType)
+    public string? GroupTitle { get; private set; }
+
+    private Conversation(
+        ConversationId id,
+        UserId createdById,
+        ConversationType conversationType,
+        string? groupTitle
+    )
         : base(id)
     {
         CreatedById = createdById;
         ConversationType = conversationType;
+        GroupTitle = groupTitle;
     }
 
     public static Result<Conversation> Create(
         UserId createdById,
-        IReadOnlyList<UserId> participantsUserIds
+        IReadOnlyList<UserId> participantsUserIds,
+        ConversationType conversationType,
+        string? groupTitle
     )
     {
-        Conversation conversation = new(ConversationId.New(), createdById, ConversationType.Group);
+        if (!participantsUserIds.Contains(createdById))
+        {
+            return Result<Conversation>.Failure(ConversationErrors.CreatorMustBeParticipant);
+        }
+
+        // already being checked in the handler
+        if (conversationType == ConversationType.Private && participantsUserIds.Count != 2)
+        {
+            return Result<Conversation>.Failure(
+                ConversationErrors.PrivateConversationInvalidParticipantCount
+            );
+        }
+
+        Conversation conversation;
+
+        if (conversationType == ConversationType.Private)
+        {
+            conversation = new(ConversationId.New(), createdById, conversationType, null);
+        }
+        else
+        {
+            conversation = new(ConversationId.New(), createdById, conversationType, groupTitle);
+        }
 
         foreach (UserId userId in participantsUserIds)
         {
@@ -43,7 +76,12 @@ public sealed class Conversation : AggregateRoot<ConversationId>
             return Result<Conversation>.Failure(ConversationErrors.CreatorSameAsParticipant);
         }
 
-        Conversation conversation = new(ConversationId.New(), creatorId, ConversationType.Private);
+        Conversation conversation = new(
+            ConversationId.New(),
+            creatorId,
+            ConversationType.Private,
+            null
+        );
 
         conversation._participants.Add(new ConversationParticipant(conversation.Id, creatorId));
         conversation._participants.Add(new ConversationParticipant(conversation.Id, participantId));
