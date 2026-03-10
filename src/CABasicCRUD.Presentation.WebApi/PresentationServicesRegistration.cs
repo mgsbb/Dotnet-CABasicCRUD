@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Presentation.WebApi.Common.Security;
 using CABasicCRUD.Presentation.WebApi.Common.Security.Authorization;
@@ -11,7 +12,11 @@ public static class PresentationServicesRegistration
 {
     public static IServiceCollection RegisterPresentationServices(this IServiceCollection services)
     {
-        services.AddControllers();
+        services
+            .AddControllers()
+            .AddJsonOptions(options =>
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())
+            );
 
         services
             .AddAuthentication(options =>
