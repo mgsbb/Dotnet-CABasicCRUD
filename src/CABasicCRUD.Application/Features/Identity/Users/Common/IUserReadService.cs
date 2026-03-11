@@ -1,3 +1,4 @@
+using CABasicCRUD.Application.Common;
 using CABasicCRUD.Domain.Identity.Users;
 
 namespace CABasicCRUD.Application.Features.Identity.Users.Common;
@@ -9,7 +10,7 @@ public interface IUserReadService
     Task<User?> GetByUsernameAsync(string username);
 
     Task<IReadOnlyList<User>> SearchUsersAsync(
-        string searchTerm,
+        string? searchTerm,
         int page,
         int pageSize,
         UserOrderBy orderBy,

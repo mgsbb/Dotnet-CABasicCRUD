@@ -1,3 +1,4 @@
+using CABasicCRUD.Application.Common;
 using CABasicCRUD.Application.Features.Identity.Users.Common;
 using CABasicCRUD.Domain.Identity.Users;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,7 @@ public sealed class UserReadService(ApplicationDbContext dbContext) : IUserReadS
     // ========================================================================================================================
 
     public async Task<IReadOnlyList<User>> SearchUsersAsync(
-        string searchTerm,
+        string? searchTerm,
         int page,
         int pageSize,
         UserOrderBy orderBy,

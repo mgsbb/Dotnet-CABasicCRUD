@@ -1,7 +1,7 @@
+using CABasicCRUD.Application.Common;
 using CABasicCRUD.Application.Common.Interfaces.Messaging;
 using CABasicCRUD.Application.Features.Posts.Posts.Common;
 using CABasicCRUD.Domain.Identity.Users;
-using SortDirection = CABasicCRUD.Application.Features.Posts.Posts.Common.SortDirection;
 
 namespace CABasicCRUD.Application.Features.Posts.Posts.Queries.SearchPosts;
 

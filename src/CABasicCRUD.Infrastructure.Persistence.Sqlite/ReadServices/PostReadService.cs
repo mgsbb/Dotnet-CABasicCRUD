@@ -1,8 +1,8 @@
+using CABasicCRUD.Application.Common;
 using CABasicCRUD.Application.Features.Posts.Posts.Common;
 using CABasicCRUD.Domain.Identity.Users;
 using CABasicCRUD.Domain.Posts.Posts;
 using Microsoft.EntityFrameworkCore;
-using SortDirection = CABasicCRUD.Application.Features.Posts.Posts.Common.SortDirection;
 
 namespace CABasicCRUD.Infrastructure.Persistence.Sqlite.ReadServices;
 

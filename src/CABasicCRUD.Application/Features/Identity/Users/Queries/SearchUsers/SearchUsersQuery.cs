@@ -1,10 +1,11 @@
+using CABasicCRUD.Application.Common;
 using CABasicCRUD.Application.Common.Interfaces.Messaging;
 using CABasicCRUD.Application.Features.Identity.Users.Common;
 
 namespace CABasicCRUD.Application.Features.Identity.Users.Queries.SearchUsers;
 
 public sealed record SearchUsersQuery(
-    string SearchTerm,
+    string? SearchTerm,
     int Page,
     int PageSize,
     UserOrderBy OrderBy,
