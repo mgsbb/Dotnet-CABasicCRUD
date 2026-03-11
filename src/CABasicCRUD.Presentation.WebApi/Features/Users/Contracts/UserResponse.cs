@@ -4,6 +4,9 @@ public sealed record UserResponse(
     Guid Id,
     string Name,
     string Email,
+    string Username,
     DateTime CreatedAt,
-    DateTime? UpdatedAt
+    DateTime? UpdatedAt,
+    string? Bio,
+    string? ProfileImageUrl
 );

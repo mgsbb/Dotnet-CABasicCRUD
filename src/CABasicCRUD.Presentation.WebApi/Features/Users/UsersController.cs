@@ -1,12 +1,13 @@
+using CABasicCRUD.Application.Common.Interfaces;
+using CABasicCRUD.Application.Features.Identity.Auth.Commands;
 using CABasicCRUD.Application.Features.Identity.Auth.Common;
-using CABasicCRUD.Application.Features.Identity.Users.Commands.DeleteUser;
-using CABasicCRUD.Application.Features.Identity.Users.Commands.UpdateUser;
+using CABasicCRUD.Application.Features.Identity.Users.Commands;
 using CABasicCRUD.Application.Features.Identity.Users.Common;
 using CABasicCRUD.Application.Features.Identity.Users.Queries.GetUserById;
+using CABasicCRUD.Application.Features.Identity.Users.Queries.SearchUsers;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Identity.Users;
 using CABasicCRUD.Presentation.WebApi.Common.Abstractions;
-using CABasicCRUD.Presentation.WebApi.Common.Security.Authorization;
 using CABasicCRUD.Presentation.WebApi.Features.Users.Contracts;
 using CABasicCRUD.Presentation.WebApi.RateLimiter;
 using MediatR;
@@ -49,39 +50,55 @@ public sealed class UsersController(IMediator mediator) : ApiController
 
     // ========================================================================================================================
 
-    [Authorize]
-    [HttpPatch("{id}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> UpdateUser(
-        Guid id,
-        [FromBody] UpdateUserRequest request,
-        [FromServices] IAuthorizationService authorizationService
+    [HttpGet]
+    [ProducesResponseType(
+        type: typeof(IReadOnlyList<UserResponse>),
+        statusCode: StatusCodes.Status200OK
+    )]
+    public async Task<ActionResult<IReadOnlyList<UserResponse>>> SearchUsersAsync(
+        [FromQuery] SearchUsersRequestQueryParams queryParams
     )
     {
-        var authResult = await authorizationService.AuthorizeAsync(
-            HttpContext.User,
-            id,
-            AuthorizationPolicies.ResourceOwner
+        SearchUsersQuery query = new(
+            queryParams.SearchTerm,
+            queryParams.Page,
+            queryParams.PageSize,
+            queryParams.UserOrderBy,
+            queryParams.SortDirection
         );
 
-        if (!authResult.Succeeded)
+        Result<IReadOnlyList<UserResult>> result = await _mediator.Send(query);
+
+        if (result.IsFailure)
         {
-            return HandleProblem(
-                StatusCodes.Status403Forbidden,
-                detail: "You don't have permission to perform the requested action."
-            );
+            return HandleResultFailure(result);
         }
 
-        UpdateUserCommand command = new((UserId)id, request.Name, request.Email);
+        IReadOnlyList<UserResponse> userResponses = result.Value.ToUserResponse();
 
-        Result updateResult = await _mediator.Send(command);
+        return Ok(userResponses);
+    }
 
-        if (updateResult.IsFailure)
+    // ========================================================================================================================
+
+    [Authorize]
+    [HttpPatch("{id}/email")]
+    [ProducesResponseType(statusCode: StatusCodes.Status204NoContent)]
+    [ProducesResponseType(statusCode: StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(statusCode: StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(statusCode: StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateUserEmail(
+        [FromBody] UpdateUserEmailRequest request,
+        Guid id
+    )
+    {
+        UpdateUserEmailCommand command = new((UserId)id, request.Email);
+
+        Result result = await _mediator.Send(request: command);
+
+        if (result.IsFailure)
         {
-            return HandleResultFailure(updateResult);
+            return HandleResultFailure(result);
         }
 
         return NoContent();
@@ -90,37 +107,53 @@ public sealed class UsersController(IMediator mediator) : ApiController
     // ========================================================================================================================
 
     [Authorize]
-    [HttpDelete("{id}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> DeleteUser(
-        Guid id,
-        [FromServices] IAuthorizationService authorizationService
+    [HttpPatch("{id}/profile")]
+    [ProducesResponseType(statusCode: StatusCodes.Status204NoContent)]
+    [ProducesResponseType(statusCode: StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(statusCode: StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(statusCode: StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateUserProfile(
+        [FromBody] UpdateUserProfileRequest request,
+        Guid id
     )
     {
-        var authResult = await authorizationService.AuthorizeAsync(
-            HttpContext.User,
-            id,
-            AuthorizationPolicies.ResourceOwner
-        );
+        UpdateUserProfileCommand command = new((UserId)id, request.FullName, request.Bio);
 
-        if (!authResult.Succeeded)
+        Result result = await _mediator.Send(request: command);
+
+        if (result.IsFailure)
         {
-            return HandleProblem(
-                StatusCodes.Status403Forbidden,
-                detail: "You don't have permission to perform the requested action."
-            );
+            return HandleResultFailure(result);
         }
 
-        DeleteUserCommand command = new((UserId)id);
+        return NoContent();
+    }
 
-        Result deleteResult = await _mediator.Send(command);
+    // ========================================================================================================================
 
-        if (deleteResult.IsFailure)
+    [Authorize]
+    [HttpPatch("{id}/password")]
+    [ProducesResponseType(statusCode: StatusCodes.Status204NoContent)]
+    [ProducesResponseType(statusCode: StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(statusCode: StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(statusCode: StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateUserPassword(
+        [FromBody] UpdateUserPasswordRequest request,
+        Guid id
+    )
+    {
+        UpdateUserPasswordCommand command = new(
+            (UserId)id,
+            request.OldPassword,
+            request.NewPassword,
+            request.NewPasswordConfirmed
+        );
+
+        Result result = await _mediator.Send(request: command);
+
+        if (result.IsFailure)
         {
-            return HandleResultFailure(deleteResult);
+            return HandleResultFailure(result);
         }
 
         return NoContent();
@@ -152,7 +185,16 @@ public sealed class UsersController(IMediator mediator) : ApiController
         {
             return HandleProblem(StatusCodes.Status404NotFound, detail: result.Error.Message);
         }
-        if (result.Error == AuthErrors.Forbidden)
+
+        if (result.Error == AuthErrors.AlreadyExistsEmail)
+        {
+            return HandleProblem(StatusCodes.Status409Conflict, detail: result.Error.Message);
+        }
+        if (
+            result.Error == AuthErrors.PasswordsMismatch
+            || result.Error == AuthErrors.InvalidPassword
+            || result.Error == AuthErrors.Forbidden
+        )
         {
             return HandleProblem(StatusCodes.Status403Forbidden, detail: result.Error.Message);
         }

@@ -11,8 +11,18 @@ public static class UserMappings
             userResult.Id,
             userResult.Name,
             userResult.Email,
+            userResult.Username,
             userResult.CreatedAt,
-            userResult.UpdatedAt
+            userResult.UpdatedAt,
+            userResult.Bio,
+            userResult.ProfileImageUrl
         );
+    }
+
+    public static IReadOnlyList<UserResponse> ToUserResponse(
+        this IReadOnlyList<UserResult> userResults
+    )
+    {
+        return userResults.Select(result => result.ToUserResponse()).ToList();
     }
 }
