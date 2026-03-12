@@ -127,7 +127,11 @@ public sealed class ConversationsController(ICurrentUser currentUser, IMediator 
         {
             return NotFound();
         }
-        return RedirectToAction(nameof(Details), new { id });
+
+        // return RedirectToAction(nameof(Details), new { id });
+
+        // handled by js
+        return NoContent();
     }
 }
 

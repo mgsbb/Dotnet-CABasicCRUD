@@ -60,7 +60,7 @@
 
 
     @* send message form *@
-    <form method="post" asp-action="SendMessage" asp-controller="Conversations" asp-route-id="@Model.Id"
+    <form id="sendMessageForm" method="post" asp-action="SendMessage" asp-controller="Conversations" asp-route-id="@Model.Id"
           class="border-t border-gray-300 w-full flex py-2 sm:py-4 px-2 sm:px-10 justify-between gap-2 sm:gap-6 items-center">
         <div class="flex flex-col gap-1 w-full">
             <textarea asp-for="NewMessage.Content" class=" border border-gray-300 rounded-sm p-2" rows="1"></textarea>
@@ -90,7 +90,7 @@
     connection.on("MessageReceived", function (message) {
         const container = document.getElementById("messages-container");
 
-        const isCurrentUser = message.senderUserId === currentUserId;
+        const isCurrentUser = message.senderId === currentUserId;
 
         const wrapper = document.createElement("div");
         wrapper.className = `flex ${isCurrentUser ? "justify-end" : "justify-start"}`;
@@ -133,7 +133,17 @@
         .then(() => console.log("Joined group"))
         .catch(err => console.error(err));
 
+    const form = document.getElementById("sendMessageForm");
 
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+
+        await fetch(form.action, {method: "POST", body: formData});
+
+        form.reset();
+    })
 
 
 </script>
