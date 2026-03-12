@@ -3,24 +3,28 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
 
-type LoginFormData = {
+type RegisterFormData = {
   email: string;
   password: string;
+  name: string;
+  username: string;
 };
 
-const initialState: LoginFormData = {
+const initialState: RegisterFormData = {
   email: "",
   password: "",
+  name: "",
+  username: "",
 };
 
-export default function Login() {
+export default function Register() {
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState<LoginFormData>(initialState);
+  const [formData, setFormData] = useState<RegisterFormData>(initialState);
 
-  const loginMutation = useMutation({
-    mutationFn: async (data: LoginFormData) => {
-      const response = await axios.post("/api/v1/auth/login", data, {
+  const registerMutation = useMutation({
+    mutationFn: async (data: RegisterFormData) => {
+      const response = await axios.post("/api/v1/auth/register", data, {
         withCredentials: true,
       });
       //   console.log(response.data);
@@ -44,7 +48,7 @@ export default function Login() {
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    loginMutation.mutate(formData);
+    registerMutation.mutate(formData);
   };
 
   return (
@@ -53,10 +57,12 @@ export default function Login() {
 
       <section className="flex-1 pt-40">
         <div className="mx-auto w-3/4 sm:w-2/3 xl:w-1/2">
-          <h1 className="text-5xl font-medium text-gray-700 mb-4">Login</h1>
+          <h1 className="text-5xl font-medium text-gray-700 mb-4">
+            Create an account
+          </h1>
 
           <Link to="/auth/register" className="text-gray-500 text-center">
-            Don't have an account? Create one
+            Already have an account? Login
           </Link>
 
           <hr className="border border-gray-300 mb-12 mt-4" />
@@ -66,6 +72,36 @@ export default function Login() {
             className="text-black flex flex-col gap-10"
           >
             <div className="flex flex-col gap-4">
+              <label
+                htmlFor="name"
+                className="font-medium text-gray-500 flex flex-col gap-1"
+              >
+                Name
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-sm p-2"
+                />
+              </label>
+
+              <label
+                htmlFor="username"
+                className="font-medium text-gray-500 flex flex-col gap-1"
+              >
+                Username
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-sm p-2"
+                />
+              </label>
+
               <label
                 htmlFor="email"
                 className="font-medium text-gray-500 flex flex-col gap-1"

@@ -1,5 +1,12 @@
 import { BrowserRouter, Route, Routes } from "react-router";
-import { GuestLayout, Login, Posts, ProtectedLayout, RootPage } from "./pages";
+import {
+  GuestLayout,
+  Login,
+  Posts,
+  ProtectedLayout,
+  Register,
+  RootPage,
+} from "./pages";
 
 function AppRouter() {
   return (
@@ -11,6 +18,7 @@ function AppRouter() {
         {/* guest routes */}
         <Route element={<GuestLayout />}>
           <Route path="/auth/login" element={<Login />} />
+          <Route path="/auth/register" element={<Register />} />
         </Route>
 
         {/* protected routes */}
