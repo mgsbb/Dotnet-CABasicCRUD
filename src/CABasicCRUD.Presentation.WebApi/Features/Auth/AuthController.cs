@@ -1,13 +1,19 @@
+using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Features.Identity.Auth.Commands.LoginUser;
 using CABasicCRUD.Application.Features.Identity.Auth.Commands.RegisterUser;
 using CABasicCRUD.Application.Features.Identity.Auth.Common;
+using CABasicCRUD.Application.Features.Identity.Users.Common;
+using CABasicCRUD.Application.Features.Identity.Users.Queries.GetUserById;
 using CABasicCRUD.Domain.Common;
+using CABasicCRUD.Domain.Identity.Users;
 using CABasicCRUD.Presentation.WebApi.Common;
 using CABasicCRUD.Presentation.WebApi.Common.Abstractions;
 using CABasicCRUD.Presentation.WebApi.Features.Auth.Contracts;
 using CABasicCRUD.Presentation.WebApi.Features.Users;
+using CABasicCRUD.Presentation.WebApi.Features.Users.Contracts;
 using CABasicCRUD.Presentation.WebApi.RateLimiter;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -19,10 +25,15 @@ namespace CABasicCRUD.Presentation.WebApi.Features.Auth;
 [EnableRateLimiting(RateLimitPolicies.Anonymous)]
 [ApiController]
 [Route("/api/v1/[controller]")]
-public sealed class AuthController(IMediator mediator, IConfiguration configuration) : ApiController
+public sealed class AuthController(
+    IMediator mediator,
+    IConfiguration configuration,
+    ICurrentUser currentUser
+) : ApiController
 {
     private readonly IMediator _mediator = mediator;
     private readonly IConfiguration _configuration = configuration;
+    private readonly ICurrentUser _currentUser = currentUser;
 
     // ========================================================================================================================
 
@@ -86,6 +97,28 @@ public sealed class AuthController(IMediator mediator, IConfiguration configurat
         AuthResponse authResponse = result.Value.ToAuthResponse();
 
         return Ok(authResponse);
+    }
+
+    // ========================================================================================================================
+
+    [Authorize]
+    [HttpGet("me")]
+    [ProducesResponseType(type: typeof(UserResponse), statusCode: StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<UserResponse?>> Me()
+    {
+        GetUserByIdQuery query = new((UserId)_currentUser.UserId);
+
+        Result<UserResult> result = await _mediator.Send(query);
+
+        if (result.IsFailure || result.Value == null)
+        {
+            return HandleResultFailure(result);
+        }
+
+        UserResponse userResponse = result.Value.ToUserResponse();
+
+        return Ok(userResponse);
     }
 
     // ========================================================================================================================

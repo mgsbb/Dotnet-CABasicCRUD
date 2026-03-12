@@ -84,4 +84,9 @@ app.MapGet("/", () => "Hello World!")
     .WithSummary("Root endpoint")
     .WithDescription("Returns hello world message");
 
+app.MapGet("/api/health", () => new { Health = "Ok" })
+    .WithTags("HealthCheck")
+    .WithSummary("Health check endpoint")
+    .WithDescription("Returns Ok!");
+
 app.Run();
