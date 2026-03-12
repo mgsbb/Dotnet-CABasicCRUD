@@ -1,11 +1,22 @@
 import { BrowserRouter, Route, Routes } from "react-router";
-import { Login } from "./pages";
+import { GuestLayout, Login, Posts, ProtectedLayout, RootPage } from "./pages";
 
 function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/auth/login" element={<Login />}></Route>
+        {/* protection logic inside rootpage */}
+        <Route path="/" element={<RootPage />} />
+
+        {/* guest routes */}
+        <Route element={<GuestLayout />}>
+          <Route path="/auth/login" element={<Login />} />
+        </Route>
+
+        {/* protected routes */}
+        <Route element={<ProtectedLayout />}>
+          <Route path="/posts" element={<Posts />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
