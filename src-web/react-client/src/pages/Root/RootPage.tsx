@@ -1,4 +1,5 @@
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
+import AppLayout from "../Layouts/AppLayout";
 import Home from "./Home";
 import Landing from "./Landing";
 
@@ -9,5 +10,9 @@ export default function RootPage() {
 
   if (isError) return <Landing />;
 
-  return <Home />;
+  return (
+    <AppLayout>
+      <Home />
+    </AppLayout>
+  );
 }
