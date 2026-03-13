@@ -123,6 +123,21 @@ public sealed class AuthController(
 
     // ========================================================================================================================
 
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        Response.Cookies.Delete(
+            "access_token",
+            CookieOptionsFactory.CreateAccessTokenCookieOptions(_configuration)
+        );
+
+        await Task.CompletedTask;
+
+        return Ok();
+    }
+
+    // ========================================================================================================================
+
     private ObjectResult HandleResultFailure(Result result)
     {
         // redundant check?
