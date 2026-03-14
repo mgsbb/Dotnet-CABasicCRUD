@@ -26,4 +26,29 @@ internal static class CommentMappings
 
         return comments.Select(comment => comment.ToCommentResponse()).ToList();
     }
+
+    internal static CommentWithAuthorResponse ToCommentWithAuthorResponse(
+        this CommentWithAuthorResult commentWithAuthorResult
+    )
+    {
+        return new(
+            commentWithAuthorResult.Id,
+            commentWithAuthorResult.Body,
+            commentWithAuthorResult.PostId,
+            commentWithAuthorResult.UserId,
+            commentWithAuthorResult.AuthorName,
+            commentWithAuthorResult.CreatedAt,
+            commentWithAuthorResult.UpdatedAt
+        );
+    }
+
+    internal static IReadOnlyList<CommentWithAuthorResponse> ToListCommentWithAuthorResponse(
+        this IReadOnlyList<CommentWithAuthorResult> comments
+    )
+    {
+        if (comments == null)
+            return new List<CommentWithAuthorResponse>();
+
+        return comments.Select(comment => comment.ToCommentWithAuthorResponse()).ToList();
+    }
 }

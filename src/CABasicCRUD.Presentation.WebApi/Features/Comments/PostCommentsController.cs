@@ -2,7 +2,7 @@ using CABasicCRUD.Application.Common.Interfaces;
 using CABasicCRUD.Application.Features.Identity.Auth.Common;
 using CABasicCRUD.Application.Features.Posts.Comments.Commands.CreateComment;
 using CABasicCRUD.Application.Features.Posts.Comments.Common;
-using CABasicCRUD.Application.Features.Posts.Comments.Queries.GetAllCommentsOfPost;
+using CABasicCRUD.Application.Features.Posts.Comments.Queries.GetCommentsWithAuthorOfPost;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Identity.Users;
 using CABasicCRUD.Domain.Posts.Posts;
@@ -66,21 +66,22 @@ public class PostCommentsController(IMediator mediator, ICurrentUser currentUser
 
     [HttpGet]
     [ProducesResponseType(
-        type: typeof(IReadOnlyList<CommentResponse>),
+        type: typeof(IReadOnlyList<CommentWithAuthorResponse>),
         statusCode: StatusCodes.Status200OK
     )]
-    public async Task<ActionResult<IReadOnlyList<CommentResponse>>> GetAllCommentsOfPost(
+    public async Task<ActionResult<IReadOnlyList<CommentWithAuthorResponse>>> GetAllCommentsOfPost(
         Guid postId
     )
     {
-        GetAllCommentsOfPostQuery query = new((PostId)postId);
+        GetCommentsWithAuthorOfPostQuery query = new((PostId)postId);
 
-        Result<IReadOnlyList<CommentResult>> result = await _mediator.Send(query);
+        Result<IReadOnlyList<CommentWithAuthorResult>> result = await _mediator.Send(query);
 
         if (result.IsFailure || result.Value == null)
             return Ok();
 
-        IReadOnlyList<CommentResponse> commentResponses = result.Value.ToListCommentResponse();
+        IReadOnlyList<CommentWithAuthorResponse> commentResponses =
+            result.Value.ToListCommentWithAuthorResponse();
 
         return Ok(commentResponses);
     }
