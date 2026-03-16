@@ -61,7 +61,7 @@ export default function Register() {
             Create an account
           </h1>
 
-          <Link to="/auth/register" className="text-gray-500 text-center">
+          <Link to="/auth/login" className="text-gray-500 text-center">
             Already have an account? Login
           </Link>
 
@@ -137,7 +137,7 @@ export default function Register() {
               type="submit"
               className="bg-gray-900 text-white py-3 rounded-sm cursor-pointer font-semibold text-sm"
             >
-              Login
+              Register
             </button>
           </form>
         </div>
