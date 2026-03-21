@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { Link, useNavigate } from "react-router";
 import { queryClient } from "../../App";
+import CurrentUser from "./CurrentUser";
 
 export default function Sidebar() {
   const navigate = useNavigate();
@@ -60,14 +61,7 @@ export default function Sidebar() {
       </button>
 
       {/* user details */}
-      <div className="sidebar-user-details px-4 py-10 flex flex-col gap-4 items-center">
-        {/* replace with user profile image  */}
-        <div className="border border-gray-400 rounded-sm p-4 w-32 h-32"></div>
-        {/* replace with username instead  */}
-        <p className="font-bold text-gray-700">
-          <a href="/users/@CurrentUser.UserId">@CurrentUser.Username</a>
-        </p>
-      </div>
+      <CurrentUser />
 
       <div className="px-10 py-10 h-10 flex flex-col gap-8 text-gray-500 text-lg font-medium w-full">
         {/* home icon  */}
