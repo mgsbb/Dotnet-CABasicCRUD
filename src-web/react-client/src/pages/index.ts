@@ -10,3 +10,4 @@ export { default as Landing } from "./Root/Landing";
 export { default as RootPage } from "./Root/RootPage";
 
 export { default as Posts } from "./Posts/Posts";
+export { default as CreatePost } from "./Posts/CreatePost";

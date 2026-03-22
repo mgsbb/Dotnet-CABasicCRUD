@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router";
 import {
   AppLayout,
+  CreatePost,
   GuestLayout,
   Login,
   Posts,
@@ -26,6 +27,7 @@ function AppRouter() {
         <Route element={<ProtectedLayout />}>
           <Route element={<AppLayout />}>
             <Route path="/posts" element={<Posts />} />
+            <Route path="/posts/create" element={<CreatePost />} />
           </Route>
         </Route>
       </Routes>
