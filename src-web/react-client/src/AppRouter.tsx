@@ -4,6 +4,7 @@ import {
   CreatePost,
   GuestLayout,
   Login,
+  PostDetails,
   Posts,
   ProtectedLayout,
   Register,
@@ -28,6 +29,7 @@ function AppRouter() {
           <Route element={<AppLayout />}>
             <Route path="/posts" element={<Posts />} />
             <Route path="/posts/create" element={<CreatePost />} />
+            <Route path="/posts/:id" element={<PostDetails />} />
           </Route>
         </Route>
       </Routes>
