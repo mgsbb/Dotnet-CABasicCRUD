@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Link } from "react-router";
+import { useAuth } from "../../hooks/useAuth";
 
 type Post = {
   id: string;
@@ -28,6 +29,8 @@ export default function Posts() {
       return response.data;
     },
   });
+
+  const { data: { data: currentUser } = {} } = useAuth();
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -121,7 +124,7 @@ export default function Posts() {
                     <p className="">{post.content}</p>
                   </Link>
                 </div>
-                {
+                {currentUser?.id == post.userId && (
                   <nav className="flex gap-4">
                     <Link to={`/posts/${post.id}/edit`}>
                       <button className="bg-gray-100 px-2 py-1 text-gray-700 text-sm font-semibold rounded-sm cursor-pointer">
@@ -134,7 +137,7 @@ export default function Posts() {
                       </button>
                     </Link>
                   </nav>
-                }
+                )}
               </div>
             </li>
           );
