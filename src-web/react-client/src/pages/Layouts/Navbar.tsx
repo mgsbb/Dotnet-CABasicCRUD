@@ -1,4 +1,10 @@
-export default function Navbar() {
+export default function Navbar({
+  isSidebarOpen,
+  setIsSidebarOpen,
+}: {
+  isSidebarOpen: boolean;
+  setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   return (
     <header
       id="header"
@@ -7,8 +13,10 @@ export default function Navbar() {
       <nav>
         <button
           type="button"
-          // onclick="toggleSidebar()"
-          className="text-gray-500 cursor-pointer md:hidden"
+          onClick={() => {
+            setIsSidebarOpen(!isSidebarOpen);
+          }}
+          className="text-gray-500 cursor-pointer"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

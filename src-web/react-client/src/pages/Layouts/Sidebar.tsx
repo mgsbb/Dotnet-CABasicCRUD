@@ -4,7 +4,13 @@ import { Link, useNavigate } from "react-router";
 import { queryClient } from "../../App";
 import CurrentUser from "./CurrentUser";
 
-export default function Sidebar() {
+export default function Sidebar({
+  isSidebarOpen,
+  setIsSidebarOpen,
+}: {
+  isSidebarOpen: boolean;
+  setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const navigate = useNavigate();
 
   const logoutMutation = useMutation({
@@ -36,12 +42,16 @@ export default function Sidebar() {
   return (
     <aside
       id="sidebar"
-      className="fixed left-0 top-0 h-screen bg-white border-r border-gray-300 p-4 transition-all duration-300 z-20 w-80"
+      className={`fixed left-0 top-0 h-screen bg-white border-r border-gray-300 
+     p-1 md:p-2 lg:p-4 transform transition-transform duration-300 z-20 w-64 md:w-48 lg:w-80 ease-in-out
+     ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
     >
       {/* hamburger menu button to toggle sidebar */}
       <button
         type="button"
-        // onclick="toggleSidebar()"
+        onClick={() => {
+          setIsSidebarOpen(!isSidebarOpen);
+        }}
         className="text-gray-500 cursor-pointer"
       >
         <svg
