@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import {
   AppLayout,
   CreatePost,
+  EditPost,
   GuestLayout,
   Login,
   PostDetails,
@@ -30,6 +31,7 @@ function AppRouter() {
             <Route path="/posts" element={<Posts />} />
             <Route path="/posts/create" element={<CreatePost />} />
             <Route path="/posts/:id" element={<PostDetails />} />
+            <Route path="/posts/:id/edit" element={<EditPost />} />
           </Route>
         </Route>
       </Routes>

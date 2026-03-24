@@ -12,3 +12,4 @@ export { default as RootPage } from "./Root/RootPage";
 export { default as Posts } from "./Posts/Posts";
 export { default as CreatePost } from "./Posts/CreatePost";
 export { default as PostDetails } from "./Posts/PostDetails";
+export { default as EditPost } from "./Posts/EditPost";
