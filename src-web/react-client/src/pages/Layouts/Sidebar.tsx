@@ -1,8 +1,6 @@
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import { Link, useNavigate } from "react-router";
-import { queryClient } from "../../App";
+import { Link } from "react-router";
 import CurrentUser from "./CurrentUser";
+import Logout from "./Logout";
 
 export default function Sidebar({
   isSidebarOpen,
@@ -11,34 +9,6 @@ export default function Sidebar({
   isSidebarOpen: boolean;
   setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const navigate = useNavigate();
-
-  const logoutMutation = useMutation({
-    mutationFn: async () => {
-      const response = await axios.post(
-        "/api/v1/auth/logout",
-        {},
-        { withCredentials: true },
-      );
-      return response.data;
-    },
-
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["auth"] });
-      navigate("/auth/login");
-    },
-
-    onError: (error: any) => {
-      console.error(error);
-    },
-  });
-
-  const handleLogoutSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    logoutMutation.mutate();
-  };
-
   return (
     <aside
       id="sidebar"
@@ -131,30 +101,7 @@ export default function Sidebar({
           <span className="sidebar-label">Users</span>
         </Link>
 
-        {/* logout */}
-        <form
-          onSubmit={handleLogoutSubmit}
-          className="inline-flex gap-4 cursor-pointer"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="size-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75"
-            />
-          </svg>
-
-          <button type="submit" className="cursor-pointer sidebar-label">
-            Logout
-          </button>
-        </form>
+        <Logout />
       </div>
     </aside>
   );
