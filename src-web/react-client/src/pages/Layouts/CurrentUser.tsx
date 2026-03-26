@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import { useAuth } from "../../hooks/useAuth";
 
 export default function CurrentUser() {
-  const { data, isLoading, isError } = useAuth();
+  const { data: currentUser, isLoading, isError } = useAuth();
 
   if (isLoading) return <>Loading...</>;
 
@@ -14,7 +14,7 @@ export default function CurrentUser() {
       <div className="border border-gray-400 rounded-sm p-4 w-32 h-32"></div>
       {/* replace with username instead  */}
       <p className="font-bold text-gray-700">
-        <Link to={`/users/${data?.data.id}`}>{data?.data.username}</Link>
+        <Link to={`/users/${currentUser?.id}`}>{currentUser?.username}</Link>
       </p>
     </div>
   );
