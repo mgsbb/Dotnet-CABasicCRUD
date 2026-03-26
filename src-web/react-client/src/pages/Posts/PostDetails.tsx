@@ -3,6 +3,8 @@ import axios from "axios";
 import { Link, useParams } from "react-router";
 import AddComment from "./AddComment";
 import Comments from "./Comments";
+import { useAuth } from "../../hooks/useAuth";
+import DeletePost from "./DeletePost";
 
 type Post = {
   id: string;
@@ -32,6 +34,8 @@ export default function PostDetails() {
     },
   });
 
+  const { data: currentUser } = useAuth();
+
   if (isPostLoading) return <div>Loading...</div>;
 
   if (isPostError) return <div>Error occurred</div>;
@@ -47,19 +51,19 @@ export default function PostDetails() {
           {post?.authorName}
         </p>
       </Link>
+
       <nav className="flex gap-6 mt-6 items-center">
-        <div className="flex gap-2">
-          <Link to={`/posts/${post?.id}/edit`}>
-            <button className="bg-gray-100 px-2 py-1 text-gray-700 font-semibold rounded-sm cursor-pointer">
-              Edit
-            </button>
-          </Link>
-          <Link to={`/posts/${post?.id}/delete`}>
-            <button className="bg-red-100 px-2 py-1 text-red-700 font-semibold rounded-sm cursor-pointer">
-              Delete
-            </button>
-          </Link>
-        </div>
+        {currentUser?.id == post?.userId && (
+          <div className="flex gap-2">
+            <Link to={`/posts/${post?.id}/edit`}>
+              <button className="bg-gray-100 px-2 py-1 text-gray-700 font-semibold rounded-sm cursor-pointer">
+                Edit
+              </button>
+            </Link>
+
+            <DeletePost postId={post?.id} />
+          </div>
+        )}
 
         <Link to="/posts" className="text-gray-500 font-medium">
           Back to posts
