@@ -74,7 +74,7 @@ export default function EditPost() {
             name="title"
             value={formData.title}
             onChange={handleChange}
-            className="border border-gray-300 rounded-sm p-2"
+            className="border border-gray-300 rounded-sm p-2 text-black font-normal"
           />
         </label>
 
@@ -90,7 +90,7 @@ export default function EditPost() {
             onChange={(e) => {
               setFormData({ ...formData, [e.target.name]: e.target.value });
             }}
-            className="border border-gray-300 rounded-sm p-2"
+            className="border border-gray-300 rounded-sm p-2 text-black font-normal"
             rows={15}
           ></textarea>
         </label>

@@ -83,7 +83,7 @@ export default function Register() {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="border border-gray-300 rounded-sm p-2"
+                  className="border border-gray-300 rounded-sm p-2 text-black font-normal"
                 />
               </label>
 
@@ -98,7 +98,7 @@ export default function Register() {
                   name="username"
                   value={formData.username}
                   onChange={handleChange}
-                  className="border border-gray-300 rounded-sm p-2"
+                  className="border border-gray-300 rounded-sm p-2 text-black font-normal"
                 />
               </label>
 
@@ -113,7 +113,7 @@ export default function Register() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="border border-gray-300 rounded-sm p-2"
+                  className="border border-gray-300 rounded-sm p-2 text-black font-normal"
                 />
               </label>
 
@@ -128,7 +128,7 @@ export default function Register() {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="border border-gray-300 rounded-sm p-2"
+                  className="border border-gray-300 rounded-sm p-2 text-black font-normal"
                 />
               </label>
             </div>

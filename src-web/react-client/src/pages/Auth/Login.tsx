@@ -77,7 +77,7 @@ export default function Login() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="border border-gray-300 rounded-sm p-2"
+                  className="border border-gray-300 rounded-sm p-2 text-black font-normal"
                 />
               </label>
 
@@ -92,7 +92,7 @@ export default function Login() {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="border border-gray-300 rounded-sm p-2"
+                  className="border border-gray-300 rounded-sm p-2 text-black font-normal"
                 />
               </label>
             </div>
