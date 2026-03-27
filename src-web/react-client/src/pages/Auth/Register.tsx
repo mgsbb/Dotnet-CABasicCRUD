@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
+import AuthInput from "./AuthInput";
 
 type RegisterFormData = {
   email: string;
@@ -72,65 +73,37 @@ export default function Register() {
             className="text-black flex flex-col gap-10"
           >
             <div className="flex flex-col gap-4">
-              <label
-                htmlFor="name"
-                className="font-medium text-gray-500 flex flex-col gap-1"
-              >
-                Name
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="border border-gray-300 rounded-sm p-2 text-black font-normal"
-                />
-              </label>
+              <AuthInput
+                label="Name"
+                type="text"
+                id="name"
+                value={formData.name}
+                onChange={handleChange}
+              />
 
-              <label
-                htmlFor="username"
-                className="font-medium text-gray-500 flex flex-col gap-1"
-              >
-                Username
-                <input
-                  type="text"
-                  id="username"
-                  name="username"
-                  value={formData.username}
-                  onChange={handleChange}
-                  className="border border-gray-300 rounded-sm p-2 text-black font-normal"
-                />
-              </label>
+              <AuthInput
+                label="Username"
+                type="text"
+                id="username"
+                value={formData.username}
+                onChange={handleChange}
+              />
 
-              <label
-                htmlFor="email"
-                className="font-medium text-gray-500 flex flex-col gap-1"
-              >
-                Email
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="border border-gray-300 rounded-sm p-2 text-black font-normal"
-                />
-              </label>
+              <AuthInput
+                label="Email"
+                type="email"
+                id="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
 
-              <label
-                htmlFor="password"
-                className="font-medium text-gray-500 flex flex-col gap-1"
-              >
-                Password
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="border border-gray-300 rounded-sm p-2 text-black font-normal"
-                />
-              </label>
+              <AuthInput
+                label="Password"
+                type="password"
+                id="password"
+                value={formData.password}
+                onChange={handleChange}
+              />
             </div>
 
             <button

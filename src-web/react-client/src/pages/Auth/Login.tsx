@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
+import AuthInput from "./AuthInput";
 
 type LoginFormData = {
   email: string;
@@ -66,35 +67,21 @@ export default function Login() {
             className="text-black flex flex-col gap-10"
           >
             <div className="flex flex-col gap-4">
-              <label
-                htmlFor="email"
-                className="font-medium text-gray-500 flex flex-col gap-1"
-              >
-                Email
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="border border-gray-300 rounded-sm p-2 text-black font-normal"
-                />
-              </label>
+              <AuthInput
+                label="Email"
+                type="email"
+                id="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
 
-              <label
-                htmlFor="password"
-                className="font-medium text-gray-500 flex flex-col gap-1"
-              >
-                Password
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="border border-gray-300 rounded-sm p-2 text-black font-normal"
-                />
-              </label>
+              <AuthInput
+                label="Password"
+                type="password"
+                id="password"
+                value={formData.password}
+                onChange={handleChange}
+              />
             </div>
 
             <button
