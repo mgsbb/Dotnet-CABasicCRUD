@@ -1,5 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { Link } from "react-router";
+import DeleteComment from "./DeleteComment";
+import { useAuth } from "../../hooks/useAuth";
 
 type Comment = {
   id: string;
@@ -27,6 +30,8 @@ export default function Comments({ postId }: { postId?: string }) {
     },
   });
 
+  const { data: currentUser } = useAuth();
+
   if (isCommentsLoading) return <div>Loading...</div>;
 
   if (isCommentsError) return <div>Error</div>;
@@ -48,23 +53,19 @@ export default function Comments({ postId }: { postId?: string }) {
               >
                 <div>
                   <p className="mb-1">{comment.body}</p>
-                  <a
-                    href="/users/@comment.UserId"
+                  <Link
+                    to={`/users/${comment.userId}`}
                     className="text-sm text-gray-600 font-medium"
                   >
                     by {comment.authorName}{" "}
-                  </a>
+                  </Link>
                   <small className="text-gray-500 font-medium">
                     at {comment.createdAt}
                   </small>
                 </div>
-                <nav>
-                  <a href="/comments/@comment.Id/delete">
-                    <button className="bg-red-100 px-2 py-1 text-red-700 text-sm font-semibold rounded-sm cursor-pointer">
-                      Delete
-                    </button>
-                  </a>
-                </nav>
+                {comment.userId == currentUser?.id && (
+                  <DeleteComment commentId={comment.id} postId={postId} />
+                )}
               </div>
             );
           })}

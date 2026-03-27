@@ -2,12 +2,9 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 import { queryClient } from "../../App";
-import { useNavigate } from "react-router";
 
 export default function AddComment({ postId }: { postId?: string }) {
   const [comment, setComment] = useState("");
-
-  const navigate = useNavigate();
 
   const createCommentMutation = useMutation({
     mutationFn: async (data: string) => {
@@ -27,7 +24,6 @@ export default function AddComment({ postId }: { postId?: string }) {
       queryClient.invalidateQueries({
         queryKey: ["posts", postId, "comments"],
       });
-      navigate(`/posts/${postId}`);
     },
 
     onError: (err: any) => {
