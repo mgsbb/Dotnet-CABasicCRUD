@@ -13,3 +13,6 @@ export { default as Posts } from "./Posts/Posts";
 export { default as CreatePost } from "./Posts/CreatePost";
 export { default as PostDetails } from "./Posts/PostDetails";
 export { default as EditPost } from "./Posts/EditPost";
+
+export { default as Users } from "./Users/Users";
+export { default as UserDetails } from "./Users/UserDetails";

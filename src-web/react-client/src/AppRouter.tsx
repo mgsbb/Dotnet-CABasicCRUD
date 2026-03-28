@@ -10,6 +10,8 @@ import {
   ProtectedLayout,
   Register,
   RootPage,
+  Users,
+  UserDetails,
 } from "./pages";
 
 function AppRouter() {
@@ -32,6 +34,9 @@ function AppRouter() {
             <Route path="/posts/create" element={<CreatePost />} />
             <Route path="/posts/:id" element={<PostDetails />} />
             <Route path="/posts/:id/edit" element={<EditPost />} />
+
+            <Route path="/users" element={<Users />} />
+            <Route path="/users/:id" element={<UserDetails />} />
           </Route>
         </Route>
       </Routes>
