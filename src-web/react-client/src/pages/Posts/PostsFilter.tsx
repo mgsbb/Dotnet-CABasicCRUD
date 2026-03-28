@@ -1,21 +1,51 @@
 import { useState } from "react";
-import type { PostsQuery } from "./Posts";
+import { useSearchParams } from "react-router";
 
-type Props = {
-  filterFormData: PostsQuery;
-  setFilterFormData: React.Dispatch<React.SetStateAction<PostsQuery>>;
+export type PostsQuery = {
+  searchTerm: string;
+  page: number;
+  pageSize: number;
+  postOrderBy: string;
+  sortDirection: string;
+  userId: string;
 };
 
-export default function PostsFiler({
-  filterFormData,
-  setFilterFormData,
-}: Props) {
+export function getPostsQuery(searchParams: URLSearchParams): PostsQuery {
+  return {
+    searchTerm: searchParams.get("searchTerm") ?? "",
+    page: Number(searchParams.get("page") ?? 1),
+    pageSize: Number(searchParams.get("pageSize") ?? 10),
+    postOrderBy: searchParams.get("postOrderBy") ?? "createdAt",
+    sortDirection: searchParams.get("sortDirection") ?? "desc",
+    userId: searchParams.get("userId") ?? "",
+  };
+}
+
+function updateParams(
+  searchParams: URLSearchParams,
+  setSearchParams: (p: URLSearchParams) => void,
+  updates: Record<string, string>,
+) {
+  const params = new URLSearchParams(searchParams);
+
+  Object.entries(updates).forEach(([key, value]) => {
+    params.set(key, value);
+  });
+
+  setSearchParams(params);
+}
+
+export default function PostsFiler() {
   const [searchTerm, setSetTerm] = useState("");
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const postsQuery = getPostsQuery(searchParams);
 
   const handleFilterSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    setFilterFormData({ ...filterFormData, searchTerm: searchTerm });
+    updateParams(searchParams, setSearchParams, { searchTerm });
   };
 
   return (
@@ -31,11 +61,13 @@ export default function PostsFiler({
       />
 
       <select
-        className="border border-gray-300 rounded-sm p-2"
-        value={filterFormData?.postOrderBy}
+        value={postsQuery.postOrderBy}
         onChange={(e) => {
-          setFilterFormData({ ...filterFormData, postOrderBy: e.target.value });
+          updateParams(searchParams, setSearchParams, {
+            postOrderBy: e.target.value,
+          });
         }}
+        className="border border-gray-300 rounded-sm p-2"
       >
         <option value="createdAt">Created</option>
         <option value="updatedAt">Updated</option>
@@ -43,27 +75,26 @@ export default function PostsFiler({
       </select>
 
       <select
-        className="border border-gray-300 rounded-sm p-2"
-        value={filterFormData?.sortDirection}
-        onChange={(e) =>
-          setFilterFormData({
-            ...filterFormData,
+        value={postsQuery.sortDirection}
+        onChange={(e) => {
+          updateParams(searchParams, setSearchParams, {
             sortDirection: e.target.value,
-          })
-        }
+          });
+        }}
+        className="border border-gray-300 rounded-sm p-2"
       >
         <option value="desc">Desc</option>
         <option value="asc">Asc</option>
       </select>
 
       <select
+        value={postsQuery.pageSize}
+        onChange={(e) => {
+          updateParams(searchParams, setSearchParams, {
+            pageSize: e.target.value,
+          });
+        }}
         className="border border-gray-300 rounded-sm p-2"
-        onChange={(e) =>
-          setFilterFormData({
-            ...filterFormData,
-            pageSize: parseInt(e.target.value),
-          })
-        }
       >
         <option value={10}>10/page</option>
         <option value={20}>20/page</option>

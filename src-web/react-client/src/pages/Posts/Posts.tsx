@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { Link } from "react-router";
-import PostsFilter from "./PostsFilter";
-import { useState } from "react";
+import { Link, useSearchParams } from "react-router";
+import PostsFilter, { getPostsQuery } from "./PostsFilter";
 
 export type Post = {
   id: string;
@@ -14,27 +13,10 @@ export type Post = {
   updatedAt: string;
 };
 
-export type PostsQuery = {
-  searchTerm: string;
-  page: number;
-  pageSize: number;
-  postOrderBy: string;
-  sortDirection: string;
-  userId: string;
-};
-
-const initialPostQuery: PostsQuery = {
-  searchTerm: "",
-  page: 1,
-  pageSize: 10,
-  postOrderBy: "createdAt",
-  sortDirection: "desc",
-  userId: "",
-};
-
 export default function Posts() {
-  const [filterFormData, setFilterFormData] =
-    useState<PostsQuery>(initialPostQuery);
+  const [searchParams] = useSearchParams();
+
+  const postsQuery = getPostsQuery(searchParams);
 
   const {
     data: posts,
@@ -42,21 +24,16 @@ export default function Posts() {
     isError,
     error,
   } = useQuery({
-    queryKey: [
-      "posts",
-      {
-        searchTerm: filterFormData.searchTerm,
-        page: filterFormData.page,
-        pageSize: filterFormData.pageSize,
-        postOrderBy: filterFormData.postOrderBy,
-        sortDirection: filterFormData.sortDirection,
-        userId: filterFormData.userId,
-      },
-    ],
+    queryKey: ["posts", postsQuery],
 
     queryFn: async (): Promise<Post[]> => {
       const response = await axios.get(
-        `/api/v1/posts?searchTerm=${filterFormData.searchTerm}&page=${filterFormData?.page}&pageSize=${filterFormData?.pageSize}&postOrderBy=${filterFormData?.postOrderBy}&sortDirection=${filterFormData?.sortDirection}`,
+        `/api/v1/posts?
+        searchTerm=${postsQuery.searchTerm}
+        &page=${postsQuery.page}
+        &pageSize=${postsQuery.pageSize}
+        &postOrderBy=${postsQuery?.postOrderBy}
+        &sortDirection=${postsQuery?.sortDirection}`,
         {
           withCredentials: true,
         },
@@ -84,10 +61,7 @@ export default function Posts() {
         </nav>
       </div>
 
-      <PostsFilter
-        filterFormData={filterFormData}
-        setFilterFormData={setFilterFormData}
-      />
+      <PostsFilter />
 
       {/* list of posts  */}
       <ul className="mt-10 flex flex-col gap-10 pb-10">
