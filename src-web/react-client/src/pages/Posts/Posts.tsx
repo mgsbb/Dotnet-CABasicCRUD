@@ -28,12 +28,7 @@ export default function Posts() {
 
     queryFn: async (): Promise<Post[]> => {
       const response = await axios.get(
-        `/api/v1/posts?
-        searchTerm=${postsQuery.searchTerm}
-        &page=${postsQuery.page}
-        &pageSize=${postsQuery.pageSize}
-        &postOrderBy=${postsQuery?.postOrderBy}
-        &sortDirection=${postsQuery?.sortDirection}`,
+        `/api/v1/posts?searchTerm=${postsQuery.searchTerm}&page=${postsQuery.page}&pageSize=${postsQuery.pageSize}&postOrderBy=${postsQuery?.postOrderBy}&sortDirection=${postsQuery?.sortDirection}`,
         {
           withCredentials: true,
         },

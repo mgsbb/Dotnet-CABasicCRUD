@@ -35,7 +35,7 @@ function updateParams(
   setSearchParams(params);
 }
 
-export default function PostsFiler() {
+export default function PostsFitler() {
   const [searchTerm, setSetTerm] = useState("");
 
   const [searchParams, setSearchParams] = useSearchParams();
