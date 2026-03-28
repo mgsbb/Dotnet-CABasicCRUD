@@ -1,8 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Link } from "react-router";
+import PostsFilter from "./PostsFilter";
+import { useState } from "react";
 
-type Post = {
+export type Post = {
   id: string;
   title: string;
   content: string;
@@ -12,19 +14,53 @@ type Post = {
   updatedAt: string;
 };
 
+export type PostsQuery = {
+  searchTerm: string;
+  page: number;
+  pageSize: number;
+  postOrderBy: string;
+  sortDirection: string;
+  userId: string;
+};
+
+const initialPostQuery: PostsQuery = {
+  searchTerm: "",
+  page: 1,
+  pageSize: 10,
+  postOrderBy: "createdAt",
+  sortDirection: "desc",
+  userId: "",
+};
+
 export default function Posts() {
+  const [filterFormData, setFilterFormData] =
+    useState<PostsQuery>(initialPostQuery);
+
   const {
     data: posts,
     isLoading,
     isError,
     error,
   } = useQuery({
-    queryKey: ["posts"],
+    queryKey: [
+      "posts",
+      {
+        searchTerm: filterFormData.searchTerm,
+        page: filterFormData.page,
+        pageSize: filterFormData.pageSize,
+        postOrderBy: filterFormData.postOrderBy,
+        sortDirection: filterFormData.sortDirection,
+        userId: filterFormData.userId,
+      },
+    ],
 
     queryFn: async (): Promise<Post[]> => {
-      const response = await axios.get("/api/v1/posts", {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `/api/v1/posts?searchTerm=${filterFormData.searchTerm}&page=${filterFormData?.page}&pageSize=${filterFormData?.pageSize}&postOrderBy=${filterFormData?.postOrderBy}&sortDirection=${filterFormData?.sortDirection}`,
+        {
+          withCredentials: true,
+        },
+      );
       return response.data;
     },
   });
@@ -32,10 +68,6 @@ export default function Posts() {
   if (isLoading) return <div>Loading...</div>;
 
   if (isError) return <div>Error: {error.message}</div>;
-
-  const handleFilterSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
-  };
 
   return (
     <section className="px-4 sm:px-10 flex flex-col gap-10">
@@ -52,54 +84,11 @@ export default function Posts() {
         </nav>
       </div>
 
-      {/* filter form  */}
-      <form
-        onSubmit={handleFilterSubmit}
-        className="flex flex-col lg:flex-row gap-2 text-sm w-full"
-      >
-        <input
-          // asp-for="SearchTerm"
-          placeholder="Search posts..."
-          className="border border-gray-300 rounded-sm p-2 flex-1"
-        />
+      <PostsFilter
+        filterFormData={filterFormData}
+        setFilterFormData={setFilterFormData}
+      />
 
-        <select
-          // asp-for="OrderBy"
-          // asp-items="Html.GetEnumSelectList<PostOrderBy>()"
-          className="border border-gray-300 rounded-sm p-2"
-          // onchange="this.form.submit()"
-        ></select>
-
-        <select
-          // asp-for="SortDirection"
-          // asp-items="Html.GetEnumSelectList<SortDirection>()"
-          className="border border-gray-300 rounded-sm p-2"
-          // onchange="this.form.submit()"
-        ></select>
-
-        <select
-          // asp-for="PageSize"
-          className="border border-gray-300 rounded-sm p-2"
-          // onchange="this.form.submit()"
-        >
-          <option value="10">10/page</option>
-          <option value="20">20/page</option>
-          <option value="30">30/page</option>
-        </select>
-
-        <div>
-          <input asp-for="Page" value="1" type="hidden" />
-
-          <input asp-for="PageSize" type="hidden" />
-
-          <button
-            type="submit"
-            className="bg-gray-800 text-white py-2 px-4 rounded-sm cursor-pointer w-fit"
-          >
-            Filter
-          </button>
-        </div>
-      </form>
       {/* list of posts  */}
       <ul className="mt-10 flex flex-col gap-10 pb-10">
         {posts?.map((post) => {
