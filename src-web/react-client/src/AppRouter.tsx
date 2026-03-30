@@ -12,6 +12,7 @@ import {
   RootPage,
   Users,
   UserDetails,
+  EditUser,
 } from "./pages";
 
 function AppRouter() {
@@ -37,6 +38,7 @@ function AppRouter() {
 
             <Route path="/users" element={<Users />} />
             <Route path="/users/:id" element={<UserDetails />} />
+            <Route path="/users/:id/edit" element={<EditUser />} />
           </Route>
         </Route>
       </Routes>

@@ -16,3 +16,4 @@ export { default as EditPost } from "./Posts/EditPost";
 
 export { default as Users } from "./Users/Users";
 export { default as UserDetails } from "./Users/UserDetails";
+export { default as EditUser } from "./Users/EditUser";
