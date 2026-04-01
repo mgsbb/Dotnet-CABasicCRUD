@@ -1,4 +1,5 @@
 import EditUserEmail from "./EditUserEmail";
+import EditUserPassword from "./EditUserPassword";
 import EditUserProfile from "./EditUserProfile";
 
 export default function EditUser() {
@@ -12,6 +13,8 @@ export default function EditUser() {
         <EditUserProfile />
 
         <EditUserEmail />
+
+        <EditUserPassword />
       </section>
     </>
   );
