@@ -1,15 +1,24 @@
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import AuthInput from "./AuthInput";
+import { toast, Toaster } from "sonner";
+import type { UnauthorizedResponse } from "../../types/ApiErrorResponse";
 
 type LoginFormData = {
   email: string;
   password: string;
 };
 
+type LoginValidationError = Partial<LoginFormData>;
+
 const initialState: LoginFormData = {
+  email: "",
+  password: "",
+};
+
+const initialValidationErrors: LoginValidationError = {
   email: "",
   password: "",
 };
@@ -19,22 +28,32 @@ export default function Login() {
 
   const [formData, setFormData] = useState<LoginFormData>(initialState);
 
+  const [validationErrors, setValidationErrors] =
+    useState<LoginValidationError>(initialValidationErrors);
+
   const loginMutation = useMutation({
     mutationFn: async (data: LoginFormData) => {
       const response = await axios.post("/api/v1/auth/login", data, {
         withCredentials: true,
       });
-      //   console.log(response.data);
       return response.data;
     },
 
     onSuccess: () => {
-      // console.log("Login successful");
-      navigate("/");
+      toast.success("Login success. Redirecting...", {
+        className: "!bg-green-100 !text-green-700 !text-base",
+      });
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     },
 
-    onError(error: any) {
-      console.error(error);
+    onError(error: AxiosError<UnauthorizedResponse>) {
+      if (error.response?.status == 401) {
+        toast.error(error.response?.data.detail, {
+          className: "!bg-red-100 !text-red-700 !text-base",
+        });
+      }
     },
   });
 
@@ -45,11 +64,34 @@ export default function Login() {
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    let isReturn = false;
+
+    if (formData.email === "") {
+      setValidationErrors((prev) => ({ ...prev, email: "Email is required." }));
+      isReturn = true;
+    } else {
+      setValidationErrors((prev) => ({ ...prev, email: undefined }));
+    }
+
+    if (formData.password === "") {
+      setValidationErrors((prev) => ({
+        ...prev,
+        password: "Password is required.",
+      }));
+      isReturn = true;
+    } else {
+      setValidationErrors((prev) => ({ ...prev, password: undefined }));
+    }
+
+    if (isReturn) return;
+
     loginMutation.mutate(formData);
   };
 
   return (
     <div className="flex min-h-screen">
+      <Toaster position="top-center" />
+
       <section className="hidden lg:block bg-gray-800 flex-1"></section>
 
       <section className="flex-1 pt-40">
@@ -73,6 +115,7 @@ export default function Login() {
                 id="email"
                 value={formData.email}
                 onChange={handleChange}
+                validationError={validationErrors.email}
               />
 
               <AuthInput
@@ -81,6 +124,7 @@ export default function Login() {
                 id="password"
                 value={formData.password}
                 onChange={handleChange}
+                validationError={validationErrors.password}
               />
             </div>
 

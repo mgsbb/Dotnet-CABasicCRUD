@@ -6,23 +6,38 @@ type Props = {
   onChange:
     | React.ChangeEventHandler<HTMLInputElement, HTMLInputElement>
     | undefined;
+  validationError: string | undefined;
 };
 
-export default function AuthInput({ id, type, label, value, onChange }: Props) {
+export default function AuthInput({
+  id,
+  type,
+  label,
+  value,
+  onChange,
+  validationError,
+}: Props) {
   return (
-    <label
-      htmlFor={id}
-      className="font-medium text-gray-500 flex flex-col gap-1"
-    >
-      {label}
-      <input
-        type={type}
-        id={id}
-        name={id}
-        value={value}
-        onChange={onChange}
-        className="border border-gray-300 rounded-sm p-2 text-black font-normal"
-      />
-    </label>
+    <div>
+      <label
+        htmlFor={id}
+        className="font-medium text-gray-500 flex flex-col gap-1"
+      >
+        {label}
+        <input
+          type={type}
+          id={id}
+          name={id}
+          value={value}
+          onChange={onChange}
+          className="border border-gray-300 rounded-sm p-2 text-black font-normal"
+        />
+      </label>
+      {validationError && (
+        <span className="text-sm font-semibold text-red-600">
+          {validationError}
+        </span>
+      )}
+    </div>
   );
 }

@@ -1,8 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import AuthInput from "./AuthInput";
+import type {
+  BadRequestResponse,
+  ConflictResponse,
+} from "../../types/ApiErrorResponse";
+import { toast, Toaster } from "sonner";
 
 type RegisterFormData = {
   email: string;
@@ -11,6 +16,8 @@ type RegisterFormData = {
   username: string;
 };
 
+type RegisterValidationError = Partial<RegisterFormData>;
+
 const initialState: RegisterFormData = {
   email: "",
   password: "",
@@ -18,27 +25,60 @@ const initialState: RegisterFormData = {
   username: "",
 };
 
+const initialValidationErrors: RegisterValidationError = {
+  email: undefined,
+  password: undefined,
+  name: undefined,
+  username: undefined,
+};
+
 export default function Register() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState<RegisterFormData>(initialState);
+
+  const [validationErrors, setValidationErrors] =
+    useState<RegisterValidationError>(initialValidationErrors);
 
   const registerMutation = useMutation({
     mutationFn: async (data: RegisterFormData) => {
       const response = await axios.post("/api/v1/auth/register", data, {
         withCredentials: true,
       });
-      //   console.log(response.data);
+
       return response.data;
     },
 
     onSuccess: () => {
-      // console.log("Login successful");
+      toast.error("Registered successfully", {
+        className: "!bg-green-100 !text-green-700 !text-base",
+      });
       navigate("/");
     },
 
-    onError(error: any) {
-      console.error(error);
+    onError(
+      error: AxiosError<BadRequestResponse> | AxiosError<ConflictResponse>,
+    ) {
+      const data = error.response?.data;
+
+      if (error.response?.status === 400 && data && "errors" in data) {
+        data.errors?.map((e) => {
+          setValidationErrors((prev) => {
+            const code: keyof RegisterValidationError =
+              e.code.toLowerCase() as keyof RegisterValidationError;
+            return {
+              ...prev,
+              [code]: `${prev[code] ? prev[code] : ""} ${e.message}`,
+            };
+          });
+        });
+      }
+
+      if (error.response?.status == 409) {
+        toast.error("Email already exists", {
+          className: "!bg-red-100 !text-red-700 !text-base",
+        });
+      }
     },
   });
 
@@ -49,11 +89,51 @@ export default function Register() {
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    let isReturn = false;
+
+    if (formData.name === "") {
+      setValidationErrors((prev) => ({ ...prev, name: "Name is required." }));
+      isReturn = true;
+    } else {
+      setValidationErrors((prev) => ({ ...prev, name: undefined }));
+    }
+
+    if (formData.username === "") {
+      setValidationErrors((prev) => ({
+        ...prev,
+        username: "Username is required.",
+      }));
+      isReturn = true;
+    } else {
+      setValidationErrors((prev) => ({ ...prev, username: undefined }));
+    }
+
+    if (formData.email === "") {
+      setValidationErrors((prev) => ({ ...prev, email: "Email is required." }));
+      isReturn = true;
+    } else {
+      setValidationErrors((prev) => ({ ...prev, email: undefined }));
+    }
+
+    if (formData.password === "") {
+      setValidationErrors((prev) => ({
+        ...prev,
+        password: "Password is required.",
+      }));
+      isReturn = true;
+    } else {
+      setValidationErrors((prev) => ({ ...prev, password: undefined }));
+    }
+
+    if (isReturn) return;
+
     registerMutation.mutate(formData);
   };
 
   return (
     <div className="flex min-h-screen">
+      <Toaster position="top-center" />
+
       <section className="hidden lg:block bg-gray-800 flex-1"></section>
 
       <section className="flex-1 pt-40">
@@ -79,6 +159,7 @@ export default function Register() {
                 id="name"
                 value={formData.name}
                 onChange={handleChange}
+                validationError={validationErrors.name}
               />
 
               <AuthInput
@@ -87,6 +168,7 @@ export default function Register() {
                 id="username"
                 value={formData.username}
                 onChange={handleChange}
+                validationError={validationErrors.username}
               />
 
               <AuthInput
@@ -95,6 +177,7 @@ export default function Register() {
                 id="email"
                 value={formData.email}
                 onChange={handleChange}
+                validationError={validationErrors.email}
               />
 
               <AuthInput
@@ -103,6 +186,7 @@ export default function Register() {
                 id="password"
                 value={formData.password}
                 onChange={handleChange}
+                validationError={validationErrors.password}
               />
             </div>
 
