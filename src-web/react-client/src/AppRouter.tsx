@@ -14,10 +14,13 @@ import {
   UserDetails,
   EditUser,
 } from "./pages";
+import ScrollToHash from "./components/ScrollToHash";
 
 function AppRouter() {
   return (
     <BrowserRouter>
+      <ScrollToHash />
+
       <Routes>
         {/* protection logic inside rootpage */}
         <Route path="/" element={<RootPage />} />
