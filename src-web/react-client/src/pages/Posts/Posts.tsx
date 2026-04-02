@@ -2,8 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Link, useSearchParams } from "react-router";
 import PostsFilter, { getPostsQuery } from "./PostsFilter";
+import Post from "./Post";
 
-export type Post = {
+export type TPost = {
   id: string;
   title: string;
   content: string;
@@ -26,7 +27,7 @@ export default function Posts() {
   } = useQuery({
     queryKey: ["posts", postsQuery],
 
-    queryFn: async (): Promise<Post[]> => {
+    queryFn: async (): Promise<TPost[]> => {
       const response = await axios.get(
         `/api/v1/posts?searchTerm=${postsQuery.searchTerm}&page=${postsQuery.page}&pageSize=${postsQuery.pageSize}&postOrderBy=${postsQuery?.postOrderBy}&sortDirection=${postsQuery?.sortDirection}`,
         {
@@ -61,27 +62,7 @@ export default function Posts() {
       {/* list of posts  */}
       <ul className="mt-10 flex flex-col gap-10 pb-10">
         {posts?.map((post) => {
-          return (
-            <li key={post.id} className="">
-              <div className="flex flex-col lg:flex-row gap-2 items-start justify-between">
-                <div className="flex flex-col">
-                  <div className="flex items-end gap-4">
-                    <Link to={`/posts/${post.id}`} className="flex flex-col">
-                      <p className="text-gray-700 font-bold">{post.title}</p>
-                    </Link>
-                    <Link to={`/users/${post.userId}`} className="">
-                      <p className="text-sm font-bold text-gray-500 ">
-                        - {post.authorName}
-                      </p>
-                    </Link>
-                  </div>
-                  <Link to={`/posts/${post.id}`} className="flex flex-col">
-                    <p className="">{post.content}</p>
-                  </Link>
-                </div>
-              </div>
-            </li>
-          );
+          return <Post post={post} key={post.id} />;
         })}
       </ul>
     </section>

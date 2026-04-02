@@ -3,8 +3,9 @@ import axios from "axios";
 import { Link, useParams, useSearchParams } from "react-router";
 import type { User } from "./Users";
 import { useAuth } from "../../hooks/useAuth";
-import type { Post } from "../Posts/Posts";
 import PostsFilter, { getPostsQuery } from "../Posts/PostsFilter";
+import Post from "../Posts/Post";
+import type { TPost } from "../Posts/Posts";
 
 export default function UserDetails() {
   const { id: userId } = useParams();
@@ -35,7 +36,7 @@ export default function UserDetails() {
   } = useQuery({
     queryKey: ["posts", { ...postsQuery, userId }],
 
-    queryFn: async (): Promise<Post[]> => {
+    queryFn: async (): Promise<TPost[]> => {
       const response = await axios.get(
         `/api/v1/posts?userId=${userId}&searchTerm=${postsQuery.searchTerm}&page=${postsQuery.page}&pageSize=${postsQuery.pageSize}&postOrderBy=${postsQuery?.postOrderBy}&sortDirection=${postsQuery?.sortDirection}`,
         {
@@ -112,32 +113,7 @@ export default function UserDetails() {
         ) : (
           <ul className="mt-10 flex flex-col gap-10 pb-10">
             {posts?.map((post) => {
-              return (
-                <li key={post.id} className="">
-                  <div className="flex flex-col lg:flex-row gap-2 items-start justify-between">
-                    <div className="flex flex-col">
-                      <div className="flex items-center gap-4">
-                        <Link
-                          to={`/posts/${post.id}`}
-                          className="flex flex-col"
-                        >
-                          <p className="text-gray-700 font-bold">
-                            {post.title}
-                          </p>
-                        </Link>
-                        <Link to={`/users/${post.userId}`} className="">
-                          <p className="text-sm font-bold text-gray-500">
-                            - {post.authorName}
-                          </p>
-                        </Link>
-                      </div>
-                      <Link to={`/posts/${post.id}`} className="flex flex-col">
-                        <p className="">{post.content}</p>
-                      </Link>
-                    </div>
-                  </div>
-                </li>
-              );
+              return <Post post={post} key={post.id} />;
             })}
           </ul>
         )}
