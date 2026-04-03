@@ -8,7 +8,7 @@ export default function Navbar({
   return (
     <header
       id="header"
-      className="fixed top-0 h-16 w-full bg-white border-b border-gray-300 z-20 p-4"
+      className="lg:hidden fixed top-0 h-16 w-full bg-white border-b border-gray-300 z-20 p-4"
     >
       <nav>
         <button

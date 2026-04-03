@@ -12,8 +12,8 @@ export default function Sidebar({
   return (
     <aside
       id="sidebar"
-      className={`fixed left-0 top-0 h-screen bg-white border-r border-gray-300 
-     p-1 md:p-2 lg:p-4 transform transition-transform duration-300 z-10 w-64 md:w-48 lg:w-80 ease-in-out
+      className={`fixed left-0 top-0 h-screen bg-gray-50 border-r border-gray-300 
+     p-1 md:p-2 lg:p-4 transform transition-transform duration-300 z-10 w-64 lg:w-80 ease-in-out
      ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
     >
       {/* hamburger menu button to toggle sidebar */}
@@ -22,7 +22,7 @@ export default function Sidebar({
         onClick={() => {
           setIsSidebarOpen(!isSidebarOpen);
         }}
-        className="text-gray-500 cursor-pointer"
+        className="text-gray-500 cursor-pointer lg:hidden"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -43,7 +43,7 @@ export default function Sidebar({
       {/* user details */}
       <CurrentUser />
 
-      <div className="px-10 py-10 h-10 flex flex-col gap-8 text-gray-500 text-lg font-medium w-full">
+      <div className="px-10 py-10 h-10 flex flex-col gap-8 text-gray-500 font-medium w-full">
         {/* home icon  */}
         <Link to="/" className="inline-flex gap-4">
           <svg
