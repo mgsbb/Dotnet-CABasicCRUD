@@ -1,5 +1,6 @@
 ﻿using CABasicCRUD.Application;
 using CABasicCRUD.Infrastructure;
+using CABasicCRUD.Infrastructure.Chats;
 using CABasicCRUD.Infrastructure.Persistence.PostgreSql;
 using CABasicCRUD.Infrastructure.Persistence.PostgreSql.Seeding;
 using CABasicCRUD.Presentation.WebApi;
@@ -88,5 +89,7 @@ app.MapGet("/api/health", () => new { Health = "Ok" })
     .WithTags("HealthCheck")
     .WithSummary("Health check endpoint")
     .WithDescription("Returns Ok!");
+
+app.MapHub<ChatHub>("/hubs/chat");
 
 app.Run();
