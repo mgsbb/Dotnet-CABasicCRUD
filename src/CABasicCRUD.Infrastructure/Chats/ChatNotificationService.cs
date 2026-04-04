@@ -14,10 +14,10 @@ public sealed class ChatNotificationService(IHubContext<ChatHub> hubContext)
     public Task NotifyNewMessage(
         ConversationId conversationId,
         MessageId messageId,
-        UserId senderId,
+        string content,
+        UserId senderUserId,
         string senderUsername,
         string senderFullName,
-        string content,
         DateTime sentAt,
         CancellationToken cancellationToken
     )
@@ -30,7 +30,7 @@ public sealed class ChatNotificationService(IHubContext<ChatHub> hubContext)
                 {
                     MessageId = messageId.Value,
                     ConversationId = conversationId.Value,
-                    SenderId = senderId.Value,
+                    SenderUserId = senderUserId.Value,
                     SenderUsername = senderUsername,
                     SenderFullName = senderFullName,
                     Content = content,

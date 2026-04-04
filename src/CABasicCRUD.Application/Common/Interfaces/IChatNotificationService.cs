@@ -9,10 +9,10 @@ public interface IChatNotificationService
     Task NotifyNewMessage(
         ConversationId conversationId,
         MessageId messageId,
-        UserId senderId,
+        string content,
+        UserId senderUserId,
         string senderUsername,
         string senderFullName,
-        string content,
         DateTime sentAt,
         CancellationToken cancellationToken
     );

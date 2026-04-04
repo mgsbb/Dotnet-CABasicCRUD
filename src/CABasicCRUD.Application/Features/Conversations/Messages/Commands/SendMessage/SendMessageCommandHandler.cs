@@ -60,10 +60,10 @@ internal sealed class SendMessageCommandHandler(
         await _chatNotificationService.NotifyNewMessage(
             conversation.Id,
             result.Value.Id,
+            result.Value.Content,
             result.Value.SenderUserId,
             user!.Username,
             user!.UserProfile.FullName,
-            result.Value.Content,
             result.Value.CreatedAt,
             cancellationToken
         );
