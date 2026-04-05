@@ -90,6 +90,6 @@ app.MapGet("/api/health", () => new { Health = "Ok" })
     .WithSummary("Health check endpoint")
     .WithDescription("Returns Ok!");
 
-app.MapHub<ChatHub>("/hubs/chat");
+app.MapHub<ChatHub>("/api/v1/hubs/chat");
 
 app.Run();
