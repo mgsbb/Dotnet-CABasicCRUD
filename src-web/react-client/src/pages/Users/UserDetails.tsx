@@ -6,6 +6,7 @@ import { useAuth } from "../../hooks/useAuth";
 import PostsFilter, { getPostsQuery } from "../Posts/PostsFilter";
 import Post from "../Posts/Post";
 import type { TPost } from "../Posts/Posts";
+import StartPrivateConversation from "./StartPrivateConversation";
 
 export default function UserDetails() {
   const { id: userId } = useParams();
@@ -78,23 +79,14 @@ export default function UserDetails() {
             <p>{user?.username}</p>
           </div>
         </div>
-        {user?.id !== currentUser?.id && (
-          <div className="">
-            <form
-              // asp-controller="Conversations"
-              // asp-action="StartPrivateConversation"
-              className="bg-blue-100 items-start"
-            >
-              <input type="hidden" name="targetUserId" value="@Model.Id" />
-              <button
-                type="submit"
-                className="px-4 py-2 text-white bg-gray-900 rounded-sm cursor-pointer text-sm "
-              >
-                Message
-              </button>
-            </form>
-          </div>
-        )}
+        {user?.id !== currentUser?.id &&
+          user?.id !== undefined &&
+          currentUser?.id !== undefined && (
+            <StartPrivateConversation
+              currentUserId={currentUser.id}
+              targetUserId={user.id}
+            />
+          )}
       </div>
       <div>
         <h2 className="text-sm font-bold text-gray-700 ">About</h2>

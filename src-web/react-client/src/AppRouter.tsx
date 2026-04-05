@@ -13,6 +13,8 @@ import {
   Users,
   UserDetails,
   EditUser,
+  PrivateConversation,
+  ChatLayout,
 } from "./pages";
 import ScrollToHash from "./components/ScrollToHash";
 
@@ -43,6 +45,10 @@ function AppRouter() {
             <Route path="/users/:id" element={<UserDetails />} />
             <Route path="/users/:id/edit" element={<EditUser />} />
           </Route>
+        </Route>
+
+        <Route element={<ChatLayout />}>
+          <Route path="/conversations/:id" element={<PrivateConversation />} />
         </Route>
       </Routes>
     </BrowserRouter>

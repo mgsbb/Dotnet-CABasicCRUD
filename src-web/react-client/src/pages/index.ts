@@ -1,6 +1,7 @@
 export { default as ProtectedLayout } from "./Layouts/ProtectedLayout";
 export { default as GuestLayout } from "./Layouts/GuestLayout";
 export { default as AppLayout } from "./Layouts/AppLayout";
+export { default as ChatLayout } from "./Layouts/ChatLayout";
 
 export { default as Login } from "./Auth/Login";
 export { default as Register } from "./Auth/Register";
@@ -17,3 +18,5 @@ export { default as EditPost } from "./Posts/EditPost";
 export { default as Users } from "./Users/Users";
 export { default as UserDetails } from "./Users/UserDetails";
 export { default as EditUser } from "./Users/EditUser";
+
+export { default as PrivateConversation } from "./Conversations/PrivateConversation";
