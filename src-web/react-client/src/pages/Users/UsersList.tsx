@@ -1,23 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Link, useSearchParams } from "react-router";
-import UsersFilter, { getUsersQuery } from "./UsersFilter";
+import UsersFilter, { getUsersQuery } from "./components/UsersFilter";
+import type { TUser } from "../../types/users";
 
-export type User = {
-  id: string;
-  name: string;
-  email: string;
-  username: string;
-  createdAt: string;
-  updatedAt: string;
-  bio: string;
-  profileImageUrl: string;
-};
+// ===================================================================================================================
+// ===================================================================================================================
 
 export default function Users() {
   const [searchParams] = useSearchParams();
 
   const usersQuery = getUsersQuery(searchParams);
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   const {
     data: users,
@@ -27,7 +22,7 @@ export default function Users() {
   } = useQuery({
     queryKey: ["users", usersQuery],
 
-    queryFn: async (): Promise<User[]> => {
+    queryFn: async (): Promise<TUser[]> => {
       const response = await axios.get(
         `/api/v1/users?searchTerm=${usersQuery.searchTerm}&page=${usersQuery.page}&pageSize=${usersQuery.pageSize}&postOrderBy=${usersQuery?.userOrderBy}&sortDirection=${usersQuery?.sortDirection}`,
         {
@@ -38,9 +33,13 @@ export default function Users() {
     },
   });
 
+  // -------------------------------------------------------------------------------------------------------------------
+
   if (isLoading) return <div>Loading...</div>;
 
   if (isError) return <div>Error: {error.message}</div>;
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   return (
     <section className="px-2 sm:px-10 pb-10 w-full flex flex-col gap-10">

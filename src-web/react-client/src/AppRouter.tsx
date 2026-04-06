@@ -6,11 +6,11 @@ import {
   GuestLayout,
   Login,
   PostDetails,
-  Posts,
+  PostsList,
   ProtectedLayout,
   Register,
   RootPage,
-  Users,
+  UsersList,
   UserDetails,
   EditUser,
   PrivateConversation,
@@ -36,12 +36,12 @@ function AppRouter() {
         {/* protected routes */}
         <Route element={<ProtectedLayout />}>
           <Route element={<AppLayout />}>
-            <Route path="/posts" element={<Posts />} />
+            <Route path="/posts" element={<PostsList />} />
             <Route path="/posts/create" element={<CreatePost />} />
             <Route path="/posts/:id" element={<PostDetails />} />
             <Route path="/posts/:id/edit" element={<EditPost />} />
 
-            <Route path="/users" element={<Users />} />
+            <Route path="/users" element={<UsersList />} />
             <Route path="/users/:id" element={<UserDetails />} />
             <Route path="/users/:id/edit" element={<EditUser />} />
           </Route>

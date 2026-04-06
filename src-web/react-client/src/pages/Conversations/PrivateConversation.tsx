@@ -4,44 +4,16 @@ import { Link, useParams } from "react-router";
 import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { createConnection } from "../../services/signalr";
+import type {
+  TConversation,
+  TMessage,
+  TMessageFromHub,
+} from "../../types/conversations";
 
-type TConversation = {
-  id: string;
-  conversationType: "private" | "group";
-  participants: TParticipant[];
-  messages: TMessage[];
-  createdAt: string;
-  updatedAt: string;
-};
-
-type TParticipant = {
-  participantUserId: string;
-  participantUsername: string;
-  participantFullName: string;
-};
-
-type TMessage = {
-  id: string;
-  content: string;
-  senderUserId: string;
-  senderUsername: string;
-  senderFullName: string;
-  createdAt: string;
-  updatedAt?: string;
-};
-
-type TMessageFromHub = {
-  messageId: string;
-  content: string;
-  senderUserId: string;
-  senderUsername: string;
-  senderFullName: string;
-  sentAt: string;
-  conversationId: string;
-};
+// ===================================================================================================================
+// ===================================================================================================================
 
 function formatTime(timestamp: string): string {
-  console.log(timestamp);
   const date = timestamp.split("T")[0];
   const time = timestamp.split("T")[1].split(".")[0];
   return `${date} ${time}`;
@@ -53,6 +25,10 @@ export default function PrivateConversation() {
   const { data: currentUser } = useAuth();
 
   const [message, setMessage] = useState("");
+
+  const [messages, setMessages] = useState<TMessage[]>([]);
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   const {
     data: conversation,
@@ -69,7 +45,7 @@ export default function PrivateConversation() {
     },
   });
 
-  const [messages, setMessages] = useState<TMessage[]>([]);
+  // -------------------------------------------------------------------------------------------------------------------
 
   useEffect(() => {
     console.log("running");
@@ -77,6 +53,8 @@ export default function PrivateConversation() {
       setMessages(conversation.messages);
     }
   }, [conversation?.id]);
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   useEffect(() => {
     const connection = createConnection("/api/v1/hubs/chat");
@@ -113,6 +91,8 @@ export default function PrivateConversation() {
     };
   }, []);
 
+  // -------------------------------------------------------------------------------------------------------------------
+
   const sendMessageMutation = useMutation({
     mutationFn: async (message: string) => {
       const response = await axios.post(
@@ -130,6 +110,8 @@ export default function PrivateConversation() {
     onSuccess: () => {},
   });
 
+  // -------------------------------------------------------------------------------------------------------------------
+
   const handleSendMessage = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -138,6 +120,8 @@ export default function PrivateConversation() {
     setMessage("");
   };
 
+  // -------------------------------------------------------------------------------------------------------------------
+
   if (isLoading) return <>Loading...</>;
 
   if (isError) return <>Error...</>;
@@ -145,6 +129,8 @@ export default function PrivateConversation() {
   const otherUser = conversation?.participants.filter(
     (p) => p.participantUserId !== currentUser?.id,
   )[0];
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   return (
     <div className="mx-auto bg-white h-screen flex flex-col gap-2">

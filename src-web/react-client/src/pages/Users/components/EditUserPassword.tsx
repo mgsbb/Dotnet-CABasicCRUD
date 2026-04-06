@@ -5,12 +5,11 @@ import { useParams } from "react-router";
 import type {
   BadRequestResponse,
   UnauthorizedResponse,
-} from "../../types/ApiErrorResponse";
+} from "../../../types/api";
+import { pascalToCamel } from "../../../helpers/common";
 
-function pascalToCamel(input: string): string {
-  if (!input) return "";
-  return input[0].toLowerCase() + input.slice(1);
-}
+// ===================================================================================================================
+// ===================================================================================================================
 
 type EditUserPasswordFormData = {
   oldPassword: string;
@@ -32,6 +31,9 @@ const initialError: EditUserPasswordValidationError = {
   newPasswordConfirmed: undefined,
 };
 
+// ===================================================================================================================
+// ===================================================================================================================
+
 export default function EditUserPassword() {
   const { id: userId } = useParams();
 
@@ -44,6 +46,8 @@ export default function EditUserPassword() {
 
   const [validationErrors, setValidationErrors] =
     useState<EditUserPasswordValidationError>(initialError);
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   const editUserPasswordMutation = useMutation({
     mutationFn: async (data: EditUserPasswordFormData) => {
@@ -90,6 +94,8 @@ export default function EditUserPassword() {
       console.log(validationErrors);
     },
   });
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -141,9 +147,13 @@ export default function EditUserPassword() {
     editUserPasswordMutation.mutate(formData);
   };
 
+  // -------------------------------------------------------------------------------------------------------------------
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   return (
     <form

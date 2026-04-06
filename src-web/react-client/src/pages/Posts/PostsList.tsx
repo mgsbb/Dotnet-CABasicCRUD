@@ -1,23 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Link, useSearchParams } from "react-router";
-import PostsFilter, { getPostsQuery } from "./PostsFilter";
-import Post from "./Post";
+import Post from "./components/Post";
+import type { TPost } from "../../types/posts";
+import { getPostsQuery } from "../../helpers/posts";
+import PostsFilter from "./components/PostsFilter";
 
-export type TPost = {
-  id: string;
-  title: string;
-  content: string;
-  userId: string;
-  authorName: string;
-  createdAt: string;
-  updatedAt: string;
-};
+// ===================================================================================================================
+// ===================================================================================================================
 
 export default function Posts() {
   const [searchParams] = useSearchParams();
 
   const postsQuery = getPostsQuery(searchParams);
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   const {
     data: posts,
@@ -37,6 +34,7 @@ export default function Posts() {
       return response.data;
     },
   });
+  // -------------------------------------------------------------------------------------------------------------------
 
   if (isLoading) return <div>Loading...</div>;
 

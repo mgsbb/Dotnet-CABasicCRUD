@@ -1,6 +1,6 @@
-import EditUserEmail from "./EditUserEmail";
-import EditUserPassword from "./EditUserPassword";
-import EditUserProfile from "./EditUserProfile";
+import EditUserEmail from "./components/EditUserEmail";
+import EditUserPassword from "./components/EditUserPassword";
+import EditUserProfile from "./components/EditUserProfile";
 
 export default function EditUser() {
   return (

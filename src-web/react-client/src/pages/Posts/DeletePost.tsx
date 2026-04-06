@@ -9,10 +9,15 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
+// ===================================================================================================================
+// ===================================================================================================================
+
 export default function DeletePost({ postId }: { postId?: string }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const navigate = useNavigate();
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   const deletePostMutation = useMutation({
     mutationFn: async () => {
@@ -32,9 +37,13 @@ export default function DeletePost({ postId }: { postId?: string }) {
     },
   });
 
+  // -------------------------------------------------------------------------------------------------------------------
+
   if (postId === null) {
     return null;
   }
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   return (
     <>

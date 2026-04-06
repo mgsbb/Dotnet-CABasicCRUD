@@ -7,7 +7,10 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
-import { queryClient } from "../../App";
+import { queryClient } from "../../../App";
+
+// ===================================================================================================================
+// ===================================================================================================================
 
 export default function DeleteComment({
   commentId,
@@ -17,6 +20,8 @@ export default function DeleteComment({
   postId?: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   const deleteCommentMutation = useMutation({
     mutationFn: async () => {
@@ -38,9 +43,13 @@ export default function DeleteComment({
     },
   });
 
+  // -------------------------------------------------------------------------------------------------------------------
+
   if (commentId === null) {
     return null;
   }
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   return (
     <>

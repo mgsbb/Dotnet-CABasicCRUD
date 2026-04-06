@@ -2,6 +2,9 @@ import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router";
 
+// ===================================================================================================================
+// ===================================================================================================================
+
 type Props = {
   currentUserId: string;
   targetUserId: string;
@@ -12,11 +15,16 @@ type TConversation = {
   participantsId: string[];
 };
 
+// ===================================================================================================================
+// ===================================================================================================================
+
 export default function StartPrivateConversation({
   currentUserId,
   targetUserId,
 }: Props) {
   const navigate = useNavigate();
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   const startPrivateConversationMutation = useMutation({
     mutationFn: async (): Promise<TConversation> => {
@@ -41,11 +49,16 @@ export default function StartPrivateConversation({
     },
   });
 
+  // -------------------------------------------------------------------------------------------------------------------
+
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     startPrivateConversationMutation.mutate();
   };
+
+  // -------------------------------------------------------------------------------------------------------------------
+
   return (
     <div className="">
       <form onSubmit={handleSubmit} className="bg-blue-100 items-start">

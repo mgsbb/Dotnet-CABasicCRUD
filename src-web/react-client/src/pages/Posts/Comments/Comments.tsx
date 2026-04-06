@@ -2,26 +2,22 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Link } from "react-router";
 import DeleteComment from "./DeleteComment";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../../hooks/useAuth";
+import type { TComment } from "../../../types/posts";
 
-type Comment = {
-  id: string;
-  body: string;
-  postId: string;
-  userId: string;
-  authorName: string;
-  createdAt: string;
-  updatedAt: string;
-};
+// ===================================================================================================================
+// ===================================================================================================================
 
 export default function Comments({ postId }: { postId?: string }) {
+  const { data: currentUser } = useAuth();
+
   const {
     data: comments,
     isLoading: isCommentsLoading,
     isError: isCommentsError,
   } = useQuery({
     queryKey: ["posts", postId, "comments"],
-    queryFn: async (): Promise<Comment[]> => {
+    queryFn: async (): Promise<TComment[]> => {
       const response = await axios.get(`/api/v1/posts/${postId}/comments`, {
         withCredentials: true,
       });
@@ -30,7 +26,7 @@ export default function Comments({ postId }: { postId?: string }) {
     },
   });
 
-  const { data: currentUser } = useAuth();
+  // -------------------------------------------------------------------------------------------------------------------
 
   if (isCommentsLoading) return <div>Loading...</div>;
 

@@ -1,15 +1,9 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router";
+import type { TUsersQuery } from "../../../types/users";
+import { updateParams } from "../../../helpers/users";
 
-export type UsersQuery = {
-  searchTerm: string;
-  page: number;
-  pageSize: number;
-  userOrderBy: string;
-  sortDirection: string;
-};
-
-export function getUsersQuery(searchParams: URLSearchParams): UsersQuery {
+export function getUsersQuery(searchParams: URLSearchParams): TUsersQuery {
   return {
     searchTerm: searchParams.get("searchTerm") ?? "",
     page: Number(searchParams.get("page") ?? 1),
@@ -17,20 +11,6 @@ export function getUsersQuery(searchParams: URLSearchParams): UsersQuery {
     userOrderBy: searchParams.get("userOrderBy") ?? "createdAt",
     sortDirection: searchParams.get("sortDirection") ?? "desc",
   };
-}
-
-function updateParams(
-  searchParams: URLSearchParams,
-  setSearchParams: (p: URLSearchParams) => void,
-  updates: Partial<UsersQuery>,
-) {
-  const params = new URLSearchParams(searchParams);
-
-  Object.entries(updates).forEach(([key, value]) => {
-    params.set(key, value.toString());
-  });
-
-  setSearchParams(params);
 }
 
 export default function UsersFilter() {

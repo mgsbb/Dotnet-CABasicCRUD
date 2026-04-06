@@ -3,6 +3,9 @@ import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { useParams } from "react-router";
 
+// ===================================================================================================================
+// ===================================================================================================================
+
 type EditUserProfileFormData = {
   fullName: string;
   bio: string;
@@ -20,6 +23,9 @@ const initialError: EditUserProfileValidationError = {
   bio: undefined,
 };
 
+// ===================================================================================================================
+// ===================================================================================================================
+
 export default function EditUserProfile() {
   const { id: userId } = useParams();
 
@@ -32,6 +38,8 @@ export default function EditUserProfile() {
 
   const [validationErrors, setValidationErrors] =
     useState<EditUserProfileValidationError>(initialError);
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   const editUserProfileMutation = useMutation({
     mutationFn: async (data: EditUserProfileFormData) => {
@@ -60,6 +68,8 @@ export default function EditUserProfile() {
       }
     },
   });
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -93,6 +103,8 @@ export default function EditUserProfile() {
     editUserProfileMutation.mutate(formData);
   };
 
+  // -------------------------------------------------------------------------------------------------------------------
+
   const handleChange = (
     e:
       | React.ChangeEvent<HTMLInputElement>
@@ -100,6 +112,8 @@ export default function EditUserProfile() {
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   return (
     <form

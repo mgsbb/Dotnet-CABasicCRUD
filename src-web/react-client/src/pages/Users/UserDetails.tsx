@@ -1,15 +1,27 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Link, useParams, useSearchParams } from "react-router";
-import type { User } from "./Users";
 import { useAuth } from "../../hooks/useAuth";
-import PostsFilter, { getPostsQuery } from "../Posts/PostsFilter";
-import Post from "../Posts/Post";
-import type { TPost } from "../Posts/Posts";
+import Post from "../Posts/components/Post";
 import StartPrivateConversation from "./StartPrivateConversation";
+import { getPostsQuery } from "../../helpers/posts";
+import type { TPost } from "../../types/posts";
+import PostsFilter from "../Posts/components/PostsFilter";
+import type { TUser } from "../../types/users";
+
+// ===================================================================================================================
+// ===================================================================================================================
 
 export default function UserDetails() {
   const { id: userId } = useParams();
+
+  const [searchParams] = useSearchParams();
+
+  const postsQuery = getPostsQuery(searchParams);
+
+  const { data: currentUser } = useAuth();
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   const {
     data: user,
@@ -17,7 +29,7 @@ export default function UserDetails() {
     isError,
   } = useQuery({
     queryKey: ["users", userId],
-    queryFn: async (): Promise<User> => {
+    queryFn: async (): Promise<TUser> => {
       const response = await axios.get(`/api/v1/users/${userId}`, {
         withCredentials: true,
       });
@@ -26,9 +38,7 @@ export default function UserDetails() {
     },
   });
 
-  const [searchParams] = useSearchParams();
-
-  const postsQuery = getPostsQuery(searchParams);
+  // -------------------------------------------------------------------------------------------------------------------
 
   const {
     data: posts,
@@ -48,7 +58,7 @@ export default function UserDetails() {
     },
   });
 
-  const { data: currentUser } = useAuth();
+  // -------------------------------------------------------------------------------------------------------------------
 
   if (isLoading) return <div>Loading...</div>;
 

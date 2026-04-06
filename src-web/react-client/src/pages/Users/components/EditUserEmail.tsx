@@ -3,6 +3,9 @@ import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { useParams } from "react-router";
 
+// ===================================================================================================================
+// ===================================================================================================================
+
 export default function EditUserEmail() {
   const { id: userId } = useParams();
 
@@ -15,6 +18,7 @@ export default function EditUserEmail() {
   const [validationError, setValidationError] = useState<string | undefined>(
     undefined,
   );
+  // -------------------------------------------------------------------------------------------------------------------
 
   const editUserEmailMutation = useMutation({
     mutationFn: async (email: string) => {
@@ -49,6 +53,8 @@ export default function EditUserEmail() {
     },
   });
 
+  // -------------------------------------------------------------------------------------------------------------------
+
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -66,9 +72,13 @@ export default function EditUserEmail() {
     editUserEmailMutation.mutate(email);
   };
 
+  // -------------------------------------------------------------------------------------------------------------------
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   return (
     <form

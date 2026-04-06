@@ -3,11 +3,11 @@ import axios, { AxiosError } from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import AuthInput from "./AuthInput";
-import type {
-  BadRequestResponse,
-  ConflictResponse,
-} from "../../types/ApiErrorResponse";
+import type { BadRequestResponse, ConflictResponse } from "../../types/api";
 import { toast, Toaster } from "sonner";
+
+// ===================================================================================================================
+// ===================================================================================================================
 
 type RegisterFormData = {
   email: string;
@@ -32,6 +32,9 @@ const initialValidationErrors: RegisterValidationError = {
   username: undefined,
 };
 
+// ===================================================================================================================
+// ===================================================================================================================
+
 export default function Register() {
   const navigate = useNavigate();
 
@@ -39,6 +42,8 @@ export default function Register() {
 
   const [validationErrors, setValidationErrors] =
     useState<RegisterValidationError>(initialValidationErrors);
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   const registerMutation = useMutation({
     mutationFn: async (data: RegisterFormData) => {
@@ -82,9 +87,13 @@ export default function Register() {
     },
   });
 
+  // -------------------------------------------------------------------------------------------------------------------
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -129,6 +138,8 @@ export default function Register() {
 
     registerMutation.mutate(formData);
   };
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   return (
     <div className="flex min-h-screen">

@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import type { TPost } from "./Posts";
+import type { TPost } from "../../../types/posts";
 
 export default function Post({ post }: { post: TPost }) {
   return (

@@ -1,10 +1,15 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
-import { queryClient } from "../../App";
+import { queryClient } from "../../../App";
+
+// ===================================================================================================================
+// ===================================================================================================================
 
 export default function AddComment({ postId }: { postId?: string }) {
   const [comment, setComment] = useState("");
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   const createCommentMutation = useMutation({
     mutationFn: async (data: string) => {
@@ -31,6 +36,8 @@ export default function AddComment({ postId }: { postId?: string }) {
     },
   });
 
+  // -------------------------------------------------------------------------------------------------------------------
+
   const handleCommentSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -40,6 +47,8 @@ export default function AddComment({ postId }: { postId?: string }) {
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setComment(e.target.value);
   };
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   return (
     <section className="mt-16 w-full">

@@ -1,23 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Link, useParams } from "react-router";
-import AddComment from "./AddComment";
-import Comments from "./Comments";
+import AddComment from "./Comments/AddComment";
+import Comments from "./Comments/Comments";
 import { useAuth } from "../../hooks/useAuth";
 import DeletePost from "./DeletePost";
+import type { TPost } from "../../types/posts";
 
-type Post = {
-  id: string;
-  title: string;
-  content: string;
-  userId: string;
-  authorName: string;
-  createdAt: string;
-  updatedAt: string;
-};
+// ===================================================================================================================
+// ===================================================================================================================
 
 export default function PostDetails() {
   const { id: postId } = useParams();
+
+  const { data: currentUser } = useAuth();
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   const {
     data: post,
@@ -25,7 +23,7 @@ export default function PostDetails() {
     isError: isPostError,
   } = useQuery({
     queryKey: ["posts", postId],
-    queryFn: async (): Promise<Post> => {
+    queryFn: async (): Promise<TPost> => {
       const response = await axios.get(`/api/v1/posts/${postId}`, {
         withCredentials: true,
       });
@@ -34,11 +32,13 @@ export default function PostDetails() {
     },
   });
 
-  const { data: currentUser } = useAuth();
+  // -------------------------------------------------------------------------------------------------------------------
 
   if (isPostLoading) return <div>Loading...</div>;
 
   if (isPostError) return <div>Error occurred</div>;
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   return (
     <article className="pb-10 sm:px-10">

@@ -3,6 +3,9 @@ import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 
+// ===================================================================================================================
+// ===================================================================================================================
+
 type EditPostFormData = {
   title: string;
   content: string;
@@ -13,6 +16,9 @@ const initialState: EditPostFormData = {
   content: "",
 };
 
+// ===================================================================================================================
+// ===================================================================================================================
+
 export default function EditPost() {
   const { id: postId } = useParams();
 
@@ -21,6 +27,8 @@ export default function EditPost() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   const editPostMutation = useMutation({
     mutationFn: async (formData: EditPostFormData) => {
@@ -49,6 +57,8 @@ export default function EditPost() {
     },
   });
 
+  // -------------------------------------------------------------------------------------------------------------------
+
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -60,9 +70,13 @@ export default function EditPost() {
     editPostMutation.mutate(formData);
   };
 
+  // -------------------------------------------------------------------------------------------------------------------
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   return (
     <section className="flex flex-col gap-6 ">

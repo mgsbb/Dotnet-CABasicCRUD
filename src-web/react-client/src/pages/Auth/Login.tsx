@@ -4,7 +4,10 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import AuthInput from "./AuthInput";
 import { toast, Toaster } from "sonner";
-import type { UnauthorizedResponse } from "../../types/ApiErrorResponse";
+import type { UnauthorizedResponse } from "../../types/api";
+
+// ===================================================================================================================
+// ===================================================================================================================
 
 type LoginFormData = {
   email: string;
@@ -23,6 +26,9 @@ const initialValidationErrors: LoginValidationError = {
   password: "",
 };
 
+// ===================================================================================================================
+// ===================================================================================================================
+
 export default function Login() {
   const navigate = useNavigate();
 
@@ -30,6 +36,8 @@ export default function Login() {
 
   const [validationErrors, setValidationErrors] =
     useState<LoginValidationError>(initialValidationErrors);
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   const loginMutation = useMutation({
     mutationFn: async (data: LoginFormData) => {
@@ -57,9 +65,13 @@ export default function Login() {
     },
   });
 
+  // -------------------------------------------------------------------------------------------------------------------
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -87,6 +99,8 @@ export default function Login() {
 
     loginMutation.mutate(formData);
   };
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   return (
     <div className="flex min-h-screen">

@@ -1,39 +1,9 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router";
+import { getPostsQuery, updateParams } from "../../../helpers/posts";
 
-export type PostsQuery = {
-  searchTerm: string;
-  page: number;
-  pageSize: number;
-  postOrderBy: string;
-  sortDirection: string;
-  userId: string;
-};
-
-export function getPostsQuery(searchParams: URLSearchParams): PostsQuery {
-  return {
-    searchTerm: searchParams.get("searchTerm") ?? "",
-    page: Number(searchParams.get("page") ?? 1),
-    pageSize: Number(searchParams.get("pageSize") ?? 10),
-    postOrderBy: searchParams.get("postOrderBy") ?? "createdAt",
-    sortDirection: searchParams.get("sortDirection") ?? "desc",
-    userId: searchParams.get("userId") ?? "",
-  };
-}
-
-function updateParams(
-  searchParams: URLSearchParams,
-  setSearchParams: (p: URLSearchParams) => void,
-  updates: Record<string, string>,
-) {
-  const params = new URLSearchParams(searchParams);
-
-  Object.entries(updates).forEach(([key, value]) => {
-    params.set(key, value);
-  });
-
-  setSearchParams(params);
-}
+// ===================================================================================================================
+// ===================================================================================================================
 
 export default function PostsFitler() {
   const [searchTerm, setSetTerm] = useState("");
@@ -47,6 +17,8 @@ export default function PostsFitler() {
 
     updateParams(searchParams, setSearchParams, { searchTerm });
   };
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   return (
     <form

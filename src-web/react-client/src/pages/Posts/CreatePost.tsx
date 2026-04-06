@@ -2,6 +2,10 @@ import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import type { TPost } from "../../types/posts";
+
+// ===================================================================================================================
+// ===================================================================================================================
 
 type CreatePostFormData = {
   title: string;
@@ -20,6 +24,9 @@ const initialError: CreatePostValidationError = {
   content: undefined,
 };
 
+// ===================================================================================================================
+// ===================================================================================================================
+
 export default function () {
   const [formData, setFormData] = useState<CreatePostFormData>(initialState);
 
@@ -27,8 +34,10 @@ export default function () {
 
   const navigate = useNavigate();
 
+  // -------------------------------------------------------------------------------------------------------------------
+
   const createPostMutation = useMutation({
-    mutationFn: async (data: CreatePostFormData) => {
+    mutationFn: async (data: CreatePostFormData): Promise<TPost> => {
       const response = await axios.post("/api/v1/posts", data, {
         withCredentials: true,
       });
@@ -44,6 +53,8 @@ export default function () {
       console.error(err.response?.data);
     },
   });
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -69,9 +80,13 @@ export default function () {
     createPostMutation.mutate(formData);
   };
 
+  // -------------------------------------------------------------------------------------------------------------------
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   return (
     <section className="flex flex-col gap-16">

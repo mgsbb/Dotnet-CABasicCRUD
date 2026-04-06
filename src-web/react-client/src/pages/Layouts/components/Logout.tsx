@@ -8,12 +8,17 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { queryClient } from "../../App";
+import { queryClient } from "../../../App";
+
+// ===================================================================================================================
+// ===================================================================================================================
 
 export default function Logout() {
   const [isOpen, setIsOpen] = useState(false);
 
   const navigate = useNavigate();
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
@@ -35,6 +40,8 @@ export default function Logout() {
     },
   });
 
+  // -------------------------------------------------------------------------------------------------------------------
+
   const handleLogoutSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -42,6 +49,8 @@ export default function Logout() {
 
     setIsOpen(false);
   };
+
+  // -------------------------------------------------------------------------------------------------------------------
 
   return (
     <>
