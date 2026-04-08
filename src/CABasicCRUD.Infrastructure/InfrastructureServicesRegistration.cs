@@ -6,6 +6,7 @@ using CABasicCRUD.Infrastructure.Caching;
 using CABasicCRUD.Infrastructure.Chats;
 using CABasicCRUD.Infrastructure.EmailService;
 using CABasicCRUD.Infrastructure.Serialization;
+using CABasicCRUD.Infrastructure.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -24,6 +25,7 @@ public static class InfrastructureServicesRegistration
         services.RegisterSerializer();
         services.RegisterCachingServices();
         services.RegisterChatServices();
+        services.RegisterFileStorage();
 
         return services;
     }
@@ -83,6 +85,13 @@ public static class InfrastructureServicesRegistration
         services.AddSignalR();
 
         services.AddScoped<IChatNotificationService, ChatNotificationService>();
+
+        return services;
+    }
+
+    public static IServiceCollection RegisterFileStorage(this IServiceCollection services)
+    {
+        services.AddScoped<IFileStorage, LocalFileStorage>();
 
         return services;
     }

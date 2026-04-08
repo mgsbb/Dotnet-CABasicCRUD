@@ -112,6 +112,7 @@ public sealed class UsersController(IMediator mediator) : ApiController
     [ProducesResponseType(statusCode: StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(statusCode: StatusCodes.Status403Forbidden)]
     [ProducesResponseType(statusCode: StatusCodes.Status404NotFound)]
+    [ProducesResponseType(statusCode: StatusCodes.Status409Conflict)]
     public async Task<IActionResult> UpdateUserProfile(
         [FromBody] UpdateUserProfileRequest request,
         Guid id
@@ -147,6 +148,33 @@ public sealed class UsersController(IMediator mediator) : ApiController
             request.OldPassword,
             request.NewPassword,
             request.NewPasswordConfirmed
+        );
+
+        Result result = await _mediator.Send(request: command);
+
+        if (result.IsFailure)
+        {
+            return HandleResultFailure(result);
+        }
+
+        return NoContent();
+    }
+
+    // ========================================================================================================================
+
+    [Authorize]
+    [HttpPatch("{id}/profile-image")]
+    [ProducesResponseType(statusCode: StatusCodes.Status204NoContent)]
+    [ProducesResponseType(statusCode: StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(statusCode: StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(statusCode: StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateUserProfileImage(Guid id, IFormFile formFile)
+    {
+        UpdateUserProfileImageCommand command = new(
+            (UserId)id,
+            formFile.OpenReadStream(),
+            formFile.FileName,
+            formFile.ContentType
         );
 
         Result result = await _mediator.Send(request: command);

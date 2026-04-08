@@ -121,4 +121,11 @@ public class User : AggregateRoot<UserId>
 
         return Result.Success();
     }
+
+    public Result UpdateProfileImageUrl(string? profileImageUrl)
+    {
+        Result result = UserProfile.UpdateProfileImageUrl(profileImageUrl);
+
+        return result;
+    }
 }
