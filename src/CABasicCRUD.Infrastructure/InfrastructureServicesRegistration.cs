@@ -7,6 +7,7 @@ using CABasicCRUD.Infrastructure.Chats;
 using CABasicCRUD.Infrastructure.EmailService;
 using CABasicCRUD.Infrastructure.Serialization;
 using CABasicCRUD.Infrastructure.Storage;
+using CloudinaryDotNet;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -25,7 +26,7 @@ public static class InfrastructureServicesRegistration
         services.RegisterSerializer();
         services.RegisterCachingServices();
         services.RegisterChatServices();
-        services.RegisterFileStorage();
+        services.RegisterFileStorage(configuration);
 
         return services;
     }
@@ -89,9 +90,30 @@ public static class InfrastructureServicesRegistration
         return services;
     }
 
-    public static IServiceCollection RegisterFileStorage(this IServiceCollection services)
+    public static IServiceCollection RegisterFileStorage(
+        this IServiceCollection services,
+        IConfiguration configuration
+    )
     {
-        services.AddScoped<IFileStorage, LocalFileStorage>();
+        services.AddSingleton<IValidateOptions<CloudinaryOptions>, CloudinaryOptionsValidator>();
+
+        services
+            .AddOptions<CloudinaryOptions>()
+            .Bind(configuration.GetRequiredSection(CloudinaryOptions.SectionName))
+            .ValidateOnStart();
+
+        services.AddSingleton(sp =>
+        {
+            var options = sp.GetRequiredService<IOptions<CloudinaryOptions>>().Value;
+
+            var account = new Account(options.CloudName, options.ApiKey, options.ApiSecret);
+
+            return new Cloudinary(account);
+        });
+
+        services.AddScoped<IFileStorage, CloudinaryFileStorage>();
+
+        // services.AddScoped<IFileStorage, LocalFileStorage>();
 
         return services;
     }
