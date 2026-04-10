@@ -8,5 +8,6 @@ public sealed record UserResponse(
     DateTime CreatedAt,
     DateTime? UpdatedAt,
     string? Bio,
-    string? ProfileImageUrl
+    string? ProfileImageUrl,
+    string? CoverImageUrl
 );

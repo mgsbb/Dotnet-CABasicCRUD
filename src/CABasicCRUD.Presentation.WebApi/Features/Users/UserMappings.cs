@@ -15,7 +15,8 @@ public static class UserMappings
             userResult.CreatedAt,
             userResult.UpdatedAt,
             userResult.Bio,
-            userResult.ProfileImageUrl
+            userResult.ProfileImageUrl,
+            userResult.CoverImageUrl
         );
     }
 

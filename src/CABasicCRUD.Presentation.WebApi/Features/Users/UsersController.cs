@@ -189,6 +189,33 @@ public sealed class UsersController(IMediator mediator) : ApiController
 
     // ========================================================================================================================
 
+    [Authorize]
+    [HttpPatch("{id}/cover-image")]
+    [ProducesResponseType(statusCode: StatusCodes.Status204NoContent)]
+    [ProducesResponseType(statusCode: StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(statusCode: StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(statusCode: StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateUserCoverImage(Guid id, IFormFile formFile)
+    {
+        UpdateUserCoverImageCommand command = new(
+            (UserId)id,
+            formFile.OpenReadStream(),
+            formFile.FileName,
+            formFile.ContentType
+        );
+
+        Result result = await _mediator.Send(request: command);
+
+        if (result.IsFailure)
+        {
+            return HandleResultFailure(result);
+        }
+
+        return NoContent();
+    }
+
+    // ========================================================================================================================
+
     private ObjectResult HandleResultFailure(Result result)
     {
         if (result.IsSuccess)

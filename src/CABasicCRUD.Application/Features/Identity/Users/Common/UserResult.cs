@@ -10,5 +10,6 @@ public sealed record UserResult(
     DateTime CreatedAt,
     DateTime? UpdatedAt,
     string? Bio,
-    string? ProfileImageUrl
+    string? ProfileImageUrl,
+    string? CoverImageUrl
 );

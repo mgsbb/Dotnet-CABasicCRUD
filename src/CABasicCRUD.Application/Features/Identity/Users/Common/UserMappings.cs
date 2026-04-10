@@ -14,7 +14,8 @@ internal static class UserMappings
             UpdatedAt: user.UpdatedAt,
             Username: user.Username,
             Bio: user.UserProfile.Bio,
-            ProfileImageUrl: user.UserProfile.ProfileImageUrl
+            ProfileImageUrl: user.UserProfile.ProfileImageUrl,
+            CoverImageUrl: user.UserProfile.CoverImageUrl
         );
     }
 
