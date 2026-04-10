@@ -54,6 +54,8 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
 
                 profileBuilder.Property(userProfile => userProfile.ProfileImageUrl);
 
+                profileBuilder.Property(userProfile => userProfile.CoverImageUrl);
+
                 profileBuilder.Property(userProfile => userProfile.CreatedAt).IsRequired();
 
                 profileBuilder.Property(userProfile => userProfile.UpdatedAt).IsRequired(false);
