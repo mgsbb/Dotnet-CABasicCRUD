@@ -19,4 +19,13 @@ public sealed class CloudinaryFileStorage(Cloudinary cloudinary) : IFileStorage
 
         return result.SecureUrl.ToString();
     }
+
+    public async Task DeleteAsync(string fileUrl, CancellationToken cancellationToken)
+    {
+        var publicId = Path.GetFileNameWithoutExtension(fileUrl);
+
+        var deleteParams = new DeletionParams(publicId);
+
+        await cloudinary.DestroyAsync(deleteParams);
+    }
 }

@@ -12,6 +12,11 @@ public sealed class LocalFileStorage : IFileStorage
         _rootPath = Path.Combine(env.ContentRootPath, "uploads", "profile-images");
     }
 
+    public Task DeleteAsync(string fileUrl, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<string> UploadAsync(
         Stream stream,
         string fileName,

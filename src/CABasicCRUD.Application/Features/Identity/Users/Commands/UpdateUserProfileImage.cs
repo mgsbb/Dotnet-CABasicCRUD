@@ -42,6 +42,8 @@ internal sealed class UpdateUserProfileImageCommandHandler(
             return Result.Failure(UserErrors.NotFound);
         }
 
+        string? oldProfileImageUrl = user.UserProfile.ProfileImageUrl;
+
         string fileName = $"{user.Id.Value}_{request.FileName}";
 
         string imageUrl = await fileStorage.UploadAsync(
@@ -54,6 +56,11 @@ internal sealed class UpdateUserProfileImageCommandHandler(
         user.UpdateProfileImageUrl(imageUrl);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        if (!string.IsNullOrWhiteSpace(oldProfileImageUrl))
+        {
+            await fileStorage.DeleteAsync(oldProfileImageUrl, cancellationToken);
+        }
 
         return Result.Success();
     }
