@@ -18,7 +18,7 @@ public class User : AggregateRoot<UserId>
         Name = name;
         Email = email;
         PasswordHash = passwordHash;
-        UserProfile = UserProfile.Create(id, Name, null, null);
+        UserProfile = UserProfile.Create(id, Name, null, null, null);
         Username = username;
     }
 
@@ -125,6 +125,13 @@ public class User : AggregateRoot<UserId>
     public Result UpdateProfileImageUrl(string? profileImageUrl)
     {
         Result result = UserProfile.UpdateProfileImageUrl(profileImageUrl);
+
+        return result;
+    }
+
+    public Result UpdateCoverImageUrl(string? coverImageUrl)
+    {
+        Result result = UserProfile.UpdateCoverImageUrl(coverImageUrl);
 
         return result;
     }

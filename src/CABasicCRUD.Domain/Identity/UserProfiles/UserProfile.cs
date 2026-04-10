@@ -8,23 +8,32 @@ public sealed class UserProfile : EntityBase<UserId>
     public string FullName { get; set; }
     public string? Bio { get; set; }
     public string? ProfileImageUrl { get; set; }
+    public string? CoverImageUrl { get; set; }
 
-    private UserProfile(UserId? id, string fullName, string? bio, string? profileImageUrl)
+    private UserProfile(
+        UserId? id,
+        string fullName,
+        string? bio,
+        string? profileImageUrl,
+        string? coverImageUrl
+    )
         : base(id)
     {
         FullName = fullName;
         Bio = bio;
         ProfileImageUrl = profileImageUrl;
+        CoverImageUrl = coverImageUrl;
     }
 
     internal static UserProfile Create(
         UserId userId,
         string fullName,
         string? bio,
-        string? profileImageUrl
+        string? profileImageUrl,
+        string? coverImageUrl
     )
     {
-        return new UserProfile(userId, fullName, bio, profileImageUrl);
+        return new UserProfile(userId, fullName, bio, profileImageUrl, coverImageUrl);
     }
 
     internal UserProfile UpdateDetails(string? fullName, string? bio)
@@ -48,6 +57,15 @@ public sealed class UserProfile : EntityBase<UserId>
         if (string.IsNullOrWhiteSpace(profileImageUrl))
             return Result<UserProfile>.Failure(UserErrors.ProfileImageUrlEmpty);
         ProfileImageUrl = profileImageUrl;
+        UpdatedAt = DateTime.UtcNow;
+        return this;
+    }
+
+    internal Result<UserProfile> UpdateCoverImageUrl(string? coverImageUrl)
+    {
+        if (string.IsNullOrWhiteSpace(coverImageUrl))
+            return Result<UserProfile>.Failure(UserErrors.ProfileImageUrlEmpty);
+        CoverImageUrl = coverImageUrl;
         UpdatedAt = DateTime.UtcNow;
         return this;
     }
