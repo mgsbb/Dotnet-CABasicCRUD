@@ -15,7 +15,7 @@ internal sealed class SearchUsersQueryHandler(IUserReadService userReadService)
         CancellationToken cancellationToken
     )
     {
-        IReadOnlyList<User> users = await _userReadService.SearchUsersAsync(
+        IReadOnlyList<UserResult> users = await _userReadService.SearchUsersWithMediaAsync(
             request.SearchTerm,
             request.Page,
             request.PageSize,
@@ -24,8 +24,6 @@ internal sealed class SearchUsersQueryHandler(IUserReadService userReadService)
             cancellationToken
         );
 
-        IReadOnlyList<UserResult> userResults = users.ToListUserResult();
-
-        return Result<IReadOnlyList<UserResult>>.Success(userResults);
+        return Result<IReadOnlyList<UserResult>>.Success(users);
     }
 }

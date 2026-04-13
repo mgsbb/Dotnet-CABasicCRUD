@@ -16,15 +16,13 @@ internal sealed class GetUserByIdQueryHandler(IUserReadService userReadService)
         CancellationToken cancellationToken
     )
     {
-        User? user = await _userReadService.GetByIdAsync(request.UserId);
+        UserResult? user = await _userReadService.GetByIdWithMediaAsync(request.UserId);
 
         if (user is null)
         {
             return Result<UserResult>.Failure(UserErrors.NotFound);
         }
 
-        UserResult userResult = user.ToUserResult();
-
-        return userResult;
+        return user;
     }
 }
