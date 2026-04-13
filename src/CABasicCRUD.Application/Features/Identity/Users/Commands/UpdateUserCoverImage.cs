@@ -25,10 +25,10 @@ internal sealed class UpdateUserCoverImageCommandHandler(
     IUserRepository userRepository,
     IUnitOfWork unitOfWork,
     IMediaRepository mediaRepository
-) : ICommandHandler<UpdateUserProfileImageCommand>
+) : ICommandHandler<UpdateUserCoverImageCommand>
 {
     public async Task<Result> Handle(
-        UpdateUserProfileImageCommand request,
+        UpdateUserCoverImageCommand request,
         CancellationToken cancellationToken
     )
     {
