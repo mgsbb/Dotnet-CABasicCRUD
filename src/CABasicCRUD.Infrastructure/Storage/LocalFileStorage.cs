@@ -12,12 +12,12 @@ public sealed class LocalFileStorage : IFileStorage
         _rootPath = Path.Combine(env.ContentRootPath, "uploads", "profile-images");
     }
 
-    public Task DeleteAsync(string fileUrl, CancellationToken cancellationToken)
+    public Task DeleteAsync(string fileKey, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<string> UploadAsync(
+    public async Task<UploadResult> UploadAsync(
         Stream stream,
         string fileName,
         string contentType,
@@ -32,6 +32,9 @@ public sealed class LocalFileStorage : IFileStorage
 
         await stream.CopyToAsync(fileStream, cancellationToken);
 
-        return $"uploads/profile-images/{fileName}";
+        return new UploadResult(
+            Url: $"uploads/profile-images/{fileName}",
+            Key: $"uploads/profile-images/{fileName}"
+        );
     }
 }
