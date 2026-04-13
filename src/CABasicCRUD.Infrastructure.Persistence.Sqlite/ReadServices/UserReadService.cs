@@ -86,6 +86,83 @@ public sealed class UserReadService(ApplicationDbContext dbContext) : IUserReadS
     {
         return await _dbSet.AsNoTracking().FirstOrDefaultAsync(u => u.Id == userId);
     }
+
+    // ========================================================================================================================
+
+    public async Task<UserResult?> GetByIdWithMediaAsync(UserId userId)
+    {
+        return await _dbSet
+            .AsNoTracking()
+            .Where(u => u.Id == userId)
+            .Select(u => new UserResult(
+                u.Id,
+                u.UserProfile.FullName,
+                u.Email,
+                u.Username,
+                u.CreatedAt,
+                u.UpdatedAt,
+                u.UserProfile.Bio,
+                dbContext
+                    .MediaItems.Where(m => m.Id == u.UserProfile.ProfileImageId)
+                    .Select(m => m.Url)
+                    .FirstOrDefault(),
+                dbContext
+                    .MediaItems.Where(m => m.Id == u.UserProfile.CoverImageId)
+                    .Select(m => m.Url)
+                    .FirstOrDefault()
+            ))
+            .FirstOrDefaultAsync();
+    }
+
+    // ========================================================================================================================
+
+    public async Task<IReadOnlyList<UserResult>> SearchUsersWithMediaAsync(
+        string? searchTerm,
+        int page,
+        int pageSize,
+        UserOrderBy orderBy,
+        SortDirection sortDirection,
+        CancellationToken cancellationToken
+    )
+    {
+        var query = _dbSet.AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            query = query.Where(u =>
+                EF.Functions.Like(u.Name, $"%{searchTerm}%")
+                || EF.Functions.Like(u.Email, $"%{searchTerm}%")
+            );
+        }
+
+        query = ApplyOrdering(query, orderBy, sortDirection);
+
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        IReadOnlyList<UserResult> users = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(u => new UserResult(
+                u.Id,
+                u.UserProfile.FullName,
+                u.Email,
+                u.Username,
+                u.CreatedAt,
+                u.UpdatedAt,
+                u.UserProfile.Bio,
+                dbContext
+                    .MediaItems.Where(m => m.Id == u.UserProfile.ProfileImageId)
+                    .Select(m => m.Url)
+                    .FirstOrDefault(),
+                dbContext
+                    .MediaItems.Where(m => m.Id == u.UserProfile.CoverImageId)
+                    .Select(m => m.Url)
+                    .FirstOrDefault()
+            ))
+            .ToListAsync(cancellationToken);
+
+        return users;
+    }
 }
 
 // ========================================================================================================================

@@ -19,4 +19,15 @@ public interface IUserReadService
     );
 
     Task<User?> GetByIdAsync(UserId userId);
+
+    Task<UserResult?> GetByIdWithMediaAsync(UserId userId);
+
+    Task<IReadOnlyList<UserResult>> SearchUsersWithMediaAsync(
+        string? searchTerm,
+        int page,
+        int pageSize,
+        UserOrderBy orderBy,
+        SortDirection sortDirection,
+        CancellationToken cancellationToken
+    );
 }

@@ -1,5 +1,6 @@
 using CABasicCRUD.Domain.Conversations.Conversations;
 using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Domain.MediaItems;
 using CABasicCRUD.Domain.Posts.Comments;
 using CABasicCRUD.Domain.Posts.Posts;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbConte
     public DbSet<Comment> Comments { get; set; }
 
     public DbSet<Conversation> Conversations { get; set; }
+
+    public DbSet<Media> MediaItems { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
