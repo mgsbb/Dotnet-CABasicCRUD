@@ -5,6 +5,7 @@ using CABasicCRUD.Application.Features.Posts.Comments.Common;
 using CABasicCRUD.Application.Features.Posts.Posts.Common;
 using CABasicCRUD.Domain.Conversations.Conversations;
 using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Domain.MediaItems;
 using CABasicCRUD.Domain.Posts.Comments;
 using CABasicCRUD.Domain.Posts.Posts;
 using CABasicCRUD.Infrastructure.Persistence.Sqlite.Outbox;
@@ -47,6 +48,7 @@ public static class PersistenceServicesRegistration
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ICommentRepository, CommentRepository>();
         services.AddScoped<IConversationRepository, ConversationRepository>();
+        services.AddScoped<IMediaRepository, MediaRepository>();
 
         services.AddScoped<IPostReadService, PostReadService>();
         services.AddScoped<ICommentReadService, CommentReadService>();
