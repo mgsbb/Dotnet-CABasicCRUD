@@ -3,6 +3,7 @@ using CABasicCRUD.Application.Common.Interfaces.Messaging;
 using CABasicCRUD.Application.Features.Identity.Auth.Common;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Domain.MediaItems;
 using UserErrors = CABasicCRUD.Application.Features.Identity.Users.Common.UserErrors;
 
 namespace CABasicCRUD.Application.Features.Identity.Users.Commands;
@@ -22,7 +23,8 @@ internal sealed class UpdateUserProfileImageCommandHandler(
     ICurrentUser currentUser,
     IFileStorage fileStorage,
     IUserRepository userRepository,
-    IUnitOfWork unitOfWork
+    IUnitOfWork unitOfWork,
+    IMediaRepository mediaRepository
 ) : ICommandHandler<UpdateUserProfileImageCommand>
 {
     public async Task<Result> Handle(
@@ -42,25 +44,42 @@ internal sealed class UpdateUserProfileImageCommandHandler(
             return Result.Failure(UserErrors.NotFound);
         }
 
-        string? oldProfileImageUrl = user.UserProfile.ProfileImageUrl;
+        MediaId? oldProfileImageId = user.UserProfile.ProfileImageId;
 
         string fileName = $"{user.Id.Value}_{request.FileName}";
 
-        string imageUrl = await fileStorage.UploadAsync(
+        UploadResult result = await fileStorage.UploadAsync(
             request.FileStream,
             fileName,
             request.ContentType,
             cancellationToken
         );
 
-        user.UpdateProfileImageUrl(imageUrl);
+        Media media = Media.Create(
+            StorageProvider.Cloudinary,
+            result.Key,
+            result.Url,
+            MediaType.Image,
+            request.FileName,
+            request.FileStream.Length,
+            request.ContentType
+        );
 
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        await mediaRepository.AddAsync(media);
 
-        if (!string.IsNullOrWhiteSpace(oldProfileImageUrl))
+        user.UpdateProfileImageId(media.Id);
+
+        if (oldProfileImageId is not null)
         {
-            await fileStorage.DeleteAsync(oldProfileImageUrl, cancellationToken);
+            Media? oldMedia = await mediaRepository.GetByIdAsync(oldProfileImageId);
+
+            if (oldMedia is not null)
+            {
+                await fileStorage.DeleteAsync(oldMedia.StorageKey, cancellationToken);
+                await mediaRepository.DeleteAsync(oldMedia);
+            }
         }
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }

@@ -3,6 +3,7 @@ using CABasicCRUD.Application.Common.Interfaces.Messaging;
 using CABasicCRUD.Application.Features.Identity.Auth.Common;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Domain.MediaItems;
 using UserErrors = CABasicCRUD.Application.Features.Identity.Users.Common.UserErrors;
 
 namespace CABasicCRUD.Application.Features.Identity.Users.Commands;
@@ -22,11 +23,12 @@ internal sealed class UpdateUserCoverImageCommandHandler(
     ICurrentUser currentUser,
     IFileStorage fileStorage,
     IUserRepository userRepository,
-    IUnitOfWork unitOfWork
-) : ICommandHandler<UpdateUserCoverImageCommand>
+    IUnitOfWork unitOfWork,
+    IMediaRepository mediaRepository
+) : ICommandHandler<UpdateUserProfileImageCommand>
 {
     public async Task<Result> Handle(
-        UpdateUserCoverImageCommand request,
+        UpdateUserProfileImageCommand request,
         CancellationToken cancellationToken
     )
     {
@@ -42,25 +44,42 @@ internal sealed class UpdateUserCoverImageCommandHandler(
             return Result.Failure(UserErrors.NotFound);
         }
 
-        string? oldCoverImageUrl = user.UserProfile.CoverImageUrl;
+        MediaId? oldCoverImageId = user.UserProfile.CoverImageId;
 
         string fileName = $"{user.Id.Value}_{request.FileName}";
 
-        string imageUrl = await fileStorage.UploadAsync(
+        UploadResult result = await fileStorage.UploadAsync(
             request.FileStream,
             fileName,
             request.ContentType,
             cancellationToken
         );
 
-        user.UpdateCoverImageUrl(imageUrl);
+        Media media = Media.Create(
+            StorageProvider.Cloudinary,
+            result.Key,
+            result.Url,
+            MediaType.Image,
+            request.FileName,
+            request.FileStream.Length,
+            request.ContentType
+        );
 
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        await mediaRepository.AddAsync(media);
 
-        if (!string.IsNullOrWhiteSpace(oldCoverImageUrl))
+        user.UpdateCoverImageId(media.Id);
+
+        if (oldCoverImageId is not null)
         {
-            await fileStorage.DeleteAsync(oldCoverImageUrl, cancellationToken);
+            Media? oldMedia = await mediaRepository.GetByIdAsync(oldCoverImageId);
+
+            if (oldMedia is not null)
+            {
+                await fileStorage.DeleteAsync(oldMedia.StorageKey, cancellationToken);
+                await mediaRepository.DeleteAsync(oldMedia);
+            }
         }
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }
