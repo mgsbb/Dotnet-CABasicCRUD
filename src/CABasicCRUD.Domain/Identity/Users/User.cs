@@ -1,5 +1,6 @@
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Identity.UserProfiles;
+using CABasicCRUD.Domain.MediaItems;
 
 namespace CABasicCRUD.Domain.Identity.Users;
 
@@ -122,16 +123,16 @@ public class User : AggregateRoot<UserId>
         return Result.Success();
     }
 
-    public Result UpdateProfileImageUrl(string? profileImageUrl)
+    public Result UpdateProfileImageId(MediaId profileImageId)
     {
-        Result result = UserProfile.UpdateProfileImageUrl(profileImageUrl);
+        Result result = UserProfile.UpdateProfileImageId(profileImageId);
 
         return result;
     }
 
-    public Result UpdateCoverImageUrl(string? coverImageUrl)
+    public Result UpdateCoverImageId(MediaId coverImageId)
     {
-        Result result = UserProfile.UpdateCoverImageUrl(coverImageUrl);
+        Result result = UserProfile.UpdateCoverImageId(coverImageId);
 
         return result;
     }

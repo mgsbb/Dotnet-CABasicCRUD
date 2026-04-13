@@ -1,5 +1,6 @@
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Domain.MediaItems;
 
 namespace CABasicCRUD.Domain.Identity.UserProfiles;
 
@@ -7,33 +8,34 @@ public sealed class UserProfile : EntityBase<UserId>
 {
     public string FullName { get; set; }
     public string? Bio { get; set; }
-    public string? ProfileImageUrl { get; set; }
-    public string? CoverImageUrl { get; set; }
+
+    public MediaId? ProfileImageId { get; set; }
+    public MediaId? CoverImageId { get; set; }
 
     private UserProfile(
         UserId? id,
         string fullName,
         string? bio,
-        string? profileImageUrl,
-        string? coverImageUrl
+        MediaId? profileImageId,
+        MediaId? coverImageId
     )
         : base(id)
     {
         FullName = fullName;
         Bio = bio;
-        ProfileImageUrl = profileImageUrl;
-        CoverImageUrl = coverImageUrl;
+        ProfileImageId = profileImageId;
+        CoverImageId = coverImageId;
     }
 
     internal static UserProfile Create(
         UserId userId,
         string fullName,
         string? bio,
-        string? profileImageUrl,
-        string? coverImageUrl
+        MediaId? profileImageId,
+        MediaId? coverImageId
     )
     {
-        return new UserProfile(userId, fullName, bio, profileImageUrl, coverImageUrl);
+        return new UserProfile(userId, fullName, bio, profileImageId, coverImageId);
     }
 
     internal UserProfile UpdateDetails(string? fullName, string? bio)
@@ -52,20 +54,16 @@ public sealed class UserProfile : EntityBase<UserId>
         return this;
     }
 
-    internal Result<UserProfile> UpdateProfileImageUrl(string? profileImageUrl)
+    internal Result<UserProfile> UpdateProfileImageId(MediaId profileImageId)
     {
-        if (string.IsNullOrWhiteSpace(profileImageUrl))
-            return Result<UserProfile>.Failure(UserErrors.ProfileImageUrlEmpty);
-        ProfileImageUrl = profileImageUrl;
+        ProfileImageId = profileImageId;
         UpdatedAt = DateTime.UtcNow;
         return this;
     }
 
-    internal Result<UserProfile> UpdateCoverImageUrl(string? coverImageUrl)
+    internal Result<UserProfile> UpdateCoverImageId(MediaId coverImageId)
     {
-        if (string.IsNullOrWhiteSpace(coverImageUrl))
-            return Result<UserProfile>.Failure(UserErrors.ProfileImageUrlEmpty);
-        CoverImageUrl = coverImageUrl;
+        CoverImageId = coverImageId;
         UpdatedAt = DateTime.UtcNow;
         return this;
     }
