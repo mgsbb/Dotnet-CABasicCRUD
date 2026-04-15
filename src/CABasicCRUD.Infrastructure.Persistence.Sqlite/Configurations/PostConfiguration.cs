@@ -1,4 +1,5 @@
 using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Domain.MediaItems;
 using CABasicCRUD.Domain.Posts.Posts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -26,5 +27,32 @@ public class PostConfiguration : IEntityTypeConfiguration<Post>
         builder.Property(p => p.CreatedAt).IsRequired();
 
         builder.Property(p => p.UpdatedAt).IsRequired(false);
+
+        ConfigureMedia(builder);
+    }
+
+    private static void ConfigureMedia(EntityTypeBuilder<Post> builder)
+    {
+        builder.Metadata.FindNavigation(nameof(Post.PostMediaItems))!.SetField("_postMediaItems");
+
+        builder.OwnsMany<PostMedia>(
+            post => post.PostMediaItems,
+            pmBuilder =>
+            {
+                pmBuilder.ToTable("PostsMedia");
+
+                pmBuilder.WithOwner();
+
+                pmBuilder.HasKey(pm => new { pm.PostId, pm.MediaId });
+
+                pmBuilder
+                    .Property(pm => pm.PostId)
+                    .HasConversion(postId => postId.Value, value => (PostId)value);
+
+                pmBuilder
+                    .Property(pm => pm.MediaId)
+                    .HasConversion(mediaId => mediaId.Value, value => (MediaId)value);
+            }
+        );
     }
 }

@@ -1,4 +1,5 @@
 using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Domain.MediaItems;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -52,7 +53,22 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
 
                 profileBuilder.Property(userProfile => userProfile.Bio).HasMaxLength(200);
 
-                profileBuilder.Property(userProfile => userProfile.ProfileImageUrl);
+                profileBuilder
+                    .Property(userProfile => userProfile.ProfileImageId)
+                    .IsRequired(false)
+                    .HasConversion(
+                        profileImageId =>
+                            profileImageId != null ? profileImageId.Value : (Guid?)null,
+                        value => value != null ? (MediaId)value : null
+                    );
+
+                profileBuilder
+                    .Property(userProfile => userProfile.CoverImageId)
+                    .IsRequired(false)
+                    .HasConversion(
+                        coverImageId => coverImageId != null ? coverImageId.Value : (Guid?)null,
+                        value => value != null ? (MediaId)value : null
+                    );
 
                 profileBuilder.Property(userProfile => userProfile.CreatedAt).IsRequired();
 
