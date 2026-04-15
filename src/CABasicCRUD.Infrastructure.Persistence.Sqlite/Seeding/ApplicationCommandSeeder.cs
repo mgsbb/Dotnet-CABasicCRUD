@@ -94,7 +94,7 @@ public sealed class ApplicationCommandSeeder(
                 );
 
                 Result<PostResult> result = await _mediator.Send(
-                    new CreatePostCommand(faker.Commerce.ProductName(), postContent, userId)
+                    new CreatePostCommand(faker.Commerce.ProductName(), postContent, userId, [])
                 );
 
                 postIds.Add(result.Value!.Id);

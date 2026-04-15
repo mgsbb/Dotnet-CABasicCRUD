@@ -168,7 +168,12 @@ public class PostsController : Controller
             return View(model);
         }
 
-        CreatePostCommand command = new(model.Title, model.Content, (UserId)_currentUser.UserId);
+        CreatePostCommand command = new(
+            model.Title,
+            model.Content,
+            (UserId)_currentUser.UserId,
+            []
+        );
         Result<PostResult> result = await _mediator.Send(command);
 
         if (result.IsFailure)

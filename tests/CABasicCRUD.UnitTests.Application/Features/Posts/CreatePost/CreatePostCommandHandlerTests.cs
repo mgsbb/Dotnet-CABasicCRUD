@@ -3,6 +3,7 @@ using CABasicCRUD.Application.Features.Posts.Posts.Commands.CreatePost;
 using CABasicCRUD.Application.Features.Posts.Posts.Common;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Domain.MediaItems;
 using CABasicCRUD.Domain.Posts.Posts;
 using NSubstitute;
 
@@ -15,13 +16,23 @@ public sealed class CreatePostCommandHandlerTests
     private readonly CreatePostCommandHandler _handler;
 
     private readonly ICacheService _cacheService;
+    private readonly IFileStorage _fileStorage;
+    private readonly IMediaRepository _mediaRepository;
 
     public CreatePostCommandHandlerTests()
     {
         _postRepository = Substitute.For<IPostRepository>();
         _unitOfWork = Substitute.For<IUnitOfWork>();
         _cacheService = Substitute.For<ICacheService>();
-        _handler = new CreatePostCommandHandler(_postRepository, _unitOfWork, _cacheService);
+        _fileStorage = Substitute.For<IFileStorage>();
+        _mediaRepository = Substitute.For<IMediaRepository>();
+        _handler = new CreatePostCommandHandler(
+            _postRepository,
+            _unitOfWork,
+            _cacheService,
+            _fileStorage,
+            _mediaRepository
+        );
     }
 
     [Fact]
@@ -29,7 +40,7 @@ public sealed class CreatePostCommandHandlerTests
     {
         // // Arrange
         UserId userId = UserId.New();
-        CreatePostCommand command = new("title", "content", userId);
+        CreatePostCommand command = new("title", "content", userId, []);
         CancellationToken token = default;
 
         Post expectedPost = Post.Create("title", "content", userId).Value!;
@@ -63,7 +74,7 @@ public sealed class CreatePostCommandHandlerTests
     {
         // Arrange
         UserId userId = UserId.New();
-        CreatePostCommand command = new("", "content", UserId.New());
+        CreatePostCommand command = new("", "content", UserId.New(), []);
         CancellationToken token = default;
 
         // Act
@@ -88,7 +99,7 @@ public sealed class CreatePostCommandHandlerTests
     {
         // Arrange
         UserId userId = UserId.New();
-        CreatePostCommand command = new("title", "", UserId.New());
+        CreatePostCommand command = new("title", "", UserId.New(), []);
         CancellationToken token = default;
 
         // Act

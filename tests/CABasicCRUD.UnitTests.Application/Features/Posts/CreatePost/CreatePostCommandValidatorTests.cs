@@ -18,7 +18,7 @@ public sealed class CreatePostCommandValidatorTests
     public void Validate_WhenInputIsValid_ShouldNotHaveValidationError()
     {
         // Arrange
-        CreatePostCommand command = new("title", "content", UserId.New());
+        CreatePostCommand command = new("title", "content", UserId.New(), []);
 
         // Act
         var result = _validator.TestValidate(command);
@@ -36,7 +36,7 @@ public sealed class CreatePostCommandValidatorTests
     public void Validate_WhenTitleIsNullOrWhitespace_ShouldHaveValidationError(string? title)
     {
         // Arrange
-        CreatePostCommand command = new(title!, "content", UserId.New());
+        CreatePostCommand command = new(title!, "content", UserId.New(), []);
 
         // Act
         var result = _validator.TestValidate(command);
@@ -53,7 +53,7 @@ public sealed class CreatePostCommandValidatorTests
     public void Validate_WhenTitleExceedsMaxLength_ShouldHaveValidationError()
     {
         // Arrange
-        CreatePostCommand command = new(new string('a', 101), "content", UserId.New());
+        CreatePostCommand command = new(new string('a', 101), "content", UserId.New(), []);
 
         // Act
         var result = _validator.TestValidate(command);
@@ -75,7 +75,7 @@ public sealed class CreatePostCommandValidatorTests
     public void Validate_WhenContentIsNullOrWhitespace_ShouldHaveValidationError(string? content)
     {
         // Arrange
-        CreatePostCommand command = new("title", content!, UserId.New());
+        CreatePostCommand command = new("title", content!, UserId.New(), []);
 
         // Act
         var result = _validator.TestValidate(command);
