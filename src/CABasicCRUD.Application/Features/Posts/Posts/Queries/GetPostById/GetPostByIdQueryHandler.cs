@@ -28,15 +28,13 @@ internal sealed class GetPostByIdQueryHandler(
             return cached;
         }
 
-        var post = await _postReadService.GetByIdAsync(id: request.PostId);
+        var postResult = await _postReadService.GetByIdWithMediaAsync(id: request.PostId);
 
-        if (post is null)
+        if (postResult is null)
         {
             // throw new KeyNotFoundException($"Post with Id: {request.PostId.Value} not found");
             return Result<PostResult>.Failure(Common.PostErrors.NotFound);
         }
-
-        var postResult = post.ToPostResult();
 
         await _cacheService.SetAsync<PostResult>(cacheKey, postResult, cancellationToken);
 

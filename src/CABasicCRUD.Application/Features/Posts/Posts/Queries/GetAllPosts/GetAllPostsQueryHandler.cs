@@ -31,12 +31,10 @@ internal sealed class GetAllPostsQueryHandler(
             return Result<IReadOnlyList<PostResult>>.Success(cached);
         }
 
-        IReadOnlyList<Post> posts = await _postReadService.GetAllAsync();
+        IReadOnlyList<PostResult> posts = await _postReadService.GetAllWithMediaAsync();
 
-        IReadOnlyList<PostResult> postsList = posts.ToListPostResult();
+        await _cacheService.SetAsync(cacheKey, posts, cancellationToken);
 
-        await _cacheService.SetAsync(cacheKey, postsList, cancellationToken);
-
-        return Result<IReadOnlyList<PostResult>>.Success(postsList);
+        return Result<IReadOnlyList<PostResult>>.Success(posts);
     }
 }
