@@ -12,7 +12,8 @@ internal static class PostMappings
             Content: post.Content,
             UserId: post.UserId,
             CreatedAt: post.CreatedAt,
-            UpdatedAt: post.UpdatedAt
+            UpdatedAt: post.UpdatedAt,
+            MediaUrls: []
         );
     }
 

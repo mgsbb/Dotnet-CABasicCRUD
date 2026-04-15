@@ -9,5 +9,6 @@ public sealed record PostResult(
     string Content,
     UserId UserId,
     DateTime CreatedAt,
-    DateTime? UpdatedAt
+    DateTime? UpdatedAt,
+    IReadOnlyList<string> MediaUrls
 );

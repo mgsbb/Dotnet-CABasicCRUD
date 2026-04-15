@@ -10,5 +10,6 @@ public sealed record PostWithAuthorResult(
     UserId UserId,
     string AuthorName,
     DateTime CreatedAt,
-    DateTime? UpdatedAt
+    DateTime? UpdatedAt,
+    IReadOnlyList<string> MediaUrls
 );
