@@ -51,16 +51,28 @@ public class PostReadService(ApplicationDbContext dbContext) : IPostReadService
                 post => post.UserId,
                 user => user.Id,
                 (post, user) =>
-                    new PostWithAuthorResult(
-                        post.Id,
-                        post.Title,
-                        post.Content,
-                        post.UserId,
-                        user.Name,
-                        post.CreatedAt,
-                        post.UpdatedAt
-                    )
+                    new
+                    {
+                        post,
+                        user,
+                        mediaUrls = post.PostMediaItems.Join(
+                            _dbContext.MediaItems,
+                            pm => pm.MediaId,
+                            media => media.Id,
+                            (pm, m) => m.Url
+                        ),
+                    }
             )
+            .Select(x => new PostWithAuthorResult(
+                x.post.Id,
+                x.post.Title,
+                x.post.Content,
+                x.post.UserId,
+                x.user.UserProfile.FullName,
+                x.post.CreatedAt,
+                x.post.UpdatedAt,
+                x.mediaUrls.ToList()
+            ))
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);
@@ -106,7 +118,14 @@ public class PostReadService(ApplicationDbContext dbContext) : IPostReadService
                 p.UserId,
                 u.Name,
                 p.CreatedAt,
-                p.UpdatedAt
+                p.UpdatedAt,
+                p.PostMediaItems.Join(
+                        _dbContext.MediaItems,
+                        pm => pm.MediaId,
+                        media => media.Id,
+                        (pm, m) => m.Url
+                    )
+                    .ToList()
             )
         )
             .AsNoTracking()
@@ -125,5 +144,65 @@ public class PostReadService(ApplicationDbContext dbContext) : IPostReadService
     public async Task<Post?> GetByIdAsync(PostId id)
     {
         return await _dbSet.AsNoTracking().FirstOrDefaultAsync(post => post.Id == id);
+    }
+
+    // ========================================================================================================================
+
+    public async Task<PostResult?> GetByIdWithMediaAsync(PostId id)
+    {
+        return await _dbSet
+            .AsNoTracking()
+            .Where(post => post.Id == id)
+            .Select(post => new PostResult(
+                post.Id,
+                post.Title,
+                post.Content,
+                post.UserId,
+                post.CreatedAt,
+                post.UpdatedAt,
+                post.PostMediaItems.Join(
+                        _dbContext.MediaItems,
+                        pm => pm.MediaId,
+                        m => m.Id,
+                        (pm, m) => m.Url
+                    )
+                    .ToList()
+            ))
+            .FirstOrDefaultAsync();
+    }
+
+    // ========================================================================================================================
+
+    public async Task<IReadOnlyList<PostResult>> GetAllWithMediaAsync()
+    {
+        return await _dbContext
+            .Posts.AsNoTracking()
+            .Join(
+                _dbContext.Users,
+                post => post.UserId,
+                user => user.Id,
+                (post, user) =>
+                    new
+                    {
+                        post,
+                        user,
+                        mediaUrls = post.PostMediaItems.Join(
+                            _dbContext.MediaItems,
+                            pm => pm.MediaId,
+                            media => media.Id,
+                            (pm, m) => m.Url
+                        ),
+                    }
+            )
+            .Select(x => new PostResult(
+                x.post.Id,
+                x.post.Title,
+                x.post.Content,
+                x.post.UserId,
+                x.post.CreatedAt,
+                x.post.UpdatedAt,
+                x.mediaUrls.ToList()
+            ))
+            .ToListAsync();
     }
 }

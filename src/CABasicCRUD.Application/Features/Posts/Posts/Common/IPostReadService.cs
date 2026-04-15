@@ -24,4 +24,8 @@ public interface IPostReadService
     Task<IReadOnlyList<Post>> GetAllAsync();
 
     Task<Post?> GetByIdAsync(PostId id);
+
+    Task<PostResult?> GetByIdWithMediaAsync(PostId id);
+
+    Task<IReadOnlyList<PostResult>> GetAllWithMediaAsync();
 }
