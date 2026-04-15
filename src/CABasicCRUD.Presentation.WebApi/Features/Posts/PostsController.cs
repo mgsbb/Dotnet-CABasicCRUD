@@ -8,6 +8,7 @@ using CABasicCRUD.Application.Features.Posts.Posts.Queries.GetPostByIdWithAuthor
 using CABasicCRUD.Application.Features.Posts.Posts.Queries.SearchPosts;
 using CABasicCRUD.Domain.Common;
 using CABasicCRUD.Domain.Identity.Users;
+using CABasicCRUD.Domain.MediaItems;
 using CABasicCRUD.Domain.Posts.Posts;
 using CABasicCRUD.Presentation.WebApi.Common.Abstractions;
 using CABasicCRUD.Presentation.WebApi.Features.Posts.Contracts;
@@ -34,15 +35,61 @@ public class PostsController(IMediator mediator, ICurrentUser currentUser) : Api
 
     [Authorize]
     [HttpPost]
+    [RequestSizeLimit(100_000_000)]
     [ProducesResponseType(type: typeof(PostResponse), statusCode: StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<PostResponse>> CreatePost([FromBody] CreatePostRequest request)
+    public async Task<ActionResult<PostResponse>> CreatePost([FromForm] CreatePostRequest request)
     {
+        if (request.Files.Count > 5)
+        {
+            return HandleProblem(
+                StatusCodes.Status400BadRequest,
+                "Cannot upload more than 5 media items."
+            );
+        }
+
+        int videoCount = 0;
+
+        foreach (var file in request.Files)
+        {
+            if (file.ContentType.StartsWith("video/"))
+            {
+                videoCount++;
+                continue;
+            }
+
+            if (file.ContentType.StartsWith("image/"))
+                continue;
+
+            return HandleProblem(
+                StatusCodes.Status400BadRequest,
+                "Can only upload video or image."
+            );
+        }
+
+        if (videoCount > 1)
+        {
+            return HandleProblem(
+                StatusCodes.Status400BadRequest,
+                "Cannot upload more than 1 video."
+            );
+        }
+
+        var media = request
+            .Files.Select(f => new CreatePostMedia(
+                f.OpenReadStream(),
+                f.FileName,
+                f.ContentType.StartsWith("video/") ? MediaType.Video : MediaType.Image,
+                f.ContentType
+            ))
+            .ToList();
+
         CreatePostCommand command = new(
             request.Title,
             request.Content,
-            (UserId)_currentUser.UserId
+            (UserId)_currentUser.UserId,
+            media
         );
 
         Result<PostResult> result = await _mediator.Send(request: command);
