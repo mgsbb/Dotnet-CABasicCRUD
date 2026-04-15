@@ -13,7 +13,8 @@ internal static class PostMappings
             postResult.Content,
             postResult.UserId,
             postResult.CreatedAt,
-            postResult.UpdatedAt
+            postResult.UpdatedAt,
+            postResult.MediaUrls
         );
     }
 
@@ -38,7 +39,8 @@ internal static class PostMappings
             postWithAuthorResult.UserId,
             postWithAuthorResult.AuthorName,
             postWithAuthorResult.CreatedAt,
-            postWithAuthorResult.UpdatedAt
+            postWithAuthorResult.UpdatedAt,
+            postWithAuthorResult.MediaUrls
         );
     }
 

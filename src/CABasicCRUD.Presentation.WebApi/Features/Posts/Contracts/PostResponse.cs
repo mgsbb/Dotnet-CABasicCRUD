@@ -6,5 +6,6 @@ public record PostResponse(
     string Content,
     Guid UserId,
     DateTime CreatedAt,
-    DateTime? UpdatedAt
+    DateTime? UpdatedAt,
+    IReadOnlyList<string> MediaUrls
 );

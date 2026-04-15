@@ -7,5 +7,6 @@ public record PostWithAuthorResponse(
     Guid UserId,
     string AuthorName,
     DateTime CreatedAt,
-    DateTime? UpdatedAt
+    DateTime? UpdatedAt,
+    IReadOnlyList<string> MediaUrls
 );
