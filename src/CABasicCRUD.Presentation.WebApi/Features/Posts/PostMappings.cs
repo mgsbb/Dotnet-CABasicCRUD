@@ -38,6 +38,7 @@ internal static class PostMappings
             postWithAuthorResult.Content,
             postWithAuthorResult.UserId,
             postWithAuthorResult.AuthorName,
+            postWithAuthorResult.AuthorProfileImageUrl,
             postWithAuthorResult.CreatedAt,
             postWithAuthorResult.UpdatedAt,
             postWithAuthorResult.MediaUrls

@@ -50,17 +50,19 @@ public class PostReadService(ApplicationDbContext dbContext) : IPostReadService
                 _dbContext.Users,
                 post => post.UserId,
                 user => user.Id,
-                (post, user) =>
+                (post, user) => new { post, user }
+            )
+            .SelectMany(
+                pu =>
+                    _dbContext
+                        .MediaItems.Where(media => media.Id == pu.user.UserProfile.ProfileImageId)
+                        .DefaultIfEmpty(),
+                (pu, profileImage) =>
                     new
                     {
-                        post,
-                        user,
-                        mediaUrls = post.PostMediaItems.Join(
-                            _dbContext.MediaItems,
-                            pm => pm.MediaId,
-                            media => media.Id,
-                            (pm, m) => m.Url
-                        ),
+                        pu.user,
+                        pu.post,
+                        profileImage,
                     }
             )
             .Select(x => new PostWithAuthorResult(
@@ -69,9 +71,16 @@ public class PostReadService(ApplicationDbContext dbContext) : IPostReadService
                 x.post.Content,
                 x.post.UserId,
                 x.user.UserProfile.FullName,
+                x.profileImage != null ? x.profileImage.Url : null,
                 x.post.CreatedAt,
                 x.post.UpdatedAt,
-                x.mediaUrls.ToList()
+                x.post.PostMediaItems.Join(
+                        _dbContext.MediaItems,
+                        pm => pm.MediaId,
+                        m => m.Id,
+                        (pm, m) => m.Url
+                    )
+                    .ToList()
             ))
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
@@ -107,28 +116,45 @@ public class PostReadService(ApplicationDbContext dbContext) : IPostReadService
         CancellationToken cancellationToken
     )
     {
-        return await (
-            from p in _dbContext.Posts
-            join u in _dbContext.Users on p.UserId equals u.Id
-            where p.Id == postId
-            select new PostWithAuthorResult(
-                p.Id,
-                p.Title,
-                p.Content,
-                p.UserId,
-                u.Name,
-                p.CreatedAt,
-                p.UpdatedAt,
-                p.PostMediaItems.Join(
+        return await _dbContext
+            .Posts.AsNoTracking()
+            .Where(post => post.Id == postId)
+            .Join(
+                _dbContext.Users,
+                post => post.UserId,
+                user => user.Id,
+                (post, user) => new { post, user }
+            )
+            .SelectMany(
+                pu =>
+                    _dbContext
+                        .MediaItems.Where(media => media.Id == pu.user.UserProfile.ProfileImageId)
+                        .DefaultIfEmpty(),
+                (pu, profileImage) =>
+                    new
+                    {
+                        pu.user,
+                        pu.post,
+                        profileImage,
+                    }
+            )
+            .Select(x => new PostWithAuthorResult(
+                x.post.Id,
+                x.post.Title,
+                x.post.Content,
+                x.post.UserId,
+                x.user.UserProfile.FullName,
+                x.profileImage != null ? x.profileImage.Url : null,
+                x.post.CreatedAt,
+                x.post.UpdatedAt,
+                x.post.PostMediaItems.Join(
                         _dbContext.MediaItems,
                         pm => pm.MediaId,
-                        media => media.Id,
+                        m => m.Id,
                         (pm, m) => m.Url
                     )
                     .ToList()
-            )
-        )
-            .AsNoTracking()
+            ))
             .FirstOrDefaultAsync(cancellationToken);
     }
 

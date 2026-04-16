@@ -6,6 +6,7 @@ public record PostWithAuthorResponse(
     string Content,
     Guid UserId,
     string AuthorName,
+    string? AuthorProfileImageUrl,
     DateTime CreatedAt,
     DateTime? UpdatedAt,
     IReadOnlyList<string> MediaUrls
