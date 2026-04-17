@@ -41,7 +41,8 @@ public sealed record MessageDetail(
 public sealed record ConversationParticipantDetail(
     UserId ParticipantUserId,
     string ParticipantUsername,
-    string ParticipantFullName
+    string ParticipantFullName,
+    string? ParticipantProfileImageUrl
 );
 
 // ========================================================================================================================

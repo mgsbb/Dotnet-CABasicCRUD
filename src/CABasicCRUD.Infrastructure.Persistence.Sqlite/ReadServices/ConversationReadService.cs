@@ -43,7 +43,13 @@ public sealed class ConversationReadService(ApplicationDbContext dbContext)
                             new ConversationParticipantDetail(
                                 u.Id,
                                 u.Username,
-                                u.UserProfile.FullName
+                                u.UserProfile.FullName,
+                                dbContext
+                                    .MediaItems.Where(media =>
+                                        media.Id == u.UserProfile.ProfileImageId
+                                    )
+                                    .Select(media => media.Url)
+                                    .FirstOrDefault()
                             )
                     )
                     .ToList(),

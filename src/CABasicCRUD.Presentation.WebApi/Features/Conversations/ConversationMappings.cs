@@ -76,7 +76,8 @@ internal static class ConversationMappings
         return new(
             conversationParticipantDetail.ParticipantUserId.Value,
             conversationParticipantDetail.ParticipantUsername,
-            conversationParticipantDetail.ParticipantFullName
+            conversationParticipantDetail.ParticipantFullName,
+            conversationParticipantDetail.ParticipantProfileImageUrl
         );
     }
 
