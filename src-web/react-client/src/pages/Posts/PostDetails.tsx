@@ -6,6 +6,7 @@ import Comments from "./Comments/Comments";
 import { useAuth } from "../../hooks/useAuth";
 import DeletePost from "./DeletePost";
 import type { TPost } from "../../types/posts";
+import ImagesCarousel from "./components/ImagesCarousel";
 
 // ===================================================================================================================
 // ===================================================================================================================
@@ -70,6 +71,8 @@ export default function PostDetails() {
         </Link>
       </nav>
       <p className="mt-8">{post?.content}</p>
+
+      <ImagesCarousel mediaUrls={post?.mediaUrls} />
 
       <AddComment postId={post?.id} />
 

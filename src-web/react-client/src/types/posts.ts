@@ -4,8 +4,10 @@ export type TPost = {
   content: string;
   userId: string;
   authorName: string;
+  authorProfileImageUrl: string;
   createdAt: string;
   updatedAt: string;
+  mediaUrls: string[];
 };
 
 export type TComment = {
