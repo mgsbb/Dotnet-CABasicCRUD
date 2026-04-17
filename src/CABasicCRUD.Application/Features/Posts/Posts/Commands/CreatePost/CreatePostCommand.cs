@@ -9,7 +9,7 @@ public sealed record CreatePostCommand(
     string Title,
     string Content,
     UserId UserId,
-    IReadOnlyList<CreatePostMedia> CreatePostMedia
+    IReadOnlyList<CreatePostMedia>? CreatePostMedia
 ) : ICommand<PostResult>;
 
 public sealed record CreatePostMedia(

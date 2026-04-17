@@ -50,31 +50,32 @@ internal sealed class CreatePostCommandHandler(
 
         List<string> mediaUrls = [];
 
-        foreach (var file in request.CreatePostMedia)
-        {
-            UploadResult uploadResult = await _fileStorage.UploadAsync(
-                file.Stream,
-                file.FileName,
-                file.MediaType == MediaType.Image ? "image" : "video",
-                cancellationToken
-            );
+        if (request.CreatePostMedia is not null)
+            foreach (var file in request.CreatePostMedia)
+            {
+                UploadResult uploadResult = await _fileStorage.UploadAsync(
+                    file.Stream,
+                    file.FileName,
+                    file.MediaType == MediaType.Image ? "image" : "video",
+                    cancellationToken
+                );
 
-            Media media = Media.Create(
-                StorageProvider.Cloudinary,
-                uploadResult.Key,
-                uploadResult.Url,
-                file.MediaType,
-                file.FileName,
-                file.Stream.Length,
-                file.ContentType
-            );
+                Media media = Media.Create(
+                    StorageProvider.Cloudinary,
+                    uploadResult.Key,
+                    uploadResult.Url,
+                    file.MediaType,
+                    file.FileName,
+                    file.Stream.Length,
+                    file.ContentType
+                );
 
-            await _mediaRepository.AddAsync(media);
+                await _mediaRepository.AddAsync(media);
 
-            post.AddMedia(media.Id);
+                post.AddMedia(media.Id);
 
-            mediaUrls.Add(uploadResult.Url);
-        }
+                mediaUrls.Add(uploadResult.Url);
+            }
 
         PostResult postResult = new(
             postFromDB.Id,
