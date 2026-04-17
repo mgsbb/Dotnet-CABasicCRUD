@@ -41,7 +41,7 @@ public class PostsController(IMediator mediator, ICurrentUser currentUser) : Api
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<PostResponse>> CreatePost([FromForm] CreatePostRequest request)
     {
-        if (request.Files.Count > 5)
+        if (request.Files?.Count > 5)
         {
             return HandleProblem(
                 StatusCodes.Status400BadRequest,
@@ -51,22 +51,23 @@ public class PostsController(IMediator mediator, ICurrentUser currentUser) : Api
 
         int videoCount = 0;
 
-        foreach (var file in request.Files)
-        {
-            if (file.ContentType.StartsWith("video/"))
+        if (request.Files is not null)
+            foreach (var file in request.Files)
             {
-                videoCount++;
-                continue;
+                if (file.ContentType.StartsWith("video/"))
+                {
+                    videoCount++;
+                    continue;
+                }
+
+                if (file.ContentType.StartsWith("image/"))
+                    continue;
+
+                return HandleProblem(
+                    StatusCodes.Status400BadRequest,
+                    "Can only upload video or image."
+                );
             }
-
-            if (file.ContentType.StartsWith("image/"))
-                continue;
-
-            return HandleProblem(
-                StatusCodes.Status400BadRequest,
-                "Can only upload video or image."
-            );
-        }
 
         if (videoCount > 1)
         {
@@ -77,7 +78,7 @@ public class PostsController(IMediator mediator, ICurrentUser currentUser) : Api
         }
 
         var media = request
-            .Files.Select(f => new CreatePostMedia(
+            .Files?.Select(f => new CreatePostMedia(
                 f.OpenReadStream(),
                 f.FileName,
                 f.ContentType.StartsWith("video/") ? MediaType.Video : MediaType.Image,
